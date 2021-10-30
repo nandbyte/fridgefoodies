@@ -38,7 +38,6 @@ const AnimationSlide = (props: Props) => {
                 down: { opacity: 0, y: 100 },
                 left: { opacity: 0, x: -200 },
                 right: { opacity: 0, x: 200 },
-
                 visible: { opacity: 1, x: 0, y: 0 },
             }}
         >

@@ -21,6 +21,7 @@
     "@types/react-router-dom": "^5.1.8",
     "axios": "^0.21.1",
     "chakra-ui-simple-autocomplete": "^0.7.0",
+    "draft-js": "^0.11.7",
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.1.17",
     "react": "^17.0.2",

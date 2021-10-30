@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/recipe-ingredients",
+      "handler": "recipe-ingredient.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/recipe-ingredients/count",
+      "handler": "recipe-ingredient.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/recipe-ingredients/:id",
+      "handler": "recipe-ingredient.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/recipe-ingredients",
+      "handler": "recipe-ingredient.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/recipe-ingredients/:id",
+      "handler": "recipe-ingredient.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/recipe-ingredients/:id",
+      "handler": "recipe-ingredient.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

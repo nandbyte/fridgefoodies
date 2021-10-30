@@ -33,7 +33,7 @@ const Navbar = () => {
     );
 
     return (
-        <Box bg={useColorModeValue("orange.100", "orange.900")} px={4}>
+        <Box bg={useColorModeValue("orange.50", "orange.50")} px={4}>
             <Flex h={24} alignItems={"center"} justifyContent={"space-between"}>
                 <Box display={{ base: "flex", lg: "none" }} w={16} />
                 <LogoContainer />

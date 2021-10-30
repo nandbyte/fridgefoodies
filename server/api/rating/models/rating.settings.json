@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ratings",
+  "info": {
+    "name": "Rating",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "value": {
+      "type": "integer",
+      "max": 10,
+      "min": 1,
+      "default": 7,
+      "required": true
+    },
+    "recipe": {
+      "via": "ratings",
+      "model": "recipe"
+    },
+    "ratedBy": {
+      "via": "ratings",
+      "plugin": "users-permissions",
+      "model": "user"
+    }
+  }
+}
