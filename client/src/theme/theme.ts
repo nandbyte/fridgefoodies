@@ -11,6 +11,9 @@ import colors from "./foundations/colors";
 // Component style overrides
 import Button from "./components/button";
 import Link from "./components/link";
+import Select from "./components/select";
+import Input from "./components/input";
+import Heading from "./components/heading";
 
 const overrides = {
     config,
@@ -22,6 +25,9 @@ const overrides = {
     components: {
         Button,
         Link,
+        Select,
+        Input,
+        Heading,
         // Other components go here
     },
 };

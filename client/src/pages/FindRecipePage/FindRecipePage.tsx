@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
     Button,
     Flex,
@@ -7,7 +8,6 @@ import {
     CircularProgress,
     SimpleGrid,
     Text,
-    Icon,
 } from "@chakra-ui/react";
 import { Heading, Stack, Box } from "@chakra-ui/layout";
 
@@ -17,54 +17,46 @@ import Credit from "../../components/Credit";
 import SectionDivider from "../../components/SectionDivider";
 import Navbar from "../../components/Navbar";
 import SubsectionDivider from "../../components/SubsectionDivider";
-import axios from "axios";
+
 import MatchingRecipe from "../../components/MatchingRecipe";
-import { FaSortAmountUp } from "react-icons/fa";
+
+import {
+    selectSelectedIngredients,
+    setSelectedIngredients,
+} from "../../state/slices/recipe.find.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllIngredients } from "../../api";
+import PageSection from "../../components/PageSection";
+import AutoComplete from "../../components/AutoComplete";
+import Loading from "../../components/Loading";
 
 const FindRecipePage = (props: any) => {
-    const [ingredients, setIngredients]: any = useState([]);
-    const [ingredientOptions, setIngredientOptions]: any = useState([]);
-    const [currentIngredient, setCurrentIngredient]: any = useState(null);
-    const [selectedIngredients, setSelectedIngredients]: any = useState([]);
-    const [ingredientFluidity, setIngredientFluidity] = useState("1");
+    const dispatch = useDispatch();
 
-    const [recipes, setRecipes]: any = useState([]);
-    const [loading, setLoading]: any = useState(false);
+    const selectedIngredients = useSelector(selectSelectedIngredients);
+    const [ingredients, setIngredients] = useState<string[]>([]);
+    const [currentIngredient, setCurrentIngredient] = useState<string>();
 
     useEffect(() => {
-        axios.get(`http://localhost:1337/ingredients`).then((response) => {
-            console.log(response.data);
-            setIngredients(response.data);
-        });
-    }, []);
+        (async function () {
+            try {
+                const response = await getAllIngredients();
+                console.log(response);
+                let ingredientList: string[] = [];
 
-    const updateRecipes = () => {
-        setLoading(true);
-        axios
-            .get(
-                `https://www.themealdb.com/api/json/v1/1/filter.php?i=${
-                    selectedIngredients[selectedIngredients.length - 1]
-                }`
-            )
-            .then((response) => {
-                setRecipes(response.data.meals);
-            });
-        setLoading(false);
-    };
+                response.data.meals.forEach((ingredient: any) => {
+                    ingredientList.push(ingredient.strIngredient);
+                });
 
-    const addIngredient = () => {
-        let ingredientList = selectedIngredients;
-        if (
-            !ingredientList.includes(currentIngredient) &&
-            (currentIngredient !== null || currentIngredient !== "")
-        ) {
-            ingredientList.push(currentIngredient);
-        }
-        console.log(ingredientList);
-        setSelectedIngredients(ingredientList);
-    };
+                setIngredients(ingredientList);
+                console.log(ingredients);
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+    }, []); // eslint-disable-line
 
-    const handleSelectionChange: any = (ingredient: string) => {
+    const handleSelectionChange: any = (ingredient: any) => {
         setCurrentIngredient(ingredient);
     };
 
@@ -77,65 +69,13 @@ const FindRecipePage = (props: any) => {
                     justifyContent="space-between"
                     width={{ base: "100%", xl: "1200px" }}
                 >
-                    <Box
-                        p={8}
-                        py={{ base: 4, xl: 8 }}
-                        borderWidth={2}
-                        borderStyle={"dashed"}
-                        borderColor={"orange.600"}
-                        borderRadius={8}
-                    >
-                        <Heading
-                            fontSize={{ base: 18, lg: 36 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                            textTransform="uppercase"
-                        >
-                            Add Ingredients
-                        </Heading>
-                        <SubsectionDivider />
-                        <Select
-                            size="lg"
-                            colorScheme="orange"
-                            borderColor="orange.800"
-                            focusBorderColor="orange.500"
-                            onChange={(event) =>
-                                handleSelectionChange(event.target.value)
-                            }
-                        >
-                            {ingredients.map((ingredient: any) => {
-                                return (
-                                    <option value={ingredient.name}>
-                                        {ingredient.name}
-                                    </option>
-                                );
-                            })}
-                        </Select>
+                    <PageSection>
+                        <Heading variant="section">Add Ingredients</Heading>
+                        <SectionDivider />
+                        <AutoComplete />
 
-                        <Button
-                            my={4}
-                            textAlign="center"
-                            textTransform="uppercase"
-                            fontWeight="bold"
-                            backgroundColor="orange.400"
-                            _hover={{
-                                bg: "orange.500",
-                            }}
-                            onClick={addIngredient}
-                        >
-                            Add Ingredient
-                        </Button>
-                    </Box>
-                    <Box py={{ base: 4, xl: 8 }}>
-                        <Heading
-                            fontSize={{ base: 18, lg: 36 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                            textTransform="uppercase"
-                        >
-                            Ingredient List
-                        </Heading>
-                        <SubsectionDivider />
+                        <Heading variant={"section"}>Your Ingredients</Heading>
+                        <SectionDivider />
                         <Box>
                             {selectedIngredients.map((ingredient: any) => {
                                 return (
@@ -153,36 +93,18 @@ const FindRecipePage = (props: any) => {
                                 );
                             })}
                         </Box>
-                    </Box>
-                    <Box
-                        p={8}
-                        py={{ base: 4, xl: 8 }}
-                        borderWidth={2}
-                        borderStyle={"dashed"}
-                        borderColor={"orange.600"}
-                        borderRadius={8}
-                    >
-                        <Heading
-                            fontSize={{ base: 18, lg: 36 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                            textTransform="uppercase"
-                        >
-                            Search Recipe
-                        </Heading>
+                    </PageSection>
+
+                    <PageSection>
+                        <Heading variant={"section"}>Search Recipe</Heading>
                         <SectionDivider />
 
                         <RadioGroup
-                            onChange={setIngredientFluidity}
-                            value={ingredientFluidity}
+                            // onChange={setIngredientFluidity}
+                            // value={ingredientFluidity}
                             colorScheme={"orange"}
                         >
-                            <Heading
-                                fontSize={{ base: 14, lg: 28 }}
-                                textAlign={"left"}
-                                fontWeight="black"
-                                py={4}
-                            >
+                            <Heading variant="subsection">
                                 1. Filter By -
                             </Heading>
                             <Stack direction="column">
@@ -200,16 +122,8 @@ const FindRecipePage = (props: any) => {
                             </Stack>
                         </RadioGroup>
 
-                        <Heading
-                            fontSize={{ base: 14, lg: 28 }}
-                            textAlign={"left"}
-                            fontWeight="black"
-                            py={4}
-                        >
-                            2. Sort by -
-                        </Heading>
+                        <Heading variant="subsection">2. Sort by -</Heading>
                         <Select
-                            size="lg"
                             colorScheme="orange"
                             borderColor="orange.800"
                             focusBorderColor="orange.500"
@@ -238,19 +152,13 @@ const FindRecipePage = (props: any) => {
                         </Select>
 
                         <Button
-                            textAlign="center"
-                            textTransform="uppercase"
-                            fontWeight="bold"
-                            backgroundColor="orange.400"
-                            _hover={{
-                                bg: "orange.500",
-                            }}
-                            onClick={updateRecipes}
+
+                        // onClick={updateRecipes}
                         >
                             Find Recipe
                         </Button>
-                    </Box>
-                    <Box py={{ base: 4, xl: 8 }}>
+                    </PageSection>
+                    <PageSection>
                         <Heading
                             fontSize={{ base: 18, lg: 36 }}
                             textAlign={{ base: "center", lg: "left" }}
@@ -259,8 +167,10 @@ const FindRecipePage = (props: any) => {
                         >
                             Matching Recipe
                         </Heading>
-                        <SubsectionDivider />
-                        {loading === true ? (
+                        <SectionDivider />
+                        <Loading />
+                    </PageSection>
+                    {/* {loading === true ? (
                             <CircularProgress />
                         ) : (
                             <Box>
@@ -280,8 +190,8 @@ const FindRecipePage = (props: any) => {
                                     })}
                                 </SimpleGrid>
                             </Box>
-                        )}
-                    </Box>
+                        )} */}
+
                     <Box pt={{ base: 64, lg: 96 }}>
                         <SectionDivider />
                         <Credit />

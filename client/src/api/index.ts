@@ -1,11 +1,3 @@
-import axios from "axios";
+export * from "./ingredients.api";
 
-const URL = "http://localhost:6969/posts";
-
-export const fetchPosts: any = () => {
-    return axios.get(URL);
-};
-
-export const createPost: any = (newPost: any) => {
-    return axios.post(URL, newPost);
-};
+export const baseUrl = "http://localhost:1337";

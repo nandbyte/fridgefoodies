@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { AspectRatio, Center, Flex, Image, Text } from "@chakra-ui/react";
+import {
+    AspectRatio,
+    Center,
+    Flex,
+    Image,
+    Input,
+    Text,
+} from "@chakra-ui/react";
 import { Heading, Stack, Box } from "@chakra-ui/layout";
 
 import Credit from "../../components/Credit";
@@ -33,6 +40,8 @@ const CreateRecipePage = (props: any) => {
                             Recipe
                         </Text>
                         <SubsectionDivider />
+                        <Input></Input>
+
                         <Heading
                             fontSize={{ base: 32, lg: 64 }}
                             textAlign={{ base: "center", lg: "left" }}
