@@ -6,7 +6,7 @@ const jwtGenerator = (userId: string) => {
         user: userId,
     };
 
-    jwt.sign(payload, jwtConfig, { expiresIn: "1hr" });
+    return jwt.sign(payload, jwtConfig, { expiresIn: "30d" });
 };
 
 export default jwtGenerator;
