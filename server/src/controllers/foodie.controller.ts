@@ -18,15 +18,21 @@ export const registerUser = expressAsyncHandler(async (req, res) => {
     try {
         const newUser: any = await query("INSERT INTO foodie (foodie_name, foodie_email, foodie_password) VALUES($1,$2,$3)", [name, email, password]);
         const searched: any = await query("SELECT * FROM foodie WHERE foodie_email=$1", [email]);
+        const user: Foodie = {
+            foodieId: searched.rows[0].foodie_id,
+            foodieEmail: searched.rows[0].foodie_email,
+            foodieName: searched.rows[0].foodie_name,
+        }
+
         const token = jwtGenerator(searched.rows[0].foodie_id);
         console.log(token);
         res.status(200).json({
             status: 200,
             data: {
-                foodie: searched.rows[0],
+                foodie: user,
                 token: token
             },
-            error: ""
+            error: null
         })
 
     } catch (err) {
@@ -47,13 +53,20 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
         });
     } else {
         if (userExists.rows[0].foodie_password === password) {
+
+            const user: Foodie = {
+                foodieId: userExists.rows[0].foodie_id,
+                foodieEmail: userExists.rows[0].foodie_email,
+                foodieName: userExists.rows[0].foodie_name,
+            }
+
             res.status(200).json({
                 status: 200,
                 data: {
-                    foodie: userExists.rows[0],
+                    foodie: user,
                     token: jwtGenerator(userExists.rows[0].foodie_id)
                 },
-                error: ""
+                error: null
             })
         } else {
             res.status(401).json({

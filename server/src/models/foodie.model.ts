@@ -1,7 +1,7 @@
 export interface Foodie {
     foodieId: string;
-    foodieImage: string;
+    foodieImage?: string;
     foodieName: string;
     foodieEmail: string;
-    foodiePassword: string;
+    foodiePassword?: string;
 }
