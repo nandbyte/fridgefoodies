@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/foodie.controller";
+import { registerUser,loginUser } from "../controllers/foodie.controller";
 
 const router = Router();
 
-router.post("/register", registerUser);
+router.post("/register", registerUser).get("/login",loginUser);
 
 export default router;
