@@ -20,15 +20,6 @@
     },
     "approved": {
       "type": "boolean"
-    },
-    "recipeIngredient": {
-      "model": "recipe-ingredient",
-      "via": "ingredient"
-    },
-    "addedBy": {
-      "via": "ingredients",
-      "plugin": "users-permissions",
-      "model": "user"
     }
   }
 }

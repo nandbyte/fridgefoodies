@@ -63,10 +63,6 @@
       "via": "foodie",
       "collection": "comment"
     },
-    "ingredients": {
-      "via": "addedBy",
-      "collection": "ingredient"
-    },
     "ratings": {
       "via": "ratedBy",
       "collection": "rating"

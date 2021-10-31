@@ -532,43 +532,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "recipeIngredients": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "variant": {
-                  "type": "string"
-                },
-                "guide": {
-                  "type": "string"
-                },
-                "quantity": {
-                  "type": "string"
-                },
-                "ingredient": {
-                  "type": "string"
-                },
-                "recipe": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "string"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "comments": {
             "type": "array",
             "items": {
@@ -679,12 +642,6 @@
                   "type": "string"
                 }
               },
-              "ingredients": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
               "ratings": {
                 "type": "array",
                 "items": {
@@ -708,6 +665,40 @@
               }
             }
           },
+          "recipeIngredients": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "variant": {
+                  "type": "string"
+                },
+                "guide": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "string"
+                },
+                "ingredient": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "published_at": {
             "type": "string",
             "format": "date-time"
@@ -726,12 +717,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "recipeIngredients": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "comments": {
             "type": "array",
             "items": {
@@ -746,6 +731,12 @@
           },
           "author": {
             "type": "string"
+          },
+          "recipeIngredients": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "published_at": {
             "type": "string",

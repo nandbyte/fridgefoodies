@@ -1286,43 +1286,6 @@
               }
             }
           },
-          "ingredients": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "approved": {
-                  "type": "boolean"
-                },
-                "recipeIngredient": {
-                  "type": "string"
-                },
-                "addedBy": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "string"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "ratings": {
             "type": "array",
             "items": {
@@ -1374,12 +1337,6 @@
                 "lastEdited": {
                   "type": "string"
                 },
-                "recipeIngredients": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
                 "comments": {
                   "type": "array",
                   "items": {
@@ -1394,6 +1351,12 @@
                 },
                 "author": {
                   "type": "string"
+                },
+                "recipeIngredients": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "published_at": {
                   "type": "string"
@@ -1453,12 +1416,6 @@
             "type": "string"
           },
           "comments": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "ingredients": {
             "type": "array",
             "items": {
               "type": "string"

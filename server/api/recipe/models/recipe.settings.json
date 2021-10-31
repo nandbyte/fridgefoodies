@@ -21,10 +21,6 @@
     "lastEdited": {
       "type": "datetime"
     },
-    "recipeIngredients": {
-      "collection": "recipe-ingredient",
-      "via": "recipe"
-    },
     "comments": {
       "via": "recipe",
       "collection": "comment"
@@ -37,6 +33,9 @@
       "via": "recipes",
       "plugin": "users-permissions",
       "model": "user"
+    },
+    "recipeIngredients": {
+      "collection": "recipe-ingredient"
     }
   }
 }

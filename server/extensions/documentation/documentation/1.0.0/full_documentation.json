@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "10/26/2021 2:26:00 AM"
+    "x-generation-date": "10/31/2021 10:52:35 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -4874,12 +4874,6 @@
               "lastEdited": {
                 "type": "string"
               },
-              "recipeIngredients": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
               "comments": {
                 "type": "array",
                 "items": {
@@ -4894,6 +4888,12 @@
               },
               "author": {
                 "type": "string"
+              },
+              "recipeIngredients": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "published_at": {
                 "type": "string"
@@ -4945,12 +4945,6 @@
                 "type": "string"
               },
               "comments": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "ingredients": {
                 "type": "array",
                 "items": {
                   "type": "string"
@@ -5029,113 +5023,6 @@
           "approved": {
             "type": "boolean"
           },
-          "recipeIngredient": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "variant": {
-                "type": "string"
-              },
-              "guide": {
-                "type": "string"
-              },
-              "quantity": {
-                "type": "string"
-              },
-              "ingredient": {
-                "type": "string"
-              },
-              "recipe": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
-          "addedBy": {
-            "required": [
-              "id",
-              "username",
-              "email",
-              "name"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "provider": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "resetPasswordToken": {
-                "type": "string"
-              },
-              "confirmationToken": {
-                "type": "string"
-              },
-              "confirmed": {
-                "type": "boolean"
-              },
-              "blocked": {
-                "type": "boolean"
-              },
-              "role": {
-                "type": "string"
-              },
-              "comments": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "ingredients": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "ratings": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "recipes": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "name": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "published_at": {
             "type": "string",
             "format": "date-time"
@@ -5152,12 +5039,6 @@
           },
           "approved": {
             "type": "boolean"
-          },
-          "recipeIngredient": {
-            "type": "string"
-          },
-          "addedBy": {
-            "type": "string"
           },
           "published_at": {
             "type": "string",
@@ -5201,12 +5082,6 @@
               "lastEdited": {
                 "type": "string"
               },
-              "recipeIngredients": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
               "comments": {
                 "type": "array",
                 "items": {
@@ -5221,6 +5096,12 @@
               },
               "author": {
                 "type": "string"
+              },
+              "recipeIngredients": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "published_at": {
                 "type": "string"
@@ -5272,12 +5153,6 @@
                 "type": "string"
               },
               "comments": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "ingredients": {
                 "type": "array",
                 "items": {
                   "type": "string"
@@ -5373,61 +5248,6 @@
               "approved": {
                 "type": "boolean"
               },
-              "recipeIngredient": {
-                "type": "string"
-              },
-              "addedBy": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
-          "recipe": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "instructions": {
-                "type": "string"
-              },
-              "lastEdited": {
-                "type": "string"
-              },
-              "recipeIngredients": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "comments": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "ratings": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "author": {
-                "type": "string"
-              },
               "published_at": {
                 "type": "string"
               },
@@ -5459,9 +5279,6 @@
           "ingredient": {
             "type": "string"
           },
-          "recipe": {
-            "type": "string"
-          },
           "published_at": {
             "type": "string",
             "format": "date-time"
@@ -5491,43 +5308,6 @@
           "lastEdited": {
             "type": "string",
             "format": "date-time"
-          },
-          "recipeIngredients": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "variant": {
-                  "type": "string"
-                },
-                "guide": {
-                  "type": "string"
-                },
-                "quantity": {
-                  "type": "string"
-                },
-                "ingredient": {
-                  "type": "string"
-                },
-                "recipe": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "string"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
           },
           "comments": {
             "type": "array",
@@ -5639,12 +5419,6 @@
                   "type": "string"
                 }
               },
-              "ingredients": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
               "ratings": {
                 "type": "array",
                 "items": {
@@ -5668,6 +5442,40 @@
               }
             }
           },
+          "recipeIngredients": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "variant": {
+                  "type": "string"
+                },
+                "guide": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "string"
+                },
+                "ingredient": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "published_at": {
             "type": "string",
             "format": "date-time"
@@ -5686,12 +5494,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "recipeIngredients": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "comments": {
             "type": "array",
             "items": {
@@ -5706,6 +5508,12 @@
           },
           "author": {
             "type": "string"
+          },
+          "recipeIngredients": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "published_at": {
             "type": "string",
@@ -5820,12 +5628,6 @@
                   "type": "string"
                 },
                 "comments": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "ingredients": {
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -5994,43 +5796,6 @@
               }
             }
           },
-          "ingredients": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "approved": {
-                  "type": "boolean"
-                },
-                "recipeIngredient": {
-                  "type": "string"
-                },
-                "addedBy": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "string"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "ratings": {
             "type": "array",
             "items": {
@@ -6082,12 +5847,6 @@
                 "lastEdited": {
                   "type": "string"
                 },
-                "recipeIngredients": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
                 "comments": {
                   "type": "array",
                   "items": {
@@ -6102,6 +5861,12 @@
                 },
                 "author": {
                   "type": "string"
+                },
+                "recipeIngredients": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "published_at": {
                   "type": "string"
@@ -6161,12 +5926,6 @@
             "type": "string"
           },
           "comments": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "ingredients": {
             "type": "array",
             "items": {
               "type": "string"

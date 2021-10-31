@@ -561,61 +561,6 @@
               "approved": {
                 "type": "boolean"
               },
-              "recipeIngredient": {
-                "type": "string"
-              },
-              "addedBy": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
-          "recipe": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "instructions": {
-                "type": "string"
-              },
-              "lastEdited": {
-                "type": "string"
-              },
-              "recipeIngredients": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "comments": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "ratings": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "author": {
-                "type": "string"
-              },
               "published_at": {
                 "type": "string"
               },
@@ -645,9 +590,6 @@
             "type": "string"
           },
           "ingredient": {
-            "type": "string"
-          },
-          "recipe": {
             "type": "string"
           },
           "published_at": {
