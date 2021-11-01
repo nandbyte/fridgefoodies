@@ -7,8 +7,9 @@ import jwtGenerator from "../utils/jwt-generator";
 
 export const registerUser = expressAsyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
+    
     const userExists: any = await query("SELECT * FROM foodie WHERE foodie_email=$1", [email]);
-    console.log(userExists);
+    // console.log(userExists);
 
     if (userExists.rowCount !== 0) {
         res.status(400);

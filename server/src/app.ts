@@ -3,6 +3,7 @@ import cors from "cors";
 import config from "./config";
 import ingredientRoute from "./routes/ingredient";
 import foodie from "./routes/foodie";
+import recipe from "./routes/recipe";
 
 const app = express();
 
@@ -19,5 +20,5 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 app.use(ingredientRoute);
 app.use(foodie);
-
+app.use(recipe);
 export default app;
