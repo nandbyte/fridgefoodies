@@ -1,10 +1,11 @@
-import { getIngredientById } from "../controllers/ingredient.controller";
+import { getIngredientById,listIngredients, addIngredient,editIngredient } from "../controllers/ingredient.controller";
 import { Router } from "express";
-import { listIngredients } from "../controllers/ingredient.controller";
+
 
 const router = Router();
 
 router.get("/ingredients", listIngredients);
 router.get("/ingredient/:id", getIngredientById);
-
+router.post("/ingredient", addIngredient);
+router.put("/ingredient",editIngredient);
 export default router;

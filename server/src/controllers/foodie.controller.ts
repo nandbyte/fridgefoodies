@@ -1,5 +1,4 @@
 import expressAsyncHandler from "express-async-handler";
-import { Pool } from "pg";
 import { Foodie } from "../models";
 import { query } from "../database";
 import jwtGenerator from "../utils/jwt-generator";
@@ -9,8 +8,6 @@ export const registerUser = expressAsyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
     
     const userExists: any = await query("SELECT * FROM foodie WHERE foodie_email=$1", [email]);
-    // console.log(userExists);
-
     if (userExists.rowCount !== 0) {
         res.status(400);
         throw new Error("User Already Exists");

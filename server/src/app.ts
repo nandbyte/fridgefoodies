@@ -4,6 +4,7 @@ import config from "./config";
 import ingredientRoute from "./routes/ingredient";
 import foodie from "./routes/foodie";
 import recipe from "./routes/recipe";
+import recipeIngrediant from "./routes/recipeIngredient";
 
 const app = express();
 
@@ -21,4 +22,5 @@ app.use(express.urlencoded({ extended: false }));
 app.use(ingredientRoute);
 app.use(foodie);
 app.use(recipe);
+app.use(recipeIngrediant);
 export default app;
