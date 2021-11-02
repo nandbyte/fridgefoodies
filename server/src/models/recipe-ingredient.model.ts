@@ -1,9 +1,9 @@
 export interface RecipeIngredient {
     recipeIngredientId: number;
-    recipeId: string;
-    ingredientId: string;
+    recipeId: number;
+    ingredientId: number;
     ingredientVariant: string;
     ingredientGuide: string;
     ingredientQuantity: string;
-    ingredientUnit: string;
+
 }

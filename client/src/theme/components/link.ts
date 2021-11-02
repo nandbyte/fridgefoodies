@@ -9,7 +9,7 @@ const Link = {
             lg: 3,
         },
         borderRadius: "md",
-        color: "white",
+        color: "orange.700",
         fontWeight: "normal",
         fontSize: {
             base: 16,
