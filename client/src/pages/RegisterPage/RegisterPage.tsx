@@ -5,9 +5,8 @@ import PageContainer from "../../components/PageContainer";
 import SubsectionDivider from "../../components/SubsectionDivider";
 import RegisterForm from "../../components/RegisterForm";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
-import Registered from "../../components/Registered";
-import LoggedIn from "../../components/LoggedIn";
 import { Redirect } from "react-router-dom";
+import PageSection from "../../components/PageSection";
 
 const RegisterPage = () => {
     const { foodie: user } = useTypedSelector((state) => state.foodie);
@@ -17,21 +16,12 @@ const RegisterPage = () => {
 
     return (
         <PageContainer variant="jumbotron">
-            <Heading textAlign={{ base: "left" }} fontWeight="black">
-                Register
-            </Heading>
+            <Heading variant="page">Register</Heading>
             <SubsectionDivider />
 
-            <Box
-                w="100%"
-                bgColor="gray.700"
-                color="white"
-                px={6}
-                py={4}
-                borderRadius="md"
-            >
+            <PageSection>
                 <RegisterForm />
-            </Box>
+            </PageSection>
         </PageContainer>
     );
 };

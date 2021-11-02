@@ -7,6 +7,11 @@ export const foodieApiSlice = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: baseUrl,
         prepareHeaders(headers) {
+            headers.set(
+                "Authorization",
+                "Bearer " + window.localStorage.getItem("Token")
+            );
+            headers.set("Content-Type", "application/json");
             return headers;
         },
     }),
@@ -24,13 +29,14 @@ export const foodieApiSlice = createApi({
                     };
                 },
             }),
+
             register: builder.mutation<
                 Response,
                 { email: string; name: string; password: string }
             >({
                 query({ email, name, password }) {
                     return {
-                        url: "/foodie/register",
+                        url: "/register",
                         method: "POST",
                         body: { email: email, name: name, password: password },
                     };

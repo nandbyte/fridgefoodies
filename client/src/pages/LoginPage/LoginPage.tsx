@@ -1,18 +1,22 @@
-import React from "react";
-import { Heading, Box } from "@chakra-ui/layout";
+import React, { useEffect } from "react";
+import { Heading } from "@chakra-ui/layout";
+import { useHistory } from "react-router-dom";
 
 import PageContainer from "../../components/PageContainer";
 import SubsectionDivider from "../../components/SubsectionDivider";
 import LoginForm from "../../components/LoginForm";
-import { Redirect } from "react-router-dom";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import PageSection from "../../components/PageSection";
 
 const LoginPage = () => {
-    const { foodie: user } = useTypedSelector((state) => state.foodie);
-    if (user) {
-        return <Redirect to="/create-recipe" />;
-    }
+    const { foodie } = useTypedSelector((state) => state.foodie);
+    const history = useHistory();
+
+    useEffect(() => {
+        if (foodie != null) {
+            history.push("/create-recipe");
+        }
+    }, [foodie]); //eslint-disable-line
 
     return (
         <PageContainer variant="jumbotron">

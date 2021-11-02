@@ -1,36 +1,40 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseUrl } from "../../config/api";
+import { Response } from "../types/response.type";
 
-// State type definition
-interface FindRecipeState {
-    selectedIngredients: string[];
-    filterType: "full" | "bounded";
-    sortCriteria: "Rating" | "Alphabetical";
-    sortType: "Ascending" | "Descending";
-    matchingRecipes: string[];
-    recommendedRecipes: string[];
-}
+export const foodieApiSlice = createApi({
+    reducerPath: "foodie-api",
+    baseQuery: fetchBaseQuery({
+        baseUrl: baseUrl,
+        prepareHeaders(headers) {
+            return headers;
+        },
+    }),
+    endpoints(builder) {
+        return {
+            getRecipeById: builder.mutation<Response, { id: number }>({
+                query(id) {
+                    return {
+                        url: "/recipe/" + id,
+                        method: "GET",
+                    };
+                },
+            }),
 
-// Initial state values
-const initialState: FindRecipeState = {
-    selectedIngredients: [],
-    filterType: "bounded",
-    sortCriteria: "Rating",
-    sortType: "Descending",
-    matchingRecipes: [],
-    recommendedRecipes: [],
-};
-
-// Functions for state transitions
-export const findRecipeByStringSlice = createSlice({
-    name: "find-recipe-by-string",
-    initialState,
-    reducers: {
-        // For ingredients addition
+            register: builder.mutation<
+                Response,
+                { email: string; name: string; password: string }
+            >({
+                query({ email, name, password }) {
+                    return {
+                        url: "/register",
+                        method: "POST",
+                        body: { email: email, name: name, password: password },
+                    };
+                },
+            }),
+        };
     },
 });
 
-// Export state transition functions
-export const {} = findRecipeByStringSlice.actions;
-
-// Export reducer
-export default findRecipeByStringSlice.reducer;
+export const { useGetRecipeByIdMutation } = foodieApiSlice;

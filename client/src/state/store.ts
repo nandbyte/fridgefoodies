@@ -1,9 +1,9 @@
-import { ingredientApiSlice } from "./ingredient/ingredient.api.slice";
-import { findRecipeByIngredientsSlice } from "./recipe/find-recipe-by-ingredients.slice";
 import { configureStore } from "@reduxjs/toolkit";
 import { foodieSlice } from "./foodie/foodie.slice";
 import { foodieApiSlice } from "./foodie/foodie.api.slice";
 import { ingredientSlice } from "./ingredient/ingredient.slice";
+import { ingredientApiSlice } from "./ingredient/ingredient.api.slice";
+import { findRecipeByIngredientsSlice } from "./recipe/find-recipe-by-ingredients.slice";
 
 export const store = configureStore({
     reducer: {

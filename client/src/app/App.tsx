@@ -38,9 +38,9 @@ const App = () => {
                     <Route exact path="/login">
                         <LoginPage />
                     </Route>{" "}
-                    {/* <Route exact path="/register">
+                    <Route exact path="/register">
                         <RegisterPage />
-                    </Route> */}
+                    </Route>
                 </Router>
             </ChakraProvider>
         </Provider>
