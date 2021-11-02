@@ -1,3 +1,4 @@
+import { useTypedSelector } from "./../../hooks/useTypedSelector";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Ingredient } from "../types/ingredient.type";
 
@@ -13,7 +14,7 @@ const initialState: IngredientState = {
 
 // Slice (Reducer + Actions)
 export const ingredientSlice = createSlice({
-    name: "ingredients",
+    name: "ingredient",
     initialState,
     reducers: {
         // Set ingredients
