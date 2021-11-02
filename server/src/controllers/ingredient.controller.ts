@@ -32,12 +32,22 @@ export const listIngredients: Handler = async (req, res) => {
 export const getIngredientById: Handler = async (req, res) => {
     try {
         const id = req.params.id;
-        const queryResult: any = await query(
+        const result: any = await query(
             "select * from ingredient where ingredient_id=$1",
             [id]
         );
-        const ingredient: Ingredient = queryResult.rows[0];
-        res.status(200).json(ingredient);
+        const ingredient: Ingredient = {
+            ingredientId: result.rows[0].ingredient_id,
+            ingredientName: result.rows[0].ingredient_name,
+            ingredientDescription: result.rows[0].ingredient_description
+        }
+        res.status(200).json({
+            status: 200,
+            data: {
+                ingredient: ingredient,
+            },
+            error: null,
+        });
     } catch (err: any) {
         log.error(err.message);
     }
