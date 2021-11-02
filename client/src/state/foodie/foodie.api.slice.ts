@@ -12,18 +12,19 @@ export const foodieApiSlice = createApi({
     }),
     endpoints(builder) {
         return {
-            login: builder.query<Response, { email: string; password: string }>(
-                {
-                    query({ email, password }) {
-                        return {
-                            url: "/foodie/login",
-                            method: "GET",
-                            body: { email: email, password: password },
-                        };
-                    },
-                }
-            ),
-            register: builder.query<
+            login: builder.mutation<
+                Response,
+                { email: string; password: string }
+            >({
+                query({ email, password }) {
+                    return {
+                        url: "/foodie/login",
+                        method: "GET",
+                        body: { email: email, password: password },
+                    };
+                },
+            }),
+            register: builder.mutation<
                 Response,
                 { email: string; name: string; password: string }
             >({
@@ -39,4 +40,4 @@ export const foodieApiSlice = createApi({
     },
 });
 
-export const { useLoginQuery, useRegisterQuery } = foodieApiSlice;
+export const { useLoginMutation, useRegisterMutation } = foodieApiSlice;

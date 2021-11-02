@@ -10,20 +10,29 @@ import {
     Input,
     Link,
     Stack,
+    useToast,
 } from "@chakra-ui/react";
 
 import { Text } from "@chakra-ui/layout";
 import { FaSignInAlt } from "react-icons/fa";
-import { login } from "../../config/user.api";
+import { useLoginMutation } from "../../state/foodie/foodie.api.slice";
 
 interface Props {}
 
 const LoginForm: React.FC<Props> = (props: Props) => {
-    const error = null;
+    const [email, setEmail] = useState<string>("");
+
+    const [password, setPassword] = useState<string>("");
+
+    const [loginError, setLoginError] = useState("");
+
+    const [loginUser, { data, error }] = useLoginMutation();
+
+    const toast = useToast();
 
     useEffect(() => {
-        setLoginError(error === null ? "" : error);
-    }, [error]);
+        console.log(data);
+    }, [data]);
 
     const handleLogin: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
@@ -33,36 +42,23 @@ const LoginForm: React.FC<Props> = (props: Props) => {
 
         if (!emailRegexPattern.test(email)) {
             setLoginError("Please provide a valid email address.");
+            toast({
+                position: "top",
+                title: "Error",
+                description: loginError,
+                status: "error",
+                duration: 1000,
+                isClosable: true,
+            });
         } else {
-            setLoginError("");
-            // loginUser();
+            loginUser({ email, password });
         }
     };
-
-    const [email, setEmail] = useState<string>("");
-
-    const [password, setPassword] = useState<string>("");
-
-    const [loginError, setLoginError] = useState("");
 
     return (
         <Stack spacing={6} p={4}>
             <form>
                 <Stack spacing={{ base: 8 }}>
-                    {loginError !== "" ? (
-                        <Alert status="error">
-                            <AlertIcon />
-                            <AlertTitle
-                                mr={2}
-                                fontSize={{ lg: "lg" }}
-                                color="red.900"
-                            >
-                                {loginError}
-                            </AlertTitle>
-                        </Alert>
-                    ) : (
-                        <></>
-                    )}
                     <FormControl id="login-email">
                         <FormLabel>
                             <Heading>Email</Heading>
