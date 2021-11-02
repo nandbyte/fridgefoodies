@@ -18,8 +18,8 @@ export const foodieApiSlice = createApi({
             >({
                 query({ email, password }) {
                     return {
-                        url: "/foodie/login",
-                        method: "GET",
+                        url: "/login",
+                        method: "POST",
                         body: { email: email, password: password },
                     };
                 },
