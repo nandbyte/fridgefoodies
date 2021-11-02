@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Heading, Stack, Box, Link, SimpleGrid } from "@chakra-ui/layout";
 import { Center, Flex, Image } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
 import Credit from "../../components/Credit";
 import SectionDivider from "../../components/SectionDivider";
+import axios from "axios";
 
 interface Props {}
 
 const HomePage: React.FC<Props> = (props: Props) => {
+    useEffect(() => {
+        axios.get(`http://localhost:1337/recipes`).then((response) => {
+            console.log(response.data);
+        });
+    }, []);
+
     return (
         <Box justifyItems="center">
             <Flex width="100%" justifyContent="center">
@@ -71,7 +78,7 @@ const HomePage: React.FC<Props> = (props: Props) => {
                                 _hover={{
                                     bg: "orange.500",
                                 }}
-                                to="/recipe/:id"
+                                to="/create-recipe"
                             >
                                 Create Recipe
                             </Link>

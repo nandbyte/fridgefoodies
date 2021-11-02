@@ -12,7 +12,7 @@ const SectionDivider = (props: Props) => {
                     style={{
                         border: 0,
                         height: "2px",
-                        background: "#ed8936",
+                        background: "#C05621",
                     }}
                 ></hr>
             </Box>
