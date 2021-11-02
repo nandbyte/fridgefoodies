@@ -8,8 +8,7 @@ interface Props {
 const PageSection: React.FC<Props> = (props: Props) => {
     return (
         <Box
-            my={8}
-            p={8}
+            p={4}
             borderWidth={2}
             borderStyle={"dashed"}
             borderColor={"orange.600"}

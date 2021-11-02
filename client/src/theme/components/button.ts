@@ -15,6 +15,12 @@ const Button = {
             bgColor: "orange.500",
             _hover: {
                 bg: "orange.400",
+                _disabled: {
+                    bg: "black",
+                },
+            },
+            _disabled: {
+                bg: "orange.800",
             },
         }),
     },

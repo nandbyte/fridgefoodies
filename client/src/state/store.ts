@@ -1,19 +1,19 @@
-import { recipeFindState } from "./slices/recipe.find.slice";
-// import { applyMiddleware, createStore } from "redux";
-// import thunk from "redux-thunk";
-// import reducers from "./reducers";
-
-// export const store = createStore(reducers, {}, applyMiddleware(thunk));
-
+import { ingredientApiSlice } from "./ingredient/ingredient.api.slice";
+import { findRecipeByIngredientsSlice } from "./recipe/find-recipe-by-ingredients.slice";
 import { configureStore } from "@reduxjs/toolkit";
-// ...
+import { foodieSlice } from "./foodie/foodie.slice";
+import { foodieApiSlice } from "./foodie/foodie.api.slice";
+import { ingredientSlice } from "./ingredient/ingredient.slice";
 
 export const store = configureStore({
     reducer: {
-        // recipeCreation: recipeCreationReducer,
-        recipeFind: recipeFindState.reducer,
-        // recipeSearchAdvanced: recipeSearchAdvancedReducer,
-        // user: userReducer,
+        foodie: foodieSlice.reducer,
+        [foodieApiSlice.reducerPath]: foodieApiSlice.reducer,
+
+        ingredient: ingredientSlice.reducer,
+        [ingredientApiSlice.reducerPath]: ingredientApiSlice.reducer,
+
+        findRecipeByIngredients: findRecipeByIngredientsSlice.reducer,
     },
 });
 

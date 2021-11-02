@@ -15,6 +15,8 @@ import FindRecipePage from "../pages/FindRecipePage";
 import { Provider } from "react-redux";
 import { store } from "../state";
 import CreateRecipePage from "../pages/CreateRecipePage";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 
 const App = () => {
     return (
@@ -23,16 +25,22 @@ const App = () => {
                 <Router>
                     <Route exact path="/">
                         <HomePage />
-                    </Route>{" "}
-                    <Route exact path="/find-recipe">
+                    </Route>
+                    <Route path="/find-recipe">
                         <FindRecipePage />
                     </Route>
                     <Route exact path="/recipe/:id">
                         <RecipePage />
                     </Route>
-                    <Route exact path="/create-recipe/">
+                    <Route exact path="/create-recipe">
                         <CreateRecipePage />
-                    </Route>
+                    </Route>{" "}
+                    <Route exact path="/login">
+                        <LoginPage />
+                    </Route>{" "}
+                    {/* <Route exact path="/register">
+                        <RegisterPage />
+                    </Route> */}
                 </Router>
             </ChakraProvider>
         </Provider>

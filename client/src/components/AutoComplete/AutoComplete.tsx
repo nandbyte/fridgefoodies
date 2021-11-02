@@ -1,12 +1,8 @@
 import React, { useEffect } from "react";
 import { CUIAutoComplete } from "chakra-ui-autocomplete";
-import { getAllIngredients } from "../../api";
 import { Box } from "@chakra-ui/layout";
 import { useDispatch } from "react-redux";
-import {
-    selectRecommendationsLoading,
-    setSelectedIngredients,
-} from "../../state/slices/recipe.find.slice";
+import { setSelectedIngredients } from "../../state/recipe/find-recipe-by-ingredients.slice";
 
 interface Props {}
 
@@ -16,29 +12,29 @@ const AutoComplete: React.FC<Props> = (props: Props) => {
     const [ingredients, setIngredients] = React.useState([]);
     const [selectedItems, setSelectedItems] = React.useState([]);
 
-    useEffect(() => {
-        (async function () {
-            try {
-                const response = await getAllIngredients();
-                console.log(response);
-                let ingredientList: any = [];
+    // useEffect(() => {
+    //     (async function () {
+    //         try {
+    //             const response = await getAllIngredients();
+    //             console.log(response);
+    //             let ingredientList: any = [];
 
-                // TODO: Convert this into your API comsumption mode
-                response.data.meals.forEach((ingredient: any) => {
-                    ingredientList.push({
-                        value: ingredient.strIngredient,
-                        label: ingredient.strIngredient,
-                    });
-                });
+    //             // TODO: Convert this into your API comsumption mode
+    //             response.data.meals.forEach((ingredient: any) => {
+    //                 ingredientList.push({
+    //                     value: ingredient.strIngredient,
+    //                     label: ingredient.strIngredient,
+    //                 });
+    //             });
 
-                setIngredients(ingredientList);
+    //             setIngredients(ingredientList);
 
-                console.log(ingredients);
-            } catch (e) {
-                console.error(e);
-            }
-        })();
-    }, []); // eslint-disable-line
+    //             console.log(ingredients);
+    //         } catch (e) {
+    //             console.error(e);
+    //         }
+    //     })();
+    // }, []); // eslint-disable-line
 
     const handleSelectedItemsChange = (selectedItems: any) => {
         if (selectedItems) {
