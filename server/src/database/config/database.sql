@@ -55,3 +55,10 @@ insert into foodie (foodie_name, foodie_email, foodie_password) values ('Adib Ab
 
 
 insert into ingredient (ingredient_name, ingredient_description) values ('Salt', 'Best Spice Ever');
+
+SELECT *
+FROM recipe 
+WHERE recipe_id in (
+    SELECT recipe_id FROM recipe_ingredient
+    WHERE ingredient_id=1
+)
