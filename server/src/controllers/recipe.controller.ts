@@ -86,7 +86,24 @@ export const getAllRecipeByUsers = expressAsyncHandler(async (req, res) => {
 
 export const getRecipeById = expressAsyncHandler(async (req, res) => {
     const id = req.params.id;
-    const result = await query("SELECT * FROM recipe WHERE recipe_id = $1", [id]);
+    let result: any;
+    let ingredientsResult: any;
+
+    try {
+        result = await query("SELECT * FROM recipe WHERE recipe_id = $1", [id]);
+    } catch (err: any) {
+        console.log(err);
+        throw new Error("Error while fetching recipe");
+    }
+
+    try {
+        ingredientsResult = await query("SELECT * FROM recipe_ingredient WHERE recipe_id = $1", [id]);
+    } catch (err: any) {
+        console.log(err);
+        throw new Error("Error while fetching recipe");
+    }
+
+
     if (result.rowCount === 0) {
         res.status(403).json({
             status: 403,
@@ -97,7 +114,6 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
         })
     } else {
         let jsonArray = result.rows;
-
         let modified = jsonArray.map(
             (obj: any) => {
                 return {
@@ -110,10 +126,24 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
             }
         );
 
+        let modifiedIngredient = ingredientsResult.rows.map(
+            (obj: any) => {
+                return {
+                    "recipeIngredientId": obj.recipe_ingredient_id,
+                    "recipeId": obj.recipe_id,
+                    "ingredientId": obj.ingredient_id,
+                    "ingredientVariant": obj.ingredient_variant,
+                    "ingredientGuide": obj.ingredient_guide,
+                    "ingredientQuantity": obj.ingredient_quantity,
+                }
+            }
+        );
+
         res.status(200).json({
             status: 200,
             data: {
-                recipes: modified,
+                recipe: modified,
+                recipeIngredients: modifiedIngredient,
                 message: "Recipe found",
             },
             error: null,
