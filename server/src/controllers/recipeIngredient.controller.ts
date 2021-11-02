@@ -90,7 +90,7 @@ export const getRecipeIngredientById = expressAsyncHandler(async (req, res) => {
                 error: null,
             })
 
-        }else{
+        } else {
             res.status(403).json({
                 status: 403,
                 data: {},
@@ -101,5 +101,5 @@ export const getRecipeIngredientById = expressAsyncHandler(async (req, res) => {
     } catch (err: any) {
         throw new Error(err);
     }
-
 })
+

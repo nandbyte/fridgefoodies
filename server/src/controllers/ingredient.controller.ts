@@ -6,9 +6,24 @@ import expressAsyncHandler from "express-async-handler";
 
 export const listIngredients: Handler = async (req, res) => {
     try {
-        const queryResult: any = await query("select * from ingredient", []);
+        const queryResult: any = await query("select * from ingredient order by ingredient_id asc", []);
         const ingredients: Ingredient[] = queryResult.rows;
-        res.status(200).json(ingredients);
+        const modified = ingredients.map(
+            (obj: any) => {
+                return {
+                    ingredientId: obj.ingredient_id,
+                    ingredientName: obj.ingredient_name,
+                    ingredientDescription: obj.ingredient_description
+                }
+            }
+        )
+        res.status(200).json({
+            status: 200,
+            data: {
+                ingredient: modified,
+            },
+            error: null,
+        });
     } catch (err: any) {
         log.error(err.message);
     }
