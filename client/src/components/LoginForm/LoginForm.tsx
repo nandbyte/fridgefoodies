@@ -14,7 +14,6 @@ import {
 
 import { Text } from "@chakra-ui/layout";
 import { FaSignInAlt } from "react-icons/fa";
-import { useLoginMutation } from "../../state/foodie/foodie.api.slice";
 import { useHistory } from "react-router-dom";
 
 interface Props {}
@@ -27,8 +26,6 @@ const LoginForm: React.FC<Props> = (props: Props) => {
     const [email, setEmail] = useState<string>("");
 
     const [password, setPassword] = useState<string>("");
-
-    const [loginUser] = useLoginMutation();
 
     const handleLogin: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
@@ -46,36 +43,36 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                 isClosable: true,
             });
         } else {
-            bcryptjs
-                .hash(password, "$2a$10$5874nLVXZq5CSbNxKsMTYu")
-                .then((hashedPassword: string) =>
-                    loginUser({ email, password: hashedPassword })
-                        .unwrap()
-                        .then((payload) => {
-                            toast({
-                                position: "top",
-                                title: "Success",
-                                description: "Logged in successfully",
-                                status: "success",
-                                duration: 2000,
-                                isClosable: true,
-                            });
-                            setTimeout(
-                                () => history.push("/create-recipe"),
-                                2000
-                            );
-                        })
-                        .catch((error) => {
-                            toast({
-                                position: "top",
-                                title: "Error",
-                                description: error.data.error,
-                                status: "error",
-                                duration: 2000,
-                                isClosable: true,
-                            });
-                        })
-                );
+            // bcryptjs
+            //     .hash(password, "$2a$10$5874nLVXZq5CSbNxKsMTYu")
+            //     .then((hashedPassword: string) =>
+            //         loginUser({ email, password: hashedPassword })
+            //             .unwrap()
+            //             .then((payload) => {
+            //                 toast({
+            //                     position: "top",
+            //                     title: "Success",
+            //                     description: "Logged in successfully",
+            //                     status: "success",
+            //                     duration: 2000,
+            //                     isClosable: true,
+            //                 });
+            //                 setTimeout(
+            //                     () => history.push("/create-recipe"),
+            //                     2000
+            //                 );
+            //             })
+            //             .catch((error) => {
+            //                 toast({
+            //                     position: "top",
+            //                     title: "Error",
+            //                     description: error.data.error,
+            //                     status: "error",
+            //                     duration: 2000,
+            //                     isClosable: true,
+            //                 });
+            //             })
+            //     );
         }
     };
 

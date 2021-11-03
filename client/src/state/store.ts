@@ -1,21 +1,22 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { foodieSlice } from "./foodie/foodie.slice";
-import { foodieApiSlice } from "./foodie/foodie.api.slice";
-import { ingredientSlice } from "./ingredient/ingredient.slice";
-import { ingredientApiSlice } from "./ingredient/ingredient.api.slice";
-import { findRecipeByIngredientsSlice } from "./recipe/find-recipe-by-ingredients.slice";
+import { atom, selector } from "recoil";
+import { Ingredient } from "./types/ingredient.type";
 
-export const store = configureStore({
-    reducer: {
-        foodie: foodieSlice.reducer,
-        [foodieApiSlice.reducerPath]: foodieApiSlice.reducer,
-
-        ingredient: ingredientSlice.reducer,
-        [ingredientApiSlice.reducerPath]: ingredientApiSlice.reducer,
-
-        findRecipeByIngredients: findRecipeByIngredientsSlice.reducer,
-    },
+export const foodieState = atom({
+    key: "foodie",
+    default: null,
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export const jwtState = atom({
+    key: "jwt",
+    default: "",
+});
+
+// export const matchingRecipeState = atom({
+//     key: "matching-recipe",
+//     default: [] as Recipe[],
+// });
+
+// export const recipeState = atom({
+//     key: "recipe",
+//     default: {} as Recipe,
+// });

@@ -5,18 +5,16 @@ import { useHistory } from "react-router-dom";
 import PageContainer from "../../components/PageContainer";
 import SubsectionDivider from "../../components/SubsectionDivider";
 import LoginForm from "../../components/LoginForm";
-import { useTypedSelector } from "../../hooks/useTypedSelector";
 import PageSection from "../../components/PageSection";
 
 const LoginPage = () => {
-    const { foodie } = useTypedSelector((state) => state.foodie);
     const history = useHistory();
 
-    useEffect(() => {
-        if (foodie != null) {
-            history.push("/create-recipe");
-        }
-    }, [foodie]); //eslint-disable-line
+    // useEffect(() => {
+    //     if (foodie != null) {
+    //         history.push("/create-recipe");
+    //     }
+    // }, [foodie]); //eslint-disable-line
 
     return (
         <PageContainer variant="jumbotron">

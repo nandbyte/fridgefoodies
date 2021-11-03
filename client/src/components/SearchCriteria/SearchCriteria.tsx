@@ -2,38 +2,35 @@ import React from "react";
 
 import { Heading, Box, Stack } from "@chakra-ui/layout";
 import { Button, Radio, RadioGroup } from "@chakra-ui/react";
-import { useTypedDispatch } from "../../hooks/useTypedDispatch";
-import { useTypedSelector } from "../../hooks/useTypedSelector";
+import { useRecoilState } from "recoil";
 import {
-    setFilterType,
-    setSortType,
-    setOrderType,
-} from "../../state/recipe/find-recipe-by-ingredients.slice";
-import { Recipe } from "../../state/recipe/recipe.type";
+    filterState,
+    orderState,
+    sortState,
+} from "../../state/recipe/recipe.state";
 
 interface Props {}
 
 const SearchCriteria: React.FC<Props> = (props: Props) => {
-    const dispatch = useTypedDispatch();
-
-    const { filterType, sortType, orderType, matchingRecipes } =
-        useTypedSelector((state) => state.findRecipeByIngredients);
+    const [filterType, setFilterType] = useRecoilState(filterState);
+    const [sortType, setSortType] = useRecoilState(sortState);
+    const [orderType, setOrderType] = useRecoilState(orderState);
 
     const changeFilterType = (value: string) => {
-        dispatch(setFilterType(parseInt(value)));
+        setFilterType(parseInt(value));
     };
 
     const changeSortType = (value: string) => {
-        dispatch(setSortType(parseInt(value)));
+        setFilterType(parseInt(value));
     };
 
     const changeOrderType = (value: string) => {
-        dispatch(setOrderType(parseInt(value)));
+        setOrderType(parseInt(value));
     };
 
-    const sortRecipes = () => {
-        let intermediateList = [...matchingRecipes];
-    };
+    // const sortRecipes = () => {
+    //     let intermediateList = [...matchingRecipes];
+    // };
 
     return (
         <Box>

@@ -6,9 +6,13 @@ import SectionDivider from "../../components/SectionDivider";
 import PageSection from "../../components/PageSection";
 import AutoComplete from "../../components/AutoComplete";
 import Loading from "../../components/Loading";
-import { useTypedDispatch } from "../../hooks/useTypedDispatch";
-import { useTypedSelector } from "../../hooks/useTypedSelector";
 import SearchCriteria from "../../components/SearchCriteria";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+    findRecipeByIngredientTabValue,
+    ingredientState,
+    selectedIngredientsState,
+} from "../../state/ingredient/ingredient.state";
 
 interface Props {}
 
@@ -32,15 +36,9 @@ const IngredientTag: React.FC<TagProps> = (props: TagProps) => {
 };
 
 const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
-    const dispatch = useTypedDispatch();
-
-    const ingredientList = useTypedSelector(
-        (state) => state.ingredient.ingredientList
-    );
-
-    const selectedIngredients = useTypedSelector(
-        (state) => state.findRecipeByIngredients.selectedIngredients
-    );
+    const [selectedIngredients] = useRecoilState(selectedIngredientsState);
+    const [ingredients] = useRecoilState(ingredientState);
+    const pageData = useRecoilValue(findRecipeByIngredientTabValue);
 
     return (
         <Stack px={0} mx={0} justifyContent="space-between" spacing={12}>
@@ -52,12 +50,20 @@ const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
                 <Heading variant={"section"}>Your Ingredients</Heading>
                 <SectionDivider />
                 <Box>
-                    {selectedIngredients.length === 0 ? (
+                    {pageData.selectedIngredientsCount === 0 ? (
                         <Text>No ingredient is selected.</Text>
                     ) : (
-                        selectedIngredients.map((ingredient: any) => {
+                        selectedIngredients.map((ingredientIndex: any) => {
+                            console.log(
+                                ingredients[ingredientIndex].ingredientName
+                            );
                             return (
-                                <IngredientTag ingredientName={ingredient} />
+                                <IngredientTag
+                                    ingredientName={
+                                        ingredients[ingredientIndex]
+                                            .ingredientName
+                                    }
+                                />
                             );
                         })
                     )}

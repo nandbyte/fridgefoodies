@@ -11,8 +11,6 @@ import {
     useToast,
 } from "@chakra-ui/react";
 import { FaUserPlus } from "react-icons/fa";
-
-import { useRegisterMutation } from "../../state/foodie/foodie.api.slice";
 import bcryptjs from "bcryptjs";
 import { useHistory } from "react-router-dom";
 
@@ -22,8 +20,6 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
     const toast = useToast();
 
     const history = useHistory();
-
-    const [registerUser] = useRegisterMutation();
 
     const [name, setName] = useState<string>("");
 
@@ -60,33 +56,33 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
                 isClosable: true,
             });
         } else {
-            bcryptjs
-                .hash(password, "$2a$10$5874nLVXZq5CSbNxKsMTYu")
-                .then((hashedPassword: string) =>
-                    registerUser({ email, name, password: hashedPassword })
-                        .unwrap()
-                        .then((payload) => {
-                            toast({
-                                position: "top",
-                                title: "Success",
-                                description: "User registered successfully",
-                                status: "success",
-                                duration: 2000,
-                                isClosable: true,
-                            });
-                            setTimeout(() => history.push("/login"), 2000);
-                        })
-                        .catch((error) => {
-                            toast({
-                                position: "top",
-                                title: "Error",
-                                description: error.data.error,
-                                status: "error",
-                                duration: 2000,
-                                isClosable: true,
-                            });
-                        })
-                );
+            // bcryptjs
+            //     .hash(password, "$2a$10$5874nLVXZq5CSbNxKsMTYu")
+            //     .then((hashedPassword: string) =>
+            //         registerUser({ email, name, password: hashedPassword })
+            //             .unwrap()
+            //             .then((payload) => {
+            //                 toast({
+            //                     position: "top",
+            //                     title: "Success",
+            //                     description: "User registered successfully",
+            //                     status: "success",
+            //                     duration: 2000,
+            //                     isClosable: true,
+            //                 });
+            //                 setTimeout(() => history.push("/login"), 2000);
+            //             })
+            //             .catch((error) => {
+            //                 toast({
+            //                     position: "top",
+            //                     title: "Error",
+            //                     description: error.data.error,
+            //                     status: "error",
+            //                     duration: 2000,
+            //                     isClosable: true,
+            //                 });
+            //             })
+            //     );
         }
     };
 
