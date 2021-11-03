@@ -8,18 +8,12 @@ import AutoComplete from "../../components/AutoComplete";
 import Loading from "../../components/Loading";
 import SearchCriteria from "../../components/SearchCriteria";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-    findRecipeByIngredientTabValue,
-    ingredientState,
-    selectedIngredientsState,
-} from "../../state/ingredient/ingredient.state";
+import { findRecipeByIngredientTabValue } from "../../state/ingredient/ingredient.state";
 import YourIngredients from "../../components/YourIngredients";
 
 interface Props {}
 
 const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
-    const [selectedIngredients] = useRecoilState(selectedIngredientsState);
-    const [ingredients] = useRecoilState(ingredientState);
     const pageData = useRecoilValue(findRecipeByIngredientTabValue);
 
     return (
@@ -38,7 +32,7 @@ const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
                 <Heading variant="section">Find Recipe By Ingredients</Heading>
                 <SectionDivider />
                 <SearchCriteria />
-                <Button disabled={selectedIngredients.length === 0}>
+                <Button disabled={pageData.selectedIngredientsCount === 0}>
                     Find Recipe
                 </Button>
             </PageSection>
