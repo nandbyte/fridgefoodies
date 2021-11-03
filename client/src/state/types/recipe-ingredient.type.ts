@@ -1,5 +1,5 @@
 export interface RecipeIngredient {
-    recipeIngredientId?: number;
+    recipeIngredientId: number;
     recipeId: number;
     ingredientId: number;
     ingredientVariant: string;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Button,
     FormControl,
@@ -13,6 +13,9 @@ import {
 import { FaUserPlus } from "react-icons/fa";
 import bcryptjs from "bcryptjs";
 import { useHistory } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { register } from "../../api/foodie.api.ts";
+import { foodieJwtState, foodieState } from "../../state/foodie/foodie.state";
 
 interface Props {}
 
@@ -28,6 +31,21 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
     const [password, setPassword] = useState<string>("");
 
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+    useEffect(() => {
+        console.log(window.localStorage.getItem("Token"));
+        if (window.localStorage.getItem("Token") !== "null") {
+            toast({
+                position: "top",
+                title: "Error",
+                description: "Please log out first.",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
+            setTimeout(() => history.push("/profile"), 1500);
+        }
+    }, []);
 
     const handleRegister: React.MouseEventHandler<HTMLButtonElement> = (
         event
@@ -46,6 +64,8 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
                 duration: 2000,
                 isClosable: true,
             });
+
+            setTimeout(() => history.push("/profile"), 1500);
         } else if (!emailRegexPattern.test(email)) {
             toast({
                 position: "top",
@@ -56,33 +76,32 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
                 isClosable: true,
             });
         } else {
-            // bcryptjs
-            //     .hash(password, "$2a$10$5874nLVXZq5CSbNxKsMTYu")
-            //     .then((hashedPassword: string) =>
-            //         registerUser({ email, name, password: hashedPassword })
-            //             .unwrap()
-            //             .then((payload) => {
-            //                 toast({
-            //                     position: "top",
-            //                     title: "Success",
-            //                     description: "User registered successfully",
-            //                     status: "success",
-            //                     duration: 2000,
-            //                     isClosable: true,
-            //                 });
-            //                 setTimeout(() => history.push("/login"), 2000);
-            //             })
-            //             .catch((error) => {
-            //                 toast({
-            //                     position: "top",
-            //                     title: "Error",
-            //                     description: error.data.error,
-            //                     status: "error",
-            //                     duration: 2000,
-            //                     isClosable: true,
-            //                 });
-            //             })
-            //     );
+            bcryptjs
+                .hash(password, "$2a$10$5874nLVXZq5CSbNxKsMTYu")
+                .then((hashedPassword: string) =>
+                    register(email, name, hashedPassword)
+                        .then((response) => {
+                            toast({
+                                position: "top",
+                                title: "Success",
+                                description: "Registered successfully",
+                                status: "success",
+                                duration: 2000,
+                                isClosable: true,
+                            });
+                            setTimeout(() => history.push("/login"), 1500);
+                        })
+                        .catch((error) => {
+                            toast({
+                                position: "top",
+                                title: "Error",
+                                description: error.data.error,
+                                status: "error",
+                                duration: 2000,
+                                isClosable: true,
+                            });
+                        })
+                );
         }
     };
 

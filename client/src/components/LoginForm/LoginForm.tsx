@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import bcryptjs from "bcryptjs";
 
 import {
@@ -15,6 +15,9 @@ import {
 import { Text } from "@chakra-ui/layout";
 import { FaSignInAlt } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { login } from "../../api/foodie.api.ts";
+import { foodieJwtState, foodieState } from "../../state/foodie/foodie.state";
 
 interface Props {}
 
@@ -26,6 +29,23 @@ const LoginForm: React.FC<Props> = (props: Props) => {
     const [email, setEmail] = useState<string>("");
 
     const [password, setPassword] = useState<string>("");
+
+    const [foodie, setFoodie] = useRecoilState(foodieState);
+    const [jwt, setJwt] = useRecoilState(foodieJwtState);
+
+    useEffect(() => {
+        if (window.localStorage.getItem("Token") !== "null") {
+            toast({
+                position: "top",
+                title: "Error",
+                description: "Please log out first.",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
+            setTimeout(() => history.push("/profile"), 1500);
+        }
+    }, []);
 
     const handleLogin: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
@@ -43,36 +63,40 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                 isClosable: true,
             });
         } else {
-            // bcryptjs
-            //     .hash(password, "$2a$10$5874nLVXZq5CSbNxKsMTYu")
-            //     .then((hashedPassword: string) =>
-            //         loginUser({ email, password: hashedPassword })
-            //             .unwrap()
-            //             .then((payload) => {
-            //                 toast({
-            //                     position: "top",
-            //                     title: "Success",
-            //                     description: "Logged in successfully",
-            //                     status: "success",
-            //                     duration: 2000,
-            //                     isClosable: true,
-            //                 });
-            //                 setTimeout(
-            //                     () => history.push("/create-recipe"),
-            //                     2000
-            //                 );
-            //             })
-            //             .catch((error) => {
-            //                 toast({
-            //                     position: "top",
-            //                     title: "Error",
-            //                     description: error.data.error,
-            //                     status: "error",
-            //                     duration: 2000,
-            //                     isClosable: true,
-            //                 });
-            //             })
-            //     );
+            bcryptjs
+                .hash(password, "$2a$10$5874nLVXZq5CSbNxKsMTYu")
+                .then((hashedPassword: string) =>
+                    login(email, hashedPassword)
+                        .then((response) => {
+                            setFoodie(response.data.data.foodie);
+                            setJwt(response.data.data.token);
+                            window.localStorage.setItem(
+                                "Token",
+                                response.data.data.token
+                            );
+
+                            toast({
+                                position: "top",
+                                title: "Success",
+                                description: "Logged in successfully",
+                                status: "success",
+                                duration: 2000,
+                                isClosable: true,
+                            });
+
+                            setTimeout(() => history.push("/profile"), 1500);
+                        })
+                        .catch((error) => {
+                            toast({
+                                position: "top",
+                                title: "Error",
+                                description: error.data.error,
+                                status: "error",
+                                duration: 2000,
+                                isClosable: true,
+                            });
+                        })
+                );
         }
     };
 

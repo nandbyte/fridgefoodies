@@ -17,8 +17,8 @@ import { RecoilRoot } from "recoil";
 
 const App = () => {
     return (
-        <ChakraProvider theme={theme}>
-            <RecoilRoot>
+        <RecoilRoot>
+            <ChakraProvider theme={theme}>
                 <Router>
                     <Route exact path="/">
                         <HomePage />
@@ -31,16 +31,16 @@ const App = () => {
                     </Route>
                     <Route exact path="/create-recipe">
                         <CreateRecipePage />
-                    </Route>{" "}
+                    </Route>
                     <Route exact path="/login">
                         <LoginPage />
-                    </Route>{" "}
+                    </Route>
                     <Route exact path="/register">
                         <RegisterPage />
                     </Route>
                 </Router>
-            </RecoilRoot>
-        </ChakraProvider>
+            </ChakraProvider>
+        </RecoilRoot>
     );
 };
 

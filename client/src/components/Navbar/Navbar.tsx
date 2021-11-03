@@ -15,6 +15,8 @@ interface LinkObject {
 const Links: ReadonlyArray<LinkObject> = [
     { name: "Home", href: "/" },
     { name: "Find Recipe", href: "/find-recipe" },
+    { name: "Create Recipe", href: "/create-recipe" },
+    { name: "Profile", href: "/profile" },
 ];
 
 const Navbar = () => {

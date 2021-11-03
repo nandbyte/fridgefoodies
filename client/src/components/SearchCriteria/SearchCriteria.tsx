@@ -1,20 +1,20 @@
 import React from "react";
 
 import { Heading, Box, Stack } from "@chakra-ui/layout";
-import { Button, Radio, RadioGroup } from "@chakra-ui/react";
+import { Radio, RadioGroup } from "@chakra-ui/react";
 import { useRecoilState } from "recoil";
 import {
-    filterState,
-    orderState,
-    sortState,
-} from "../../state/recipe/recipe.state";
+    ingredientFilterState,
+    ingredientOrderState,
+    ingredientSortState,
+} from "../../state/recipe/ingredient-recipe.state";
 
 interface Props {}
 
 const SearchCriteria: React.FC<Props> = (props: Props) => {
-    const [filterType, setFilterType] = useRecoilState(filterState);
-    const [sortType, setSortType] = useRecoilState(sortState);
-    const [orderType, setOrderType] = useRecoilState(orderState);
+    const [filterType, setFilterType] = useRecoilState(ingredientFilterState);
+    const [sortType, setSortType] = useRecoilState(ingredientSortState);
+    const [orderType, setOrderType] = useRecoilState(ingredientOrderState);
 
     const changeFilterType = (value: string) => {
         setFilterType(parseInt(value));

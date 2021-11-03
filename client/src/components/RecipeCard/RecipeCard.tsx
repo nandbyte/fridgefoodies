@@ -9,10 +9,10 @@ interface Props {
     id: string;
 }
 
-const MatchingRecipe: React.FC<Props> = (props: Props) => {
+const RecipeCard: React.FC<Props> = (props: Props) => {
     return (
         <Link to={`/recipe/${props.id}`}>
-            <Box p={2} borderRadius="md" border="2px solid black">
+            <Box p={2} borderRadius="md" border="2px solid orange">
                 <Center>
                     <Image w="100%" src={props.image} />
                 </Center>
@@ -24,4 +24,4 @@ const MatchingRecipe: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default MatchingRecipe;
+export default RecipeCard;
