@@ -12,7 +12,7 @@ import FindRecipeByIngredientTab from "./FindRecipeByIngredientTab";
 
 const tabs: Array<TabObject> = [
     {
-        tabName: "Search By Recipe Name",
+        tabName: "Search By Recipe",
         tabPanel: <FindRecipeByTitleTab />,
         tabLink: "/find-recipe/title",
     },

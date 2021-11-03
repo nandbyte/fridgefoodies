@@ -12,11 +12,12 @@ const CreateRecipePage = (props: any) => {
 
     return (
         <PageContainer variant="navbar">
-            <Heading variant="page">Find Recipe</Heading>
+            <Heading variant="page">Create a New Recipe</Heading>
             <SectionDivider />
 
             <Stack px={0} mx={0} justifyContent="space-between" spacing={12}>
                 <PageSection>
+                    {/* Recipe title will already be set */}
                     <Heading variant="section">Recipe Title</Heading>
                     <SectionDivider />
                 </PageSection>
