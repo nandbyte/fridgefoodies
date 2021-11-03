@@ -12,9 +12,9 @@ import { protect } from "../middleware/auth"
 
 const router = Router();
 
-router.post("/recipe",protect,addRecipe)
-    .put("/recipe", editRecipe)
-    .get("/recipe", getAllRecipe);
+router.post("/recipe",protect,addRecipe);
+router.put("/recipe",protect, editRecipe);
+router.get("/recipe", getAllRecipe);
 router.get("/recipe/user/:id", getAllRecipeByUsers);
 router.get("/recipe/:id", getRecipeById);
 router.get("/recipe/find/:keyword", searchRecipeByKeyWord);
