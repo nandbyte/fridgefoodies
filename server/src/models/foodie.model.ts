@@ -3,4 +3,5 @@ export interface Foodie {
     foodieName: string;
     foodieEmail: string;
     foodiePassword?: string;
+    isAdmin?: boolean;
 }

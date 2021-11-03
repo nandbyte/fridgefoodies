@@ -1,7 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Foodie } from "../models";
-import expressAsyncHandler from "express-async-handler";
-import { jwtConfig } from "../utils/utils.config";
+
 import express from 'express';
 const protect = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     let token;
@@ -15,7 +13,8 @@ const protect = async (req: express.Request, res: express.Response, next: expres
         console.log(token);
         try {
             const decoded: any = jwt.verify(token, "secret");
-            if (decoded.user != req.body.foodieID) {
+            console.log(decoded.user,req.body.foodieId );
+            if (decoded.user != req.body.foodieId) {
                 return res.json({ status: 500, msg: "Unauthorized access will not be granted." });
             }
         } catch (error) {

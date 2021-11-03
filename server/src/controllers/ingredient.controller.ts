@@ -13,7 +13,6 @@ export const listIngredients: Handler = async (req, res) => {
                 return {
                     ingredientId: obj.ingredient_id,
                     ingredientName: obj.ingredient_name,
-                    ingredientDescription: obj.ingredient_description
                 }
             }
         )
