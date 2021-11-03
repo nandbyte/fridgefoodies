@@ -13,27 +13,9 @@ import {
     ingredientState,
     selectedIngredientsState,
 } from "../../state/ingredient/ingredient.state";
+import YourIngredients from "../../components/YourIngredients";
 
 interface Props {}
-
-interface TagProps {
-    ingredientName: string;
-}
-const IngredientTag: React.FC<TagProps> = (props: TagProps) => {
-    return (
-        <Tag
-            key={props.ingredientName}
-            fontSize="lg"
-            colorScheme="orange"
-            variant="outline"
-            px={3}
-            py={2}
-            m={1}
-        >
-            {props.ingredientName}
-        </Tag>
-    );
-};
 
 const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
     const [selectedIngredients] = useRecoilState(selectedIngredientsState);
@@ -49,25 +31,7 @@ const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
 
                 <Heading variant={"section"}>Your Ingredients</Heading>
                 <SectionDivider />
-                <Box>
-                    {pageData.selectedIngredientsCount === 0 ? (
-                        <Text>No ingredient is selected.</Text>
-                    ) : (
-                        selectedIngredients.map((ingredientIndex: any) => {
-                            console.log(
-                                ingredients[ingredientIndex].ingredientName
-                            );
-                            return (
-                                <IngredientTag
-                                    ingredientName={
-                                        ingredients[ingredientIndex]
-                                            .ingredientName
-                                    }
-                                />
-                            );
-                        })
-                    )}
-                </Box>
+                <YourIngredients />
             </PageSection>
 
             <PageSection>

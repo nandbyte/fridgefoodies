@@ -21,7 +21,7 @@ const SearchCriteria: React.FC<Props> = (props: Props) => {
     };
 
     const changeSortType = (value: string) => {
-        setFilterType(parseInt(value));
+        setSortType(parseInt(value));
     };
 
     const changeOrderType = (value: string) => {

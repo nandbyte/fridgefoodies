@@ -2,30 +2,30 @@ import React, { useEffect } from "react";
 import { CUIAutoComplete } from "chakra-ui-autocomplete";
 import { Box } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
-import axios from "axios";
-import { baseUrl } from "../../config/api";
+
 import {
     findRecipeByIngredientTabValue,
     ingredientState,
     selectedIngredientsState,
 } from "../../state/ingredient/ingredient.state";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { getIngredients } from "../../api/ingredient.api";
 
 interface Props {}
 
 const AutoComplete: React.FC<Props> = (props: Props) => {
     const toast = useToast();
 
-    const [ingredients, setingredients] = useRecoilState(ingredientState);
+    const [ingredients, setIngredients] = useRecoilState(ingredientState);
     const [selectedIngredients, setSelectedIngredients] = useRecoilState(
         selectedIngredientsState
     );
+
     const pageData = useRecoilValue(findRecipeByIngredientTabValue);
 
     useEffect(() => {
-        axios
-            .get(baseUrl + "/ingredients")
-            .then((response) => setingredients(response.data.data.ingredient))
+        getIngredients()
+            .then((response) => setIngredients(response.data.data.ingredient))
             .catch((error) => {
                 console.log(error);
             });
