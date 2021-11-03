@@ -63,7 +63,9 @@ const FindRecipeByTitleTab: React.FC<Props> = (props: Props) => {
                 <Heading variant="section">Find Recipe By Title</Heading>
                 <SectionDivider />
                 <TitleSearchCriteria />
-                <Button onClick={findRecipe}>Find Recipe</Button>
+                <Button disabled={keyword === ""} onClick={findRecipe}>
+                    Find Recipe
+                </Button>
             </PageSection>
 
             {loading === true ? <Loading /> : <></>}

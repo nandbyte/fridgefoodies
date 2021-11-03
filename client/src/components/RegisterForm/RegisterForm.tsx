@@ -32,9 +32,10 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
 
     const [confirmPassword, setConfirmPassword] = useState<string>("");
 
+    const [foodie] = useRecoilState(foodieState);
+
     useEffect(() => {
-        console.log(window.localStorage.getItem("Token"));
-        if (window.localStorage.getItem("Token") !== "null") {
+        if (foodie != null) {
             toast({
                 position: "top",
                 title: "Error",
@@ -92,10 +93,11 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
                             setTimeout(() => history.push("/login"), 1500);
                         })
                         .catch((error) => {
+                            console.log(error);
                             toast({
                                 position: "top",
                                 title: "Error",
-                                description: error.data.error,
+                                description: "User already exists",
                                 status: "error",
                                 duration: 2000,
                                 isClosable: true,

@@ -17,20 +17,16 @@ const SearchCriteria: React.FC<Props> = (props: Props) => {
     const [orderType, setOrderType] = useRecoilState(ingredientOrderState);
 
     const changeFilterType = (value: string) => {
-        setFilterType(parseInt(value));
+        setFilterType(value);
     };
 
     const changeSortType = (value: string) => {
-        setSortType(parseInt(value));
+        setSortType(value);
     };
 
     const changeOrderType = (value: string) => {
-        setOrderType(parseInt(value));
+        setOrderType(value);
     };
-
-    // const sortRecipes = () => {
-    //     let intermediateList = [...matchingRecipes];
-    // };
 
     return (
         <Box>
@@ -46,8 +42,12 @@ const SearchCriteria: React.FC<Props> = (props: Props) => {
                 >
                     <Heading variant="subsection">1. Filter By - </Heading>
                     <Stack direction="column" space={2}>
-                        <Radio value={0}>Ingredient</Radio>
-                        <Radio value={1}>Best Match</Radio>
+                        <Radio value={"best"}>
+                            Including your ingredients and more.
+                        </Radio>
+                        <Radio value={"bounded"}>
+                            Including your incredients only.
+                        </Radio>
                     </Stack>
                 </RadioGroup>
 
@@ -58,8 +58,8 @@ const SearchCriteria: React.FC<Props> = (props: Props) => {
                 >
                     <Heading variant="subsection">2. Sort by - </Heading>
                     <Stack direction="column" space={2}>
-                        <Radio value={0}>Rating</Radio>
-                        <Radio value={1}>Alphabetical</Radio>
+                        <Radio value={"rating"}>Rating</Radio>
+                        <Radio value={"alphabet"}>Alphabetical</Radio>
                     </Stack>
                 </RadioGroup>
 
@@ -70,8 +70,8 @@ const SearchCriteria: React.FC<Props> = (props: Props) => {
                 >
                     <Heading variant="subsection">3. Order by - </Heading>
                     <Stack direction="column" space={2}>
-                        <Radio value={0}>Ascending</Radio>
-                        <Radio value={1}>Descending</Radio>
+                        <Radio value={"desc"}>Descending</Radio>
+                        <Radio value={"asc"}>Ascending</Radio>
                     </Stack>
                 </RadioGroup>
             </Stack>

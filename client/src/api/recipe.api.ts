@@ -30,9 +30,24 @@ export const getRecipeByTitle = async (
     );
 };
 
-// export const getRecipeByIngredients = async (keyword: string) => {
-//     return axios.get(baseUrl + "/recipe/find/" + keyword);
-// };
+export const getRecipeByIngredeints = async (
+    keyword: string,
+    filter: string,
+    sort: string,
+    order: string
+) => {
+    return axios.get(
+        baseUrl +
+            "/recipe/search/" +
+            keyword +
+            "?filter=" +
+            filter +
+            "sort=" +
+            sort +
+            "&order=" +
+            order
+    );
+};
 
 export const postRecipe = async (recipe: Recipe) => {
     return axios.post(baseUrl + "/recipe", { ...recipe });

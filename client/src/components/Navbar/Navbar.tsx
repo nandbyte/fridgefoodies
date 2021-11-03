@@ -1,11 +1,15 @@
-import React from "react";
-import { Box, Center, Flex, HStack, Stack } from "@chakra-ui/layout";
-import { IconButton } from "@chakra-ui/button";
+import React, { useEffect } from "react";
+import { Box, Center, Flex, HStack, Stack, Heading } from "@chakra-ui/layout";
+import { IconButton, Button } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { FaBars, FaTimes } from "react-icons/fa";
 import LogoContainer from "../LogoContainer";
 import NavLink from "../NavLink";
+import { useHistory } from "react-router-dom";
+import { logout } from "../../api/foodie.api.ts";
+import { foodieState } from "../../state/foodie/foodie.state";
+import { useRecoilState } from "recoil";
 
 interface LinkObject {
     name: string;
@@ -14,13 +18,34 @@ interface LinkObject {
 
 const Links: ReadonlyArray<LinkObject> = [
     { name: "Home", href: "/" },
-    { name: "Find Recipe", href: "/find-recipe" },
-    { name: "Create Recipe", href: "/create-recipe" },
+    { name: "Find ", href: "/find-recipe" },
+    { name: "Create ", href: "/create-recipe" },
     { name: "Profile", href: "/profile" },
 ];
 
 const Navbar = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const [foodie, setFoodie] = useRecoilState(foodieState);
+
+    const history = useHistory();
+
+    const NavButton = () => {
+        if (foodie === null) {
+            return (
+                <Button
+                    onClick={() => {
+                        history.push("/login");
+                    }}
+                >
+                    Log In
+                </Button>
+            );
+        } else {
+            setFoodie(null);
+            return <Button onClick={logout}>Log Out</Button>;
+        }
+    };
 
     const CrossIcon = (
         <Center h="100%" w="100%">
@@ -41,7 +66,7 @@ const Navbar = () => {
                 <LogoContainer />
                 <HStack
                     as={"nav"}
-                    spacing={4}
+                    spacing={2}
                     display={{ base: "none", lg: "flex" }}
                 >
                     {Links.map((link) => (
@@ -54,6 +79,7 @@ const Navbar = () => {
                             {link.name}
                         </NavLink>
                     ))}
+                    <NavButton />
                     <IconButton
                         w={4}
                         size="md"
@@ -100,6 +126,7 @@ const Navbar = () => {
                                 {link.name}
                             </NavLink>
                         ))}
+                        <NavButton />
                     </Stack>
                 </Box>
             ) : null}

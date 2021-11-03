@@ -34,7 +34,7 @@ const LoginForm: React.FC<Props> = (props: Props) => {
     const [jwt, setJwt] = useRecoilState(foodieJwtState);
 
     useEffect(() => {
-        if (window.localStorage.getItem("Token") !== "null") {
+        if (foodie !== null) {
             toast({
                 position: "top",
                 title: "Error",
