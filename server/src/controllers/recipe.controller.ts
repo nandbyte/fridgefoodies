@@ -151,7 +151,7 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
 
     if (result.rowCount === 0) {
         res.status(200).json({
-            status: 403,
+            status: 200,
             data: {
                 data: {}
             },
@@ -268,8 +268,10 @@ export const searchRecipeByKeyWord = expressAsyncHandler(async (req, res) => {
                 totalMatch: result.rowCount,
             })
         } else {
-            res.status(403).json({
-                data: {},
+            res.status(200).json({
+                data: {
+                    recipes: {},
+                },
                 totalMatch: result.rowCount,
             })
         }

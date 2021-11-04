@@ -27,7 +27,7 @@ export const search = expressAsyncHandler(async (req, res) => {
 
     res.status(200).json({
         data: {
-            bestMatch: bestMatch,
+            recipes: bestMatch,
         },
     });
 

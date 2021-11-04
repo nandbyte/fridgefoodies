@@ -20,9 +20,11 @@ export const addRating = expressAsyncHandler(async (req, res) => {
                 error: null,
             });
         } else {
-            res.status(403).json({
-                status: 403,
-                data: {},
+            res.status(200).json({
+                status: 200,
+                data: {
+                    rating: 0,
+                },
                 error: null,
             });
         }
@@ -78,8 +80,8 @@ export const getAllRatingsByRecipe = expressAsyncHandler(async (req, res) => {
                 error: null,
             })
         } else {
-            res.status(403).json({
-                status: 403,
+            res.status(200).json({
+                status: 200,
                 data: {
                     rating: 0,
                 },
@@ -107,7 +109,7 @@ export const deleteRating = expressAsyncHandler(async (req, res) => {
             })
         } else {
             res.status(202).json({
-                status: 403,
+                status: 202,
                 data: {
                     deleted: false,
                 },

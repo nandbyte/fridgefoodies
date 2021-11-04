@@ -101,7 +101,7 @@ export const getRecipeIngredientById = expressAsyncHandler(async (req, res) => {
             res.status(200).json({
                 status: 200,
                 data: {
-                    recipeIngrediant: finalResult,
+                    recipeIngredient: finalResult,
                 },
                 error: null,
             })
@@ -110,7 +110,7 @@ export const getRecipeIngredientById = expressAsyncHandler(async (req, res) => {
             res.status(200).json({
                 status: 200,
                 data: {
-                    recipeIngrediant:[],
+                    recipeIngredient:[],
                 },
                 error: "Didn't find any Recipe with given ID",
             })

@@ -74,10 +74,12 @@ export const addIngredient = expressAsyncHandler(async (req, res) => {
                 error: null,
             })
         } else {
-            res.status(403).json({
-                status: 403,
-                data: {},
-                error: "Database error!"
+            res.status(200).json({
+                status: 200,
+                data: {
+                    ingrediant:{}
+                },
+                error: "Can't add the ingredient"
             });
         }
 
@@ -110,10 +112,12 @@ export const editIngredient = expressAsyncHandler(async (req, res) => {
                 error: null,
             })
         } else {
-            res.status(403).json({
-                status: 403,
-                data: {},
-                error: "Database error!"
+            res.status(200).json({
+                status: 200,
+                data: {
+                    ingrediant: {},
+                },
+                error: "Unable to updated the recipe"
             });
         }
 
