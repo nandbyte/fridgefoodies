@@ -42,12 +42,14 @@ const YourIngredients: React.FC<Props> = (props: Props) => {
                 <Text>No ingredient is selected.</Text>
             ) : (
                 selectedIngredients.map((ingredientIndex: any) => {
-                    console.log(ingredients[ingredientIndex].ingredientName);
+                    console.log(
+                        ingredients[ingredientIndex - 1].ingredientName
+                    );
                     return (
                         <IngredientTag
                             key={ingredientIndex}
                             ingredientName={
-                                ingredients[ingredientIndex].ingredientName
+                                ingredients[ingredientIndex - 1].ingredientName
                             }
                         />
                     );

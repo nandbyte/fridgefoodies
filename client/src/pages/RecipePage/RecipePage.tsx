@@ -30,8 +30,7 @@ const RecipePage = (props: any) => {
 
         getRecipeIngredients(id)
             .then((response) => {
-                // setRecipe(response.data.data.recipe[0]);
-                console.log(response.data);
+                setRecipeIngredients(response.data.data.recipeIngredient);
             })
             .catch((error) => console.log(error));
     }, []);

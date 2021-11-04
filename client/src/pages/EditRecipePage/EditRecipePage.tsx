@@ -100,7 +100,7 @@ const EditRecipePage = (props: any) => {
     const editRecipe = () => {
         putRecipe({
             foodieId: foodie.foodieId,
-            id,
+           recipeId:  id,
             recipeTitle,
             recipeImage: cloudinaryLink,
             recipeText: instruction,

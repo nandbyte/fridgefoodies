@@ -11,10 +11,10 @@ const RecipeIngredientTable: React.FC<Props> = (props: Props) => {
         <Table variant="simple">
             <Thead>
                 <Tr>
-                    <Th>Ingredient</Th>
-                    <Th>Variant</Th>
-                    <Th>Guide</Th>
-                    <Th>Quantity</Th>
+                    <Th fontSize="lg">Ingredient</Th>
+                    <Th fontSize="lg">Variant</Th>
+                    <Th fontSize="lg">Guide</Th>
+                    <Th fontSize="lg">Quantity</Th>
                 </Tr>
             </Thead>
             <Tbody>

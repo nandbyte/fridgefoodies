@@ -36,7 +36,7 @@ const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
 
     const findRecipe: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         setLoading(true);
-        console.log("Clicked");
+        console.log(pageData.selectedIngredients);
         getRecipeByIngredients(
             filter,
             sort,

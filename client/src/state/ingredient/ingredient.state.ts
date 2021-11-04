@@ -19,7 +19,7 @@ export const findRecipeByIngredientTabValue = selector({
             (ingredient, index) => {
                 return {
                     label: ingredient.ingredientName,
-                    value: index.toString(),
+                    value: ingredient.ingredientId.toString(),
                 };
             }
         ),

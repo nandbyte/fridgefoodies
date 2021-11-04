@@ -25,7 +25,7 @@ export const putRecipeIngredient = async (
     recipeIngredient: RecipeIngredient
 ) => {
     return axios.put(
-        baseUrl + "/recipeIngredient/" + recipeIngredientId,
+        baseUrl + "/recipeingredient/" + recipeIngredientId,
         recipeIngredient,
         {
             headers: {
@@ -36,7 +36,7 @@ export const putRecipeIngredient = async (
 };
 
 export const deleteRecipeIngredient = async (recipeIngredientId: number) => {
-    return axios.delete(baseUrl + "/recipeIngredient/" + recipeIngredientId, {
+    return axios.delete(baseUrl + "/recipeingredient/" + recipeIngredientId, {
         headers: {
             Authorization: "Bearer " + window.localStorage.getItem("Token"),
         },

@@ -45,7 +45,7 @@ export const getRecipeByIngredients = async (
             sort +
             "&order=" +
             order,
-        id,
+        { id: id },
         {
             headers: {
                 Authorization: "Bearer " + window.localStorage.getItem("Token"),
