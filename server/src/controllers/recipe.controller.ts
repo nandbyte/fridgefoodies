@@ -2,6 +2,8 @@ import expressAsyncHandler from "express-async-handler";
 import { Recipe } from "../models";
 import { query } from "../database";
 
+
+
 export const addRecipe = expressAsyncHandler(async (req, res) => {
     const { foodieId, recipeTitle, recipeImage, recipeText } = req.body;
     const result: any = await query("SELECT * FROM recipe WHERE foodie_id=$1 AND recipe_title=$2", [foodieId, recipeTitle]);
@@ -17,6 +19,7 @@ export const addRecipe = expressAsyncHandler(async (req, res) => {
         var newRecipe: any;
         try{
             newRecipe = await query("INSERT INTO recipe(foodie_id,recipe_title,recipe_image,recipe_text) VALUES($1,$2,$3,$4) RETURNING *", [foodieId, recipeTitle, recipeImage, recipeText]);
+            // console.log(newRecipe.rows[0]);
         }catch(err){
             console.log(err);
         }
@@ -55,12 +58,12 @@ export const addRecipe = expressAsyncHandler(async (req, res) => {
 export const editRecipe = expressAsyncHandler(async (req, res) => {
     const { recipeId, recipeTitle, recipeImage, recipeText } = req.body;
     console.log(req.body);
-    const result: any = await query("UPDATE recipe SET recipe_image=$1, recipe_text=$2, recipe_title = $4 WHERE recipe_id=$3 RETURNING *",
-        [recipeImage, recipeText, recipeId, recipeTitle]);
-
+    const result: any = await query("UPDATE recipe SET recipe_image=$1, recipe_text=$2, recipe_title = $3 WHERE recipe_id=$4 RETURNING *",
+        [recipeImage, recipeText, recipeTitle,recipeId]);
+    console.log(result.rows[0])
     if (result.rowCount > 1) {
-        res.status(403).json({
-            status: 403,
+        res.status(200).json({
+            status: 200,
             data: {},
             error: "Failed to Update information"
         });
@@ -135,7 +138,7 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
         GROUP BY recipe_id
     ) AS counterTable
     WHERE recipe.recipe_id = counterTable.recipe_id AND recipe.recipe_id = $1;`, [id]);
-    
+    console.log(result.rows)
     } catch (err: any) {
         console.log(err);
         throw new Error("Error while fetching recipe");

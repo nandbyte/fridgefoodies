@@ -19,12 +19,18 @@ export const search = expressAsyncHandler(async (req, res) => {
         if (current.rowCount > 0) {
             current.rows.forEach(
                 (obj: any) => {
-                    bestMatch.push(obj);
+                    bestMatch.push({
+                        foodieId: obj.foodie_id,
+                        recipeId: obj.recipe_id,
+                        recipeTitle: obj.recipe_title,
+                        recipeImage: obj.recipe_image,
+                        recipeText: obj.recipe_text
+                    });
                 }
             )
         }
     }
-
+    console.log(bestMatch);
     res.status(200).json({
         data: {
             recipes: bestMatch,
