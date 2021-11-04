@@ -3,11 +3,8 @@ import { Recipe } from "../models";
 import { query } from "../database";
 
 export const addRecipe = expressAsyncHandler(async (req, res) => {
-    const { foodieID, recipeTitle, recipeImage, recipeText } = req.body;
-
-    console.log({ foodieID, recipeTitle, recipeImage, recipeText });
-
-    const result: any = await query("SELECT * FROM recipe WHERE foodie_id=$1 AND recipe_title=$2", [foodieID, recipeTitle]);
+    const { foodieId, recipeTitle, recipeImage, recipeText } = req.body;
+    const result: any = await query("SELECT * FROM recipe WHERE foodie_id=$1 AND recipe_title=$2", [foodieId, recipeTitle]);
     if (result.rowCount > 0) {
         res.status(403).json({
             status: 403,
@@ -15,15 +12,27 @@ export const addRecipe = expressAsyncHandler(async (req, res) => {
             error: "Recipe already exists"
         })
     }
-
+    
     try {
-        const newRecipe: any = await query("INSERT INTO recipe(foodie_id,recipe_title,recipe_image,recipe_text) VALUES($1,$2,$3,$4) RETURNING *", [foodieID, recipeTitle, recipeImage, recipeText]);
+        var newRecipe: any;
+        try{
+            newRecipe = await query("INSERT INTO recipe(foodie_id,recipe_title,recipe_image,recipe_text) VALUES($1,$2,$3,$4) RETURNING *", [foodieId, recipeTitle, recipeImage, recipeText]);
+        }catch(err){
+            console.log(err);
+        }
+        var rating: any;
         const recipe: Recipe = {
             foodieId: newRecipe.rows[0].foodie_id,
             recipeId: newRecipe.rows[0].recipe_id,
             recipeTitle: newRecipe.rows[0].recipe_title,
             recipeImage: newRecipe.rows[0].recipe_image,
             recipeText: newRecipe.rows[0].recipe_text,
+        }
+        
+        try{
+            rating = await query("INSERT INTO RATING (foodie_id,recipe_id) VALUES($1,$2)",[foodieId,recipe.recipeId]);
+        }catch(err){
+            console.log(err);
         }
         res.status(200).json({
             status: 200,
@@ -33,8 +42,11 @@ export const addRecipe = expressAsyncHandler(async (req, res) => {
             error: null
         });
     } catch (err) {
+        console.log(err);
         throw new Error("Server Error Occured");
     }
+
+
 });
 
 
@@ -42,7 +54,7 @@ export const addRecipe = expressAsyncHandler(async (req, res) => {
 
 export const editRecipe = expressAsyncHandler(async (req, res) => {
     const { recipeId, recipeTitle, recipeImage, recipeText } = req.body;
-
+    console.log(req.body);
     const result: any = await query("UPDATE recipe SET recipe_image=$1, recipe_text=$2, recipe_title = $4 WHERE recipe_id=$3 RETURNING *",
         [recipeImage, recipeText, recipeId, recipeTitle]);
 
@@ -66,20 +78,42 @@ export const editRecipe = expressAsyncHandler(async (req, res) => {
 
 export const getAllRecipeByUsers = expressAsyncHandler(async (req, res) => {
     const id = req.params.id;
-    const result = await query("SELECT * FROM recipe WHERE foodie_id = $1", [id]);
+
+    const result = await query(`    
+        SELECT recipe.*,totalRating
+        FROM recipe,(
+        SELECT COUNT(recipe_id) as totalRating, recipe_id
+        FROM rating
+        GROUP BY recipe_id
+        ) AS counterTable
+        WHERE recipe.recipe_id = counterTable.recipe_id
+        AND recipe.foodie_id = $1
+    `, [id]);
     if (result.rowCount === 0) {
-        res.status(403).json({
-            status: 403,
+        res.status(200).json({
+            status: 200,
             data: {
-                message: "No recipe found for this user"
+                recipes:[]
             },
             error: null,
         })
     } else {
+        const finalRes = result.rows.map(
+            (obj: any) => {
+                return {
+                    "recipeId": obj.recipe_id,
+                    "foodieId": obj.foodie_id,
+                    "recipeTitle": obj.recipe_title,
+                    "recipeText": obj.recipe_text,
+                    "recipeImage": obj.recipe_image,
+                    "totalRating": obj.totalrating,
+                }
+            }
+        )
         res.status(200).json({
             status: 200,
             data: {
-                recipes: result.rows,
+                recipes: finalRes,
                 message: "Total recipe found " + result.rowCount,
             },
             error: null,
@@ -93,7 +127,15 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
     let ingredientsResult: any;
 
     try {
-        result = await query("SELECT * FROM recipe WHERE recipe_id = $1", [id]);
+        result = await query(`
+        SELECT recipe.*,totalRating
+        FROM recipe,(
+        SELECT COUNT(recipe_id) as totalRating, recipe_id
+        FROM rating
+        GROUP BY recipe_id
+    ) AS counterTable
+    WHERE recipe.recipe_id = counterTable.recipe_id AND recipe.recipe_id = $1;`, [id]);
+    
     } catch (err: any) {
         console.log(err);
         throw new Error("Error while fetching recipe");
@@ -103,17 +145,17 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
         ingredientsResult = await query("SELECT * FROM recipe_ingredient WHERE recipe_id = $1", [id]);
     } catch (err: any) {
         console.log(err);
-        throw new Error("Error while fetching recipe");
+        throw new Error("Error while fetching ingredient");
     }
 
 
     if (result.rowCount === 0) {
-        res.status(403).json({
+        res.status(200).json({
             status: 403,
             data: {
-                message: "The recipe you're looking for is not currently available",
+                data: {}
             },
-            error: null,
+            error: "The recipe you're looking for is not currently available",
         })
     } else {
         let jsonArray = result.rows;
@@ -147,6 +189,7 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
             data: {
                 recipe: modified,
                 recipeIngredients: modifiedIngredient,
+                totalRating: result.rows[0].totalrating,
                 message: "Recipe found",
             },
             error: null,
@@ -156,7 +199,13 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
 
 export const getAllRecipe = expressAsyncHandler(async (req, res) => {
     try {
-        const result: any = await query("SELECT * FROM recipe", []);
+        const result: any = await query(`SELECT recipe.*,totalRating
+        FROM recipe,(
+            SELECT COUNT(recipe_id) as totalRating, recipe_id
+            FROM rating
+            GROUP BY recipe_id
+        ) AS counterTable
+        WHERE recipe.recipe_id = counterTable.recipe_id;`, []);
         let jsonArray = result.rows;
 
         let modified = jsonArray.map(
@@ -167,6 +216,7 @@ export const getAllRecipe = expressAsyncHandler(async (req, res) => {
                     "recipeTitle": obj.recipe_title,
                     "recipeText": obj.recipe_text,
                     "recipeImage": obj.recipe_image,
+                    "totalRating": obj.totalrating,
                 }
             }
         );
@@ -183,14 +233,38 @@ export const getAllRecipe = expressAsyncHandler(async (req, res) => {
 
 export const searchRecipeByKeyWord = expressAsyncHandler(async (req, res) => {
     const keyword = req.params.keyword;
+    const _sort = req.query.sort==="rating"?"totalrating":"recipe_title";
+    const _order = req.query.order;
+    console.log(_sort,_order);
     try {
 
-        const result: any = await query("SELECT * FROM recipe WHERE lower(recipe_title) like lower($1)", ["%" + keyword + "%"]);
+        const result: any = await query(`
+        SELECT recipe.*,totalRating
+        FROM recipe,(
+        SELECT COUNT(recipe_id) as totalRating, recipe_id
+        FROM rating
+        GROUP BY recipe_id
+        ) AS counterTable
+        WHERE recipe.recipe_id = counterTable.recipe_id 
+        AND lower(recipe_title) like lower($1)
+        ORDER BY ${_sort} ${_order}`, ["%" + keyword + "%"]);
         if (result.rowCount > 0) {
-
-
+            const finalResult = result.rows.map(
+                (obj:any)=>{
+                    return{
+                        "recipeId": obj.recipe_id,
+                        "foodieId": obj.foodie_id,
+                        "recipeTitle": obj.recipe_title,
+                        "recipeText": obj.recipe_text,
+                        "recipeImage": obj.recipe_image,
+                        "totalRating": obj.totalrating,
+                    }
+                }
+            )
             res.status(200).json({
-                data: result.rows,
+                data: {
+                    recipes: finalResult,
+                },
                 totalMatch: result.rowCount,
             })
         } else {

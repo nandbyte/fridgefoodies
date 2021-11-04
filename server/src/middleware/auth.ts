@@ -8,12 +8,13 @@ const protect = async (req: express.Request, res: express.Response, next: expres
         res.status(401).json({ error: "Not Authorized, no token found" });
         throw new Error('Not Authorized, no token');
     }
+
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] == 'Bearer') {
         token = req.headers.authorization.split(" ")[1];
         console.log(token);
         try {
             const decoded: any = jwt.verify(token, "secret");
-            console.log(decoded.user,req.body.foodieId );
+            console.log("Creds: ",decoded.user,req.body.foodieId );
             if (decoded.user != req.body.foodieId) {
                 return res.json({ status: 500, msg: "Unauthorized access will not be granted." });
             }

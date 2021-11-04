@@ -17,6 +17,6 @@ router.put("/recipe",protect, editRecipe);
 router.get("/recipe", getAllRecipe);
 router.get("/recipe/user/:id", getAllRecipeByUsers);
 router.get("/recipe/:id", getRecipeById);
-router.get("/recipe/find/:keyword", searchRecipeByKeyWord);
+router.get("/recipe/find/:keyword?", searchRecipeByKeyWord);
 
 export default router;

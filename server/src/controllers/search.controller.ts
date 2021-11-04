@@ -6,6 +6,8 @@ export const search = expressAsyncHandler(async (req, res) => {
     // best matches
 
     const ids: number[] = req.body.id;
+    console.log(req.body);
+    console.log(req.query);
     let bestMatch: any[] = [];
     for (const id of ids) {
         const current: any = await query(`SELECT *
