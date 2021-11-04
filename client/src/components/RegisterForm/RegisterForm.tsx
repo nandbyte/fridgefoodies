@@ -35,7 +35,7 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
     const [foodie] = useRecoilState(foodieState);
 
     useEffect(() => {
-        if (foodie != null) {
+        if (foodie.foodieId !== "") {
             toast({
                 position: "top",
                 title: "Error",
@@ -97,7 +97,7 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
                             toast({
                                 position: "top",
                                 title: "Error",
-                                description: "User already exists",
+                                description: "Registration failed.",
                                 status: "error",
                                 duration: 2000,
                                 isClosable: true,

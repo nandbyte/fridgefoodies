@@ -12,7 +12,7 @@ interface Props {
 
 const PageContainer: React.FC<Props> = (props: Props) => {
     return (
-        <Box justifyItems="center" height="100%">
+        <Box justifyItems="center" height="100vh">
             {props.variant === "navbar" ? <Navbar /> : <></>}
 
             <Flex width="100%" justifyContent="center">
@@ -20,6 +20,7 @@ const PageContainer: React.FC<Props> = (props: Props) => {
                     px={{ base: 8, lg: 16, xl: 16 }}
                     justifyContent="space-between"
                     width={{ base: "100%", xl: "80em" }}
+                    height="100vh"
                 >
                     <Stack
                         pt={
@@ -33,9 +34,7 @@ const PageContainer: React.FC<Props> = (props: Props) => {
                         ) : (
                             <></>
                         )}
-                        <Box py={{ base: 8, lg: 16, xl: 16 }}>
-                            {props.children}
-                        </Box>
+                        <Box py={{ base: 8, lg: 16 }}>{props.children}</Box>
                     </Stack>
                     {props.variant !== "showcase" ? (
                         <Box pt={{ base: 16, lg: 32 }}>

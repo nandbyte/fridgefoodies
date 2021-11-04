@@ -16,7 +16,7 @@ interface LinkObject {
     href: string;
 }
 
-const Links: ReadonlyArray<LinkObject> = [
+const Links: Array<LinkObject> = [
     { name: "Home", href: "/" },
     { name: "Find ", href: "/find-recipe" },
     { name: "Create ", href: "/create-recipe" },
@@ -30,8 +30,18 @@ const Navbar = () => {
 
     const history = useHistory();
 
+    const logUserOut = () => {
+        setFoodie({
+            foodieId: "",
+            foodieName: "",
+            foodieEmail: "",
+            foodieIsAdmin: false,
+        });
+        logout();
+    };
+
     const NavButton = () => {
-        if (foodie === null) {
+        if (foodie.foodieId === "") {
             return (
                 <Button
                     onClick={() => {
@@ -42,8 +52,7 @@ const Navbar = () => {
                 </Button>
             );
         } else {
-            setFoodie(null);
-            return <Button onClick={logout}>Log Out</Button>;
+            return <Button onClick={logUserOut}>Log Out</Button>;
         }
     };
 

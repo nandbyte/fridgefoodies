@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Ingredient } from "../state/types/ingredient.type";
 import { Recipe } from "../state/types/recipe.type";
 import { baseUrl } from "./config.api";
 
@@ -30,29 +31,49 @@ export const getRecipeByTitle = async (
     );
 };
 
-export const getRecipeByIngredeints = async (
-    keyword: string,
+export const getRecipeByIngredients = async (
     filter: string,
     sort: string,
-    order: string
+    order: string,
+    id: Ingredient[]
 ) => {
-    return axios.get(
+    return axios.post(
         baseUrl +
-            "/recipe/search/" +
-            keyword +
-            "?filter=" +
+            "/search?filter=" +
             filter +
-            "sort=" +
+            "&sort=" +
             sort +
             "&order=" +
-            order
+            order,
+        id,
+        {
+            headers: {
+                Authorization: "Bearer " + window.localStorage.getItem("Token"),
+            },
+        }
     );
 };
 
 export const postRecipe = async (recipe: Recipe) => {
-    return axios.post(baseUrl + "/recipe", { ...recipe });
+    return axios.post(
+        baseUrl + "/recipe",
+        { ...recipe },
+        {
+            headers: {
+                Authorization: "Bearer " + window.localStorage.getItem("Token"),
+            },
+        }
+    );
 };
 
-export const putRecipe = async (recipe: Recipe) => {
-    return axios.put(baseUrl + "/recipe", { ...recipe });
+export const putRecipe = async (recipe: any) => {
+    return axios.put(
+        baseUrl + "/recipe",
+        { ...recipe },
+        {
+            headers: {
+                Authorization: "Bearer " + window.localStorage.getItem("Token"),
+            },
+        }
+    );
 };

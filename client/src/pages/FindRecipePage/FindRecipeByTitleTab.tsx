@@ -79,7 +79,8 @@ const FindRecipeByTitleTab: React.FC<Props> = (props: Props) => {
                             return (
                                 <RecipeCard
                                     key={recipe.recipeId}
-                                    id={recipe.recipeId.toString()}
+                                    variant="showcase"
+                                    id={recipe.recipeId}
                                     image={recipe.recipeImage}
                                     title={recipe.recipeTitle}
                                 />

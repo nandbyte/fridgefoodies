@@ -9,17 +9,31 @@ import PageContainer from "../../components/PageContainer";
 import SectionDivider from "../../components/SectionDivider";
 import Loading from "../../components/Loading";
 import { Recipe } from "../../state/types/recipe.type";
+import RecipeIngredientTable from "../../components/RecipeIngredientTable";
+import { getRecipeIngredients } from "../../api/recipe-ingredient.api";
+import { RecipeIngredient } from "../../state/types/recipe-ingredient.type";
 
 const RecipePage = (props: any) => {
     const [recipe, setRecipe]: any = useState<Recipe>(null);
+    const [recipeIngredients, setRecipeIngredients] =
+        useState<RecipeIngredient>([]);
 
     let { id }: any = useParams();
 
     useEffect(() => {
-        getRecipeById(id).then((response) => {
-            setRecipe(response.data.data.recipe[0]);
-            console.log(response.data.data.recipe[0]);
-        });
+        getRecipeById(id)
+            .then((response) => {
+                setRecipe(response.data.data.recipe[0]);
+                console.log(response.data.data.recipe[0]);
+            })
+            .catch((error) => console.log(error));
+
+        getRecipeIngredients(id)
+            .then((response) => {
+                // setRecipe(response.data.data.recipe[0]);
+                console.log(response.data);
+            })
+            .catch((error) => console.log(error));
     }, []);
 
     return (
@@ -56,17 +70,15 @@ const RecipePage = (props: any) => {
                         <PageSection>
                             <Heading variant="section">Ingredients</Heading>
                             <SectionDivider />
+                            <RecipeIngredientTable
+                                recipeIngredients={recipeIngredients}
+                            />
                         </PageSection>
 
                         <PageSection>
                             <Heading variant="section">Instructions</Heading>
                             <SectionDivider />
                             <Text>{recipe.recipeText}</Text>
-                        </PageSection>
-
-                        <PageSection>
-                            <Heading variant="section">Ingredients</Heading>
-                            <SectionDivider />
                         </PageSection>
                     </Stack>
                 </>

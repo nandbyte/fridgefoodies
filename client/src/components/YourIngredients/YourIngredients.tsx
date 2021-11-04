@@ -45,6 +45,7 @@ const YourIngredients: React.FC<Props> = (props: Props) => {
                     console.log(ingredients[ingredientIndex].ingredientName);
                     return (
                         <IngredientTag
+                            key={ingredientIndex}
                             ingredientName={
                                 ingredients[ingredientIndex].ingredientName
                             }

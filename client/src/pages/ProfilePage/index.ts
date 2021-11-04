@@ -1,3 +1,3 @@
-import CreateRecipePage from "./CreateRecipePage";
+import ProfilePage from "./ProfilePage";
 
-export default CreateRecipePage;
+export default ProfilePage;

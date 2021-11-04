@@ -34,7 +34,7 @@ const LoginForm: React.FC<Props> = (props: Props) => {
     const [jwt, setJwt] = useRecoilState(foodieJwtState);
 
     useEffect(() => {
-        if (foodie !== null) {
+        if (foodie.foodieId !== "") {
             toast({
                 position: "top",
                 title: "Error",
@@ -74,6 +74,12 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                                 "Token",
                                 response.data.data.token
                             );
+                            window.localStorage.setItem(
+                                "Foodie",
+                                response.data.data.foodie.foodieId
+                            );
+
+                            console.log(response.data.data.foodie);
 
                             toast({
                                 position: "top",
@@ -90,7 +96,7 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                             toast({
                                 position: "top",
                                 title: "Error",
-                                description: error.data.error,
+                                description: "Login Failed",
                                 status: "error",
                                 duration: 2000,
                                 isClosable: true,
