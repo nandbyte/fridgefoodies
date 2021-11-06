@@ -53,8 +53,6 @@ export const addRecipe = expressAsyncHandler(async (req, res) => {
 });
 
 
-
-
 export const editRecipe = expressAsyncHandler(async (req, res) => {
     const { recipeId, recipeTitle, recipeImage, recipeText } = req.body;
     console.log(req.body);
@@ -128,16 +126,17 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
     const id = req.params.id;
     let result: any;
     let ingredientsResult: any;
-
+    let comments: any;
+    let commentsMapped:any;
     try {
         result = await query(`
-        SELECT recipe.*,totalRating
-        FROM recipe,(
+        SELECT recipe.*,totalRating,foodie.foodie_name as foodie_name
+        FROM recipe,foodie,(
         SELECT COUNT(recipe_id) as totalRating, recipe_id
         FROM rating
         GROUP BY recipe_id
     ) AS counterTable
-    WHERE recipe.recipe_id = counterTable.recipe_id AND recipe.recipe_id = $1;`, [id]);
+    WHERE recipe.recipe_id = counterTable.recipe_id AND recipe.recipe_id = $1 AND recipe.foodie_id=foodie.foodie_id`, [id]);
     console.log(result.rows)
     } catch (err: any) {
         console.log(err);
@@ -145,13 +144,33 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
     }
 
     try {
-        ingredientsResult = await query("SELECT * FROM recipe_ingredient WHERE recipe_id = $1", [id]);
+        ingredientsResult = await query("SELECT recipe_ingredient.*, ingredient.ingredient_name FROM recipe_ingredient,ingredient WHERE recipe_ingredient.recipe_id = $1 AND recipe_ingredient.ingredient_id = ingredient.ingredient_id", [id]);
     } catch (err: any) {
         console.log(err);
         throw new Error("Error while fetching ingredient");
     }
 
+    try{
+        comments = await query("SELECT comment.*, foodie.foodie_name as foodie_name FROM comment,foodie where recipe_id = $1 AND comment.foodie_id=foodie.foodie_id ORDER BY comment.comment_id desc",[id]);
+        if(comments.rowCount>0){
+            commentsMapped = comments.rows.map(
+                (obj:any)=>{
+                    return{
+                        commentId: obj.comment_id,
+                        foodieId: obj.foodie_id,
+                        recipeId: obj.recipe_id,
+                        commentText: obj.comment_text,
+                        foodieName: obj.foodie_name,
+                    }
+                }
+            );
+        }else{
+            commentsMapped = [];
+        }
+        console.log(commentsMapped);
+    }catch(err:any){
 
+    }
     if (result.rowCount === 0) {
         res.status(200).json({
             status: 200,
@@ -170,6 +189,7 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
                     "recipeTitle": obj.recipe_title,
                     "recipeText": obj.recipe_text,
                     "recipeImage": obj.recipe_image,
+                    "foodieName": obj.foodie_name,
                 }
             }
         );
@@ -183,6 +203,7 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
                     "ingredientVariant": obj.ingredient_variant,
                     "ingredientGuide": obj.ingredient_guide,
                     "ingredientQuantity": obj.ingredient_quantity,
+                    "ingredientName": obj.ingredient_name,
                 }
             }
         );
@@ -193,8 +214,9 @@ export const getRecipeById = expressAsyncHandler(async (req, res) => {
                 recipe: modified,
                 recipeIngredients: modifiedIngredient,
                 totalRating: result.rows[0].totalrating,
-                message: "Recipe found",
+                comments: commentsMapped,
             },
+            message: "Recipe found",
             error: null,
         })
     }

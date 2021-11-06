@@ -5,8 +5,8 @@ import { protect } from "../middleware/auth";
 
 const router = Router();
 
-router.post("/ratings",protect,addRating);
+router.post("/ratings",addRating);
 router.get("/ratings/:id",getAllRatingsByRecipe);
 router.post("/checkrating",checkRating);
-router.delete("/ratings",protect,deleteRating);
+router.delete("/ratings",deleteRating);
 export default router;
