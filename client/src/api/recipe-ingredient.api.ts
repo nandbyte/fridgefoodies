@@ -9,6 +9,11 @@ export const getRecipeIngredients = async (recipeId: number) => {
 export const postRecipeIngredient = async (
     recipeIngredient: RecipeIngredient
 ) => {
+    console.log(
+        "POST RECIPE INGREDIENT - " +
+            "Bearer " +
+            window.localStorage.getItem("Token")
+    );
     return axios.post(
         baseUrl + "/recipeingredient/",
         { ...recipeIngredient },
@@ -20,22 +25,12 @@ export const postRecipeIngredient = async (
     );
 };
 
-export const putRecipeIngredient = async (
-    recipeIngredientId: number,
-    recipeIngredient: RecipeIngredient
-) => {
-    return axios.put(
-        baseUrl + "/recipeingredient/" + recipeIngredientId,
-        recipeIngredient,
-        {
-            headers: {
-                Authorization: "Bearer " + window.localStorage.getItem("Token"),
-            },
-        }
-    );
-};
-
 export const deleteRecipeIngredient = async (recipeIngredientId: number) => {
+    console.log(
+        "DELETE RECIPE INGREDIENT - " +
+            "Bearer " +
+            window.localStorage.getItem("Token")
+    );
     return axios.delete(baseUrl + "/recipeingredient/" + recipeIngredientId, {
         headers: {
             Authorization: "Bearer " + window.localStorage.getItem("Token"),

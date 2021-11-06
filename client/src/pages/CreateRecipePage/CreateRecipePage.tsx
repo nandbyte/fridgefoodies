@@ -103,7 +103,10 @@ const CreateRecipePage = (props: any) => {
                             focusBorderColor="orange.400"
                         />
                     </FormControl>
-                    <Button onClick={createRecipeEntry}>
+                    <Button
+                        onClick={createRecipeEntry}
+                        disabled={recipeTitle === ""}
+                    >
                         Create Recipe Entry
                     </Button>
                 </PageSection>

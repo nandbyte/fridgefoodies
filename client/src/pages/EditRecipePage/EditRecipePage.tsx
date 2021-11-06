@@ -9,6 +9,14 @@ import {
     Text,
     useToast,
     Select,
+    Table,
+    Thead,
+    Tbody,
+    Tr,
+    Th,
+    Td,
+    Box,
+    FormHelperText,
 } from "@chakra-ui/react";
 
 import SectionDivider from "../../components/SectionDivider";
@@ -23,6 +31,7 @@ import { foodieState } from "../../state/foodie/foodie.state";
 import { useRecoilState } from "recoil";
 import { getRecipeById, putRecipe } from "../../api/recipe.api";
 import {
+    deleteRecipeIngredient,
     getRecipeIngredients,
     postRecipeIngredient,
 } from "../../api/recipe-ingredient.api";
@@ -56,6 +65,61 @@ const EditRecipePage = (props: any) => {
     const [ingredientQuantity, setIngredientQuantity] = useState<string>("");
     const [ingredientGuide, setIngredientGuide] = useState<string>("");
 
+    const EditRecipeIngredient = () => {
+        return (
+            <Box>
+                <Table variant="simple" colorScheme={"black"}>
+                    <Thead>
+                        <Tr>
+                            <Th fontSize="xl">Ingredient</Th>
+                            <Th fontSize="xl">Variant</Th>
+                            <Th fontSize="xl">Guide</Th>
+                            <Th fontSize="xl">Quantity</Th>
+                            <Th fontSize="xl">Action</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {recipeIngredients.map((recipeIngredient) => {
+                            return (
+                                <Tr>
+                                    <Td>{recipeIngredient.ingredientName}</Td>
+                                    <Td>
+                                        {recipeIngredient.ingredientVariant}
+                                    </Td>
+                                    <Td>{recipeIngredient.ingredientGuide}</Td>
+                                    <Td>
+                                        {recipeIngredient.ingredientQuantity}
+                                    </Td>
+                                    <Td>
+                                        <Button
+                                            px={12}
+                                            onClick={() => {
+                                                deleteRecipeIngredient(
+                                                    recipeIngredient.recipeIngredientId
+                                                )
+                                                    .then((response) => {
+                                                        setRecipeIngredients(
+                                                            response.data.data
+                                                                .recipeIngredients
+                                                        );
+                                                    })
+                                                    .catch((error) =>
+                                                        console.log(error)
+                                                    );
+                                            }}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Td>
+                                </Tr>
+                            );
+                        })}
+                    </Tbody>
+                </Table>
+            </Box>
+        );
+    };
+
     useEffect(() => {
         if (foodie.foodieId === "") {
             toast({
@@ -85,6 +149,7 @@ const EditRecipePage = (props: any) => {
             getRecipeById(id)
                 .then((response) => {
                     console.log(response);
+
                     setRecipeTitle(response.data.data.recipe[0].recipeTitle);
                     setInstruction(response.data.data.recipe[0].recipeText);
                     setCloudinaryLink(response.data.data.recipe[0].recipeImage);
@@ -92,7 +157,9 @@ const EditRecipePage = (props: any) => {
                 .catch((error) => console.log(error));
 
             getRecipeIngredients(id)
-                .then((response) => {})
+                .then((response) => {
+                    setRecipeIngredients(response.data.data.recipeIngredients);
+                })
                 .catch((error) => console.log(error));
         }
     }, [id]);
@@ -100,7 +167,7 @@ const EditRecipePage = (props: any) => {
     const editRecipe = () => {
         putRecipe({
             foodieId: foodie.foodieId,
-           recipeId:  id,
+            recipeId: id,
             recipeTitle,
             recipeImage: cloudinaryLink,
             recipeText: instruction,
@@ -242,103 +309,101 @@ const EditRecipePage = (props: any) => {
                     <Heading variant="section">Ingredients</Heading>
                     <SectionDivider />
                     <FormControl id="ingredient">
-                        <RecipeIngredientTable
-                            recipeIngredients={recipeIngredients}
+                        <EditRecipeIngredient />
+                        <Heading pt={6} variant="section">
+                            Add a new ingredient
+                        </Heading>
+                        <SectionDivider />
+                        <Heading variant="subsection">Ingredient Name</Heading>
+                        <Select
+                            placeholder={"Select Ingredient"}
+                            value={ingredient?.ingredientId}
+                            onChange={(event) =>
+                                setIngredient(
+                                    ingredientList[
+                                        parseInt(event.target.value) - 1
+                                    ]
+                                )
+                            }
+                        >
+                            {ingredientList.map((ingredientObject) => {
+                                return (
+                                    <option
+                                        key={ingredientObject.ingredientId}
+                                        value={ingredientObject.ingredientId}
+                                    >
+                                        {
+                                            ingredientList[
+                                                ingredientObject.ingredientId -
+                                                    1
+                                            ].ingredientName
+                                        }
+                                    </option>
+                                );
+                            })}
+                        </Select>
+                        <Heading variant="subsection">Variant</Heading>
+                        <Input
+                            placeholder="Variant"
+                            value={ingredientVariant}
+                            onChange={(event) => {
+                                setIngredientVariant(event.target.value);
+                            }}
+                            _hover={{
+                                borderColor: "orange.300",
+                            }}
+                            borderColor="orange.600"
+                            focusBorderColor="orange.400"
+                        />{" "}
+                        <Heading variant="subsection">Guide</Heading>
+                        <Input
+                            placeholder="Guide"
+                            value={ingredientGuide}
+                            onChange={(event) => {
+                                setIngredientGuide(event.target.value);
+                            }}
+                            _hover={{
+                                borderColor: "orange.300",
+                            }}
+                            borderColor="orange.600"
+                            focusBorderColor="orange.400"
                         />
-                        <Stack direction="row">
-                            <Select
-                                placeholder={"Select Ingredient"}
-                                value={ingredient?.ingredientId}
-                                onChange={(event) =>
-                                    setIngredient(
-                                        ingredientList[
-                                            parseInt(event.target.value) - 1
-                                        ]
-                                    )
-                                }
-                            >
-                                {ingredientList.map((ingredientObject) => {
-                                    return (
-                                        <option
-                                            key={ingredientObject.ingredientId}
-                                            value={
-                                                ingredientObject.ingredientId
-                                            }
-                                        >
-                                            {
-                                                ingredientList[
-                                                    ingredientObject.ingredientId -
-                                                        1
-                                                ].ingredientName
-                                            }
-                                        </option>
-                                    );
-                                })}
-                            </Select>
-                            <Input
-                                placeholder="variant"
-                                value={ingredientVariant}
-                                onChange={(event) => {
-                                    setIngredientVariant(event.target.value);
-                                }}
-                                _hover={{
-                                    borderColor: "orange.300",
-                                }}
-                                borderColor="orange.600"
-                                focusBorderColor="orange.400"
-                            />{" "}
-                            <Input
-                                placeholder="guide"
-                                value={ingredientGuide}
-                                onChange={(event) => {
-                                    setIngredientGuide(event.target.value);
-                                }}
-                                _hover={{
-                                    borderColor: "orange.300",
-                                }}
-                                borderColor="orange.600"
-                                focusBorderColor="orange.400"
-                            />{" "}
-                            <Input
-                                placeholder="quantity"
-                                value={ingredientQuantity}
-                                onChange={(event) => {
-                                    setIngredientQuantity(event.target.value);
-                                }}
-                                _hover={{
-                                    borderColor: "orange.300",
-                                }}
-                                borderColor="orange.600"
-                                focusBorderColor="orange.400"
-                            />
-                            <Button
-                                onClick={() => {
-                                    postRecipeIngredient({
-                                        foodieId: foodie.foodieId,
-                                        recipeId: id,
-                                        ingredientId: ingredient?.ingredientId,
-                                        ingredientVariant,
-                                        ingredientGuide,
-                                        ingredientQuantity,
-                                    })
-                                        .then((response) =>
-                                            setRecipeIngredients([
-                                                ...recipeIngredients,
-                                                {
-                                                    ...response.data.data
-                                                        .recipeIngredient,
-                                                    ingredientName:
-                                                        response.data.data
-                                                            .ingredientName,
-                                                },
-                                            ])
+                        <Heading variant="subsection">Quantity</Heading>
+                        <Input
+                            placeholder="Quantity"
+                            value={ingredientQuantity}
+                            onChange={(event) => {
+                                setIngredientQuantity(event.target.value);
+                            }}
+                            _hover={{
+                                borderColor: "orange.300",
+                            }}
+                            borderColor="orange.600"
+                            focusBorderColor="orange.400"
+                        />
+                        <Button
+                            px={12}
+                            onClick={() => {
+                                postRecipeIngredient({
+                                    foodieId: foodie.foodieId,
+                                    recipeId: id,
+                                    ingredientId: ingredient?.ingredientId,
+                                    ingredientVariant,
+                                    ingredientGuide,
+                                    ingredientQuantity,
+                                })
+                                    // TODO: Add api call for fetching the whoel recipe Ingredient object
+                                    .then((response) =>
+                                        setRecipeIngredients(
+                                            response.data.data.recipeIngredients
                                         )
-                                        .catch((error) => console.log(error));
-                                }}
-                            >
-                                Add
-                            </Button>
-                        </Stack>
+                                    )
+                                    .catch((error) => console.log(error));
+                            }}
+                        >
+                            Add
+                        </Button>
+                        {/* TODO: Edit button for recipe Ingredients */}
                     </FormControl>
                 </PageSection>
 
@@ -347,7 +412,6 @@ const EditRecipePage = (props: any) => {
                     <SectionDivider />
 
                     <FormControl id="instruction">
-                        <FormLabel></FormLabel>
                         <Textarea
                             variant="outline"
                             placeholder="..."
@@ -365,7 +429,12 @@ const EditRecipePage = (props: any) => {
                         />
                     </FormControl>
                 </PageSection>
-                <Button onClick={editRecipe}>Submit Recipe</Button>
+                <Button
+                    onClick={editRecipe}
+                    disabled={instruction === "" || cloudinaryLink === ""}
+                >
+                    Submit Recipe
+                </Button>
             </Stack>
         </PageContainer>
     );

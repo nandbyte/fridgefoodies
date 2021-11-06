@@ -12,6 +12,7 @@ import { Recipe } from "../../state/types/recipe.type";
 import RecipeIngredientTable from "../../components/RecipeIngredientTable";
 import { getRecipeIngredients } from "../../api/recipe-ingredient.api";
 import { RecipeIngredient } from "../../state/types/recipe-ingredient.type";
+import { FaThumbsUp, FaVoteYea } from "react-icons/fa";
 
 const RecipePage = (props: any) => {
     const [recipe, setRecipe]: any = useState<Recipe>(null);
@@ -23,8 +24,10 @@ const RecipePage = (props: any) => {
     useEffect(() => {
         getRecipeById(id)
             .then((response) => {
-                setRecipe(response.data.data.recipe[0]);
-                console.log(response.data.data.recipe[0]);
+                setRecipe({
+                    ...response.data.data.recipe[0],
+                    recipeRating: response.data.data.totalRating,
+                });
             })
             .catch((error) => console.log(error));
 
@@ -50,8 +53,22 @@ const RecipePage = (props: any) => {
                         Recipe
                     </Text>
                     <SectionDivider />
-                    <Heading variant="page">{recipe.recipeTitle}</Heading>
-
+                    <Stack direction={"row"} justifyContent={"space-between"}>
+                        <Stack>
+                            <Heading variant="page">
+                                {recipe.recipeTitle}
+                            </Heading>
+                            <Text>Author:</Text>
+                        </Stack>
+                        <Stack>
+                            <Center>
+                                <FaThumbsUp size={36} />
+                            </Center>
+                            <Center>
+                                <Heading>{recipe.recipeRating}</Heading>
+                            </Center>
+                        </Stack>
+                    </Stack>
                     <Center py={24}>
                         <Image
                             borderRadius="md"
