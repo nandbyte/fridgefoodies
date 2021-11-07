@@ -3,6 +3,7 @@ import { Ingredient } from "./ingredient.type";
 export interface Recipe {
     recipeId: number;
     foodieId: string;
+    foodieName: string;
     recipeTitle: string;
     recipeText: string;
     recipeImage: string;

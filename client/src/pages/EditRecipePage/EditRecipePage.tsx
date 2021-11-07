@@ -16,7 +16,6 @@ import {
     Th,
     Td,
     Box,
-    FormHelperText,
 } from "@chakra-ui/react";
 
 import SectionDivider from "../../components/SectionDivider";
@@ -214,16 +213,6 @@ const EditRecipePage = (props: any) => {
                 });
             });
         setImageLoading(false);
-
-        /*fetch("https://api.cloudinary.com/v1_1/dvn255pxj/image/upload", {
-           method:'POST',
-           body:formData,
-       })
-         .then((req)=>req.json())
-         .then((req) => {
-            setImages(images => [...images,res.secure_url]);
-         })
-            .catch((error) => console.log(console.error));*/
     };
 
     return (
@@ -413,9 +402,9 @@ const EditRecipePage = (props: any) => {
 
                     <FormControl id="instruction">
                         <Textarea
+                            fontSize="xl"
                             variant="outline"
                             placeholder="..."
-                            size="xl"
                             p={2}
                             value={instruction}
                             onChange={(event) => {

@@ -6,15 +6,21 @@ const { persistAtom } = recoilPersist();
 
 export const foodieState = atom({
     key: "foodie",
-    default: {
-        foodieId: "",
-        foodieName: "",
-        foodieEmail: "",
-        foodieIsAdmin: false,
-    } as Foodie,
+    default:
+        window.localStorage.getItem("Foodie") !== undefined
+            ? window.localStorage.getItem("Foodie")
+            : ({
+                  foodieId: "",
+                  foodieName: "",
+                  foodieEmail: "",
+                  isAdmin: false,
+              } as Foodie),
 });
 
 export const foodieJwtState = atom({
     key: "foodie-jwt",
-    default: "" as string,
+    default:
+        window.localStorage.getItem("Token") !== undefined
+            ? window.localStorage.getItem("Token")
+            : ("" as string),
 });

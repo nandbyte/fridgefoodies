@@ -17,11 +17,14 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import EditRecipePage from "../pages/EditRecipePage";
 import ProfilePage from "../pages/ProfilePage";
+import AdminPage from "../pages/AdminPage";
+import Initialization from "./Initialization";
 
 const App = () => {
     return (
         <RecoilRoot>
             <ChakraProvider theme={theme}>
+                <Initialization />
                 <Router>
                     <Route exact path="/">
                         <HomePage />
@@ -48,7 +51,7 @@ const App = () => {
                         <ProfilePage />
                     </Route>
                     <Route exact path="/admin">
-                        <RegisterPage />
+                        <AdminPage />
                     </Route>
                 </Router>
             </ChakraProvider>

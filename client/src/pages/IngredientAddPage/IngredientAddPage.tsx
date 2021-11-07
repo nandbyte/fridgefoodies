@@ -13,31 +13,35 @@ import { foodieState } from "../../state/foodie/foodie.state";
 import { useRecoilState } from "recoil";
 import { useHistory } from "react-router-dom";
 
-const CreateRecipePage = (props: any) => {
+const IngredientAddPage = (props: any) => {
     const toast = useToast();
     const history = useHistory();
 
-    const [recipeTitle, setRecipeTitle] = useState("");
+    const [ingredientName, setIngredientName] = useState("");
+    const [ingredientDescription, setIngredientName] = useState("");
+
     const [foodie, setFoodie] = useRecoilState(foodieState);
 
     useEffect(() => {
-        if (foodie.foodieId === "") {
+        if (foodie.foodieId === "" || foodie.isAdmin === false) {
             toast({
                 position: "top",
                 title: "Error",
-                description: "Please log in first.",
+                description: "Please log in as admin.",
                 status: "error",
                 duration: 2000,
                 isClosable: true,
             });
-            setTimeout(() => history.push("/login"), 1500);
+            setTimeout(() => history.push("/admin"), 1500);
         }
         console.log("create recipe " + foodie.foodieId);
     }, []);
 
     useEffect(() => {
-        if (foodie.foodieId === "") {
-            history.push("/login");
+        if (foodie !== null) {
+            if (foodie.foodieId === "") {
+                history.push("/login");
+            }
         }
     }, [foodie]);
 
@@ -52,7 +56,6 @@ const CreateRecipePage = (props: any) => {
             recipeRating: 0,
         })
             .then((response) => {
-                console.log(response.data);
                 console.log(response.data.data.recipe.recipeId);
                 toast({
                     position: "top",
@@ -62,17 +65,13 @@ const CreateRecipePage = (props: any) => {
                     duration: 2000,
                     isClosable: true,
                 });
-                history.push(
-                    "/edit-recipe/" + response.data.data.recipe.recipeId
-                );
+                history.push("/admin/ingredients");
             })
             .catch((error) => {
-                console.log(error);
-
                 toast({
                     position: "top",
                     title: "Error",
-                    description: "Something went wrong",
+                    description: "Duplicate Recipe Title",
                     status: "error",
                     duration: 2000,
                     isClosable: true,
@@ -119,4 +118,4 @@ const CreateRecipePage = (props: any) => {
     );
 };
 
-export default CreateRecipePage;
+export default IngredientAddPage;

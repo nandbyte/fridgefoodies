@@ -21,10 +21,18 @@ const RecipeIngredientTable: React.FC<Props> = (props: Props) => {
                 {props.recipeIngredients.map((recipeIngredient) => {
                     return (
                         <Tr>
-                            <Td>{recipeIngredient.ingredientName}</Td>
-                            <Td>{recipeIngredient.ingredientVariant}</Td>
-                            <Td>{recipeIngredient.ingredientGuide}</Td>
-                            <Td>{recipeIngredient.ingredientQuantity}</Td>
+                            <Td fontSize="xl">
+                                {recipeIngredient.ingredientName}
+                            </Td>
+                            <Td fontSize="xl">
+                                {recipeIngredient.ingredientVariant}
+                            </Td>
+                            <Td fontSize="xl">
+                                {recipeIngredient.ingredientGuide}
+                            </Td>
+                            <Td fontSize="xl">
+                                {recipeIngredient.ingredientQuantity}
+                            </Td>
                         </Tr>
                     );
                 })}

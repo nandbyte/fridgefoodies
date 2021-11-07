@@ -7,7 +7,7 @@ import SubsectionDivider from "../../components/SubsectionDivider";
 import LoginForm from "../../components/LoginForm";
 import PageSection from "../../components/PageSection";
 
-const LoginPage = () => {
+const AdminPage = () => {
     const history = useHistory();
 
     // useEffect(() => {
@@ -28,4 +28,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default AdminPage;

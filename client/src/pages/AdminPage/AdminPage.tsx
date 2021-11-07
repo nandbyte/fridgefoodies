@@ -18,10 +18,11 @@ import { useHistory } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { login } from "../../api/foodie.api.ts";
 import { foodieJwtState, foodieState } from "../../state/foodie/foodie.state";
+import SectionDivider from "../../components/SectionDivider";
+import PageSection from "../../components/PageSection";
+import PageContainer from "../../components/PageContainer";
 
-interface Props {}
-
-const LoginForm: React.FC<Props> = (props: Props) => {
+const AdminPage = () => {
     const toast = useToast();
 
     const history = useHistory();
@@ -34,19 +35,19 @@ const LoginForm: React.FC<Props> = (props: Props) => {
 
     const [jwt, setJwt] = useRecoilState(foodieJwtState);
 
-    useEffect(() => {
-        if (foodie.foodieId !== "") {
-            toast({
-                position: "top",
-                title: "Error",
-                description: "Please log out first.",
-                status: "error",
-                duration: 2000,
-                isClosable: true,
-            });
-            setTimeout(() => history.push("/profile"), 1500);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (foodie.foodieId !== "") {
+    //         toast({
+    //             position: "top",
+    //             title: "Error",
+    //             description: "Please log out first.",
+    //             status: "error",
+    //             duration: 2000,
+    //             isClosable: true,
+    //         });
+    //         setTimeout(() => history.push("/profile"), 1500);
+    //     }
+    // }, []);
 
     const handleLogin: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
@@ -122,73 +123,68 @@ const LoginForm: React.FC<Props> = (props: Props) => {
     };
 
     return (
-        <Stack spacing={6} p={4}>
-            <form>
-                <Stack spacing={{ base: 8 }}>
-                    <FormControl id="login-email">
-                        <FormLabel>
-                            <Heading>Email</Heading>
-                        </FormLabel>
-                        <Input
-                            placeholder="gordon@lambsauce.com"
-                            size="lg"
-                            value={email}
-                            type="email"
-                            onChange={(event) => {
-                                setEmail(event.target.value);
-                            }}
-                            _hover={{
-                                borderColor: "orange.300",
-                            }}
-                            borderColor="orange.600"
-                            focusBorderColor="orange.400"
-                        />
-                    </FormControl>
-                    <FormControl id="login-password">
-                        <FormLabel>
-                            <Heading>Password</Heading>
-                        </FormLabel>
-                        <Input
-                            placeholder="**********"
-                            size="lg"
-                            value={password}
-                            type="password"
-                            onChange={(event) => {
-                                setPassword(event.target.value);
-                            }}
-                            _hover={{
-                                borderColor: "orange.300",
-                            }}
-                            borderColor="orange.600"
-                            focusBorderColor="orange.400"
-                        />
-                    </FormControl>
+        <PageContainer variant="jumbotron">
+            <Heading variant="page">Admin Login</Heading>
+            <SectionDivider />
+
+            <PageSection>
+                <Stack spacing={6} p={4}>
+                    <form>
+                        <Stack spacing={{ base: 8 }}>
+                            <FormControl id="login-email">
+                                <FormLabel>
+                                    <Heading>Email</Heading>
+                                </FormLabel>
+                                <Input
+                                    placeholder="gordon@lambsauce.com"
+                                    size="lg"
+                                    value={email}
+                                    type="email"
+                                    onChange={(event) => {
+                                        setEmail(event.target.value);
+                                    }}
+                                    _hover={{
+                                        borderColor: "orange.300",
+                                    }}
+                                    borderColor="orange.600"
+                                    focusBorderColor="orange.400"
+                                />
+                            </FormControl>
+                            <FormControl id="login-password">
+                                <FormLabel>
+                                    <Heading>Password</Heading>
+                                </FormLabel>
+                                <Input
+                                    placeholder="**********"
+                                    size="lg"
+                                    value={password}
+                                    type="password"
+                                    onChange={(event) => {
+                                        setPassword(event.target.value);
+                                    }}
+                                    _hover={{
+                                        borderColor: "orange.300",
+                                    }}
+                                    borderColor="orange.600"
+                                    focusBorderColor="orange.400"
+                                />
+                            </FormControl>
+                        </Stack>
+                    </form>
+                    <Stack direction="column" spacing="4" py={4}>
+                        <Button
+                            onClick={handleLogin}
+                            leftIcon={<FaSignInAlt />}
+                            fontSize="lg"
+                            disabled={email === "" || password === ""}
+                        >
+                            Login
+                        </Button>
+                    </Stack>
                 </Stack>
-            </form>
-            <Stack direction="column" spacing="4" py={4}>
-                <Button
-                    onClick={handleLogin}
-                    leftIcon={<FaSignInAlt />}
-                    fontSize="lg"
-                    disabled={email === "" || password === ""}
-                >
-                    Login
-                </Button>
-                <Text fontSize="2xl" fontWeight="normal">
-                    Don't have an account?
-                    <Link
-                        textDecoration="underline"
-                        _hover={{
-                            fontWeight: "bold",
-                        }}
-                        href="/register"
-                    >
-                        Register
-                    </Link>
-                </Text>
-            </Stack>
-        </Stack>
+            </PageSection>
+        </PageContainer>
     );
 };
 
-export default LoginForm;
+export default AdminPage;
