@@ -20,6 +20,7 @@ export const postRecipeIngredient = async (
         {
             headers: {
                 Authorization: "Bearer " + window.localStorage.getItem("Token"),
+                FoodieId: window.localStorage.getItem("FoodieId"),
             },
         }
     );
@@ -34,6 +35,7 @@ export const deleteRecipeIngredient = async (recipeIngredientId: number) => {
     return axios.delete(baseUrl + "/recipeingredient/" + recipeIngredientId, {
         headers: {
             Authorization: "Bearer " + window.localStorage.getItem("Token"),
+            FoodieId: window.localStorage.getItem("FoodieId"),
         },
     });
 };

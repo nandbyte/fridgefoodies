@@ -13,8 +13,8 @@ const RecipeIngredientTable: React.FC<Props> = (props: Props) => {
                 <Tr>
                     <Th fontSize="lg">Ingredient</Th>
                     <Th fontSize="lg">Variant</Th>
-                    <Th fontSize="lg">Guide</Th>
                     <Th fontSize="lg">Quantity</Th>
+                    <Th fontSize="lg">Calories</Th>
                 </Tr>
             </Thead>
             <Tbody>
@@ -28,10 +28,10 @@ const RecipeIngredientTable: React.FC<Props> = (props: Props) => {
                                 {recipeIngredient.ingredientVariant}
                             </Td>
                             <Td fontSize="xl">
-                                {recipeIngredient.ingredientGuide}
-                            </Td>
-                            <Td fontSize="xl">
                                 {recipeIngredient.ingredientQuantity}
+                            </Td>{" "}
+                            <Td fontSize="xl">
+                                {recipeIngredient.ingredientCalories}
                             </Td>
                         </Tr>
                     );

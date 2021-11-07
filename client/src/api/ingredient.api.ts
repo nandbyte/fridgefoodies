@@ -7,5 +7,10 @@ export const getIngredients = async () => {
 };
 
 export const postIngredient = async (ingredient: Ingredient) => {
-    return axios.post(baseUrl + "/ingredient", ingredient);
+    return axios.post(baseUrl + "/ingredient", ingredient, {
+        headers: {
+            Authorization: "Bearer " + window.localStorage.getItem("Token"),
+            FoodieId: window.localStorage.getItem("FoodieId"),
+        },
+    });
 };

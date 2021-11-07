@@ -53,6 +53,9 @@ const App = () => {
                     <Route exact path="/admin">
                         <AdminPage />
                     </Route>
+                    <Route exact path="/admin/add-ingredient">
+                        <AdminPage />
+                    </Route>
                 </Router>
             </ChakraProvider>
         </RecoilRoot>

@@ -46,7 +46,7 @@ const EditRecipePage = (props: any) => {
 
     const [recipeTitle, setRecipeTitle] = useState<string>("");
     const [instruction, setInstruction] = useState<string>("");
-    const [imageSelected, setImageSelected] = useState("");
+    const [imageSelected, setImageSelected] = useState<any>("");
     const [cloudinaryLink, setCloudinaryLink] = useState<string>("");
     const [imageLoading, setImageLoading] = useState<boolean>(false);
 
@@ -71,8 +71,8 @@ const EditRecipePage = (props: any) => {
                         <Tr>
                             <Th fontSize="xl">Ingredient</Th>
                             <Th fontSize="xl">Variant</Th>
-                            <Th fontSize="xl">Guide</Th>
                             <Th fontSize="xl">Quantity</Th>
+                            <Th fontSize="xl">Calories</Th>
                             <Th fontSize="xl">Action</Th>
                         </Tr>
                     </Thead>
@@ -84,9 +84,11 @@ const EditRecipePage = (props: any) => {
                                     <Td>
                                         {recipeIngredient.ingredientVariant}
                                     </Td>
-                                    <Td>{recipeIngredient.ingredientGuide}</Td>
                                     <Td>
                                         {recipeIngredient.ingredientQuantity}
+                                    </Td>
+                                    <Td>
+                                        {recipeIngredient.ingredientCalories}
                                     </Td>
                                     <Td>
                                         <Button
@@ -139,38 +141,23 @@ const EditRecipePage = (props: any) => {
     }, [foodie]);
 
     useEffect(() => {
-        getIngredients()
-            .then((response) =>
-                setIngredientList(response.data.data.ingredient)
-            )
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
-
-    useEffect(() => {
         if (foodie !== null) {
             getRecipeById(id)
                 .then((response) => {
-                    console.log(response);
-
                     setRecipeTitle(response.data.data.recipe[0].recipeTitle);
                     setInstruction(response.data.data.recipe[0].recipeText);
                     setCloudinaryLink(response.data.data.recipe[0].recipeImage);
-                })
-                .catch((error) => console.log(error));
-
-            getRecipeIngredients(id)
-                .then((response) => {
                     setRecipeIngredients(response.data.data.recipeIngredients);
                 })
                 .catch((error) => console.log(error));
         }
+
+        console.log("Edit Recipe Ingredient List - ", ingredientList);
     }, [id]);
 
     const editRecipe = () => {
         putRecipe({
-            foodieId: foodie.foodieId,
+            foodieId: foodie!.foodieId,
             recipeId: id,
             recipeTitle,
             recipeImage: cloudinaryLink,
@@ -191,7 +178,16 @@ const EditRecipePage = (props: any) => {
         axios
             .post(
                 "https://api.cloudinary.com/v1_1/charlatane2499/image/upload",
-                formData
+                formData,
+                {
+                    transformRequest: [
+                        (data, headers) => {
+                            delete headers.common.Authorization;
+                            delete headers.common.FoodieId;
+                            return data;
+                        },
+                    ],
+                }
             )
             .then((response) => {
                 console.log(response.data);
@@ -270,7 +266,7 @@ const EditRecipePage = (props: any) => {
                         variant="unstyled"
                         type="file"
                         onChange={(event) => {
-                            setImageSelected(event.target.files[0]);
+                            setImageSelected(event.target.files![0]);
                             toast({
                                 position: "top",
                                 title: "Success",
@@ -379,12 +375,13 @@ const EditRecipePage = (props: any) => {
                             px={12}
                             onClick={() => {
                                 postRecipeIngredient({
-                                    foodieId: foodie.foodieId,
+                                    recipeIngredientId: 0,
                                     recipeId: id,
-                                    ingredientId: ingredient?.ingredientId,
+                                    ingredientId: ingredient!.ingredientId,
+                                    ingredientName: ingredient!.ingredientName,
                                     ingredientVariant,
-                                    ingredientGuide,
                                     ingredientQuantity,
+                                    ingredientCalories: 0,
                                 })
                                     // TODO: Add api call for fetching the whoel recipe Ingredient object
                                     .then((response) =>
@@ -397,7 +394,6 @@ const EditRecipePage = (props: any) => {
                         >
                             Add
                         </Button>
-                        {/* TODO: Edit button for recipe Ingredients */}
                     </FormControl>
                 </PageSection>
 

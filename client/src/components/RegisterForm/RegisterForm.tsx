@@ -15,7 +15,7 @@ import bcryptjs from "bcryptjs";
 import { useHistory } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { register } from "../../api/foodie.api.ts";
-import { foodieJwtState, foodieState } from "../../state/foodie/foodie.state";
+import { foodieState } from "../../state/foodie/foodie.state";
 
 interface Props {}
 

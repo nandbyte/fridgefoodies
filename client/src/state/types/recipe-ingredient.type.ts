@@ -4,6 +4,6 @@ export interface RecipeIngredient {
     ingredientId: number;
     ingredientName: string;
     ingredientVariant: string;
-    ingredientGuide: string;
     ingredientQuantity: string;
+    ingredientCalories: number;
 }

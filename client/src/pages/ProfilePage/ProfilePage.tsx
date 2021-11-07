@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Center, Image, Text, useToast } from "@chakra-ui/react";
+import { Text, useToast } from "@chakra-ui/react";
 import { Heading, Stack, SimpleGrid } from "@chakra-ui/layout";
 
-import { useHistory, useParams } from "react-router-dom";
-import { getRecipeById, getRecipeByUser } from "../../api/recipe.api";
+import { useHistory } from "react-router-dom";
+import { getRecipeByUser } from "../../api/recipe.api";
 import PageSection from "../../components/PageSection";
 import PageContainer from "../../components/PageContainer";
 import SectionDivider from "../../components/SectionDivider";
-import { Recipe, RecipeCardData } from "../../state/types/recipe.type";
+import { RecipeCardData } from "../../state/types/recipe.type";
 import { useRecoilState } from "recoil";
 import { foodieState } from "../../state/foodie/foodie.state";
 import RecipeCard from "../../components/RecipeCard";
@@ -21,7 +21,7 @@ const ProfilePage = (props: any) => {
     const [recipes, setRecipes] = useState([]);
 
     useEffect(() => {
-        if (foodie.foodieId === "") {
+        if (foodie === null) {
             toast({
                 position: "top",
                 title: "Error",
@@ -32,6 +32,7 @@ const ProfilePage = (props: any) => {
             });
             setTimeout(() => history.push("/login"), 1500);
         } else {
+            console.log(foodie.foodieId);
             getRecipeByUser(foodie.foodieId)
                 .then((response) => {
                     setRecipes(response.data.data.recipes);
@@ -43,11 +44,7 @@ const ProfilePage = (props: any) => {
     }, []);
 
     useEffect(() => {
-        console.log("foodie = ", foodie);
-    }, [foodie]);
-
-    useEffect(() => {
-        if (foodie.foodieId === "") {
+        if (foodie === null) {
             history.push("/login");
         }
     }, [foodie]);

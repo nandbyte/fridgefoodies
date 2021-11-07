@@ -8,7 +8,6 @@ import PageContainer from "../../components/PageContainer";
 import PageSection from "../../components/PageSection";
 import { Button } from "@chakra-ui/react";
 
-import { postRecipe } from "../../api/recipe.api";
 import { foodieState } from "../../state/foodie/foodie.state";
 import { useRecoilState } from "recoil";
 import { useHistory } from "react-router-dom";
@@ -23,33 +22,34 @@ const IngredientAddPage = (props: any) => {
 
     const [foodie, setFoodie] = useRecoilState(foodieState);
 
-    useEffect(() => {
-        if (foodie !== null) {
-            if (foodie.isAdmin === false)
-                toast({
-                    position: "top",
-                    title: "Error",
-                    description: "Please log in as admin.",
-                    status: "error",
-                    duration: 2000,
-                    isClosable: true,
-                });
-            setTimeout(() => history.push("/admin"), 1500);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (foodie !== null) {
+    //         if (foodie.isAdmin === false)
+    //             toast({
+    //                 position: "top",
+    //                 title: "Error",
+    //                 description: "Please log in as admin.",
+    //                 status: "error",
+    //                 duration: 2000,
+    //                 isClosable: true,
+    //             });
+    //         setTimeout(() => history.push("/admin"), 1500);
+    //     }
+    // }, []);
 
-    useEffect(() => {
-        if (foodie !== null) {
-            if (foodie.foodieId === "") {
-                history.push("/login");
-            }
-        }
-    }, [foodie]);
+    // useEffect(() => {
+    //     if (foodie !== null) {
+    //         if (foodie.foodieId === "") {
+    //             history.push("/admin-login");
+    //         }
+    //     }
+    // }, [foodie]);
 
     const createIngredient = () => {
         postIngredient({
-           ingredientId: 0, 
-           ingredientName, ingredientDescription
+            ingredientId: 0,
+            ingredientName,
+            ingredientDescription,
         })
             .then((response) => {
                 console.log(response.data.data.ingredient);
@@ -61,7 +61,7 @@ const IngredientAddPage = (props: any) => {
                     duration: 2000,
                     isClosable: true,
                 });
-                history.push("/admin/ingredients");
+                history.push("/admin/add-ingredient");
             })
             .catch((error) => {
                 toast({
@@ -121,12 +121,17 @@ const IngredientAddPage = (props: any) => {
                     <Button
                         onClick={createIngredient}
                         disabled={
-                            (ingredientName === "") |
-                            (ingredientDescription === "")
+                            ingredientName === "" ||
+                            ingredientDescription === ""
                         }
                     >
-                        Create Recipe Entry
+                        Create Ingredient
                     </Button>
+                </PageSection>
+
+                <PageSection>
+                    <Heading variant="section">Ingredients</Heading>
+                    <SectionDivider />
                 </PageSection>
             </Stack>
         </PageContainer>

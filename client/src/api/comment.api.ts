@@ -22,6 +22,7 @@ export const postComment = async (comment: Comment) => {
         {
             headers: {
                 Authorization: "Bearer " + window.localStorage.getItem("Token"),
+                FoodieId: window.localStorage.getItem("FoodieId"),
             },
         }
     );
@@ -38,6 +39,7 @@ export const deleteComment = async (commentId: number) => {
     return axios.delete(baseUrl + "/comment/" + commentId, {
         headers: {
             Authorization: "Bearer " + window.localStorage.getItem("Token"),
+            FoodieId: window.localStorage.getItem("FoodieId"),
         },
     });
 };

@@ -63,9 +63,15 @@ const RecipePage = (props: any) => {
             useState<boolean>(false);
 
         const displayEditButton: ResponsiveValue<any> = () => {
-            if (foodie.foodieId !== props.comment.foodieId) {
-                return "none";
-            } else return "block";
+            if (foodie !== null) {
+                if (foodie.foodieId !== props.comment.foodieId) {
+                    return "none";
+                } else {
+                    return "block";
+                }
+            } else {
+                return "block";
+            }
         };
 
         return (
@@ -211,8 +217,8 @@ const RecipePage = (props: any) => {
                                             setPostCommentLoading(true);
                                             postComment({
                                                 commentId: 0,
-                                                foodieId: foodie.foodieId,
-                                                foodieName: foodie.foodieName,
+                                                foodieId: foodie!.foodieId,
+                                                foodieName: foodie!.foodieName,
                                                 recipeId: recipe.recipeId,
                                                 commentText: commentText,
                                             })

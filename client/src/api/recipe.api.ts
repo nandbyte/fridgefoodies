@@ -49,6 +49,7 @@ export const getRecipeByIngredients = async (
         {
             headers: {
                 Authorization: "Bearer " + window.localStorage.getItem("Token"),
+                FoodieId: window.localStorage.getItem("FoodieId"),
             },
         }
     );
@@ -61,6 +62,7 @@ export const postRecipe = async (recipe: Recipe) => {
         {
             headers: {
                 Authorization: "Bearer " + window.localStorage.getItem("Token"),
+                FoodieId: window.localStorage.getItem("FoodieId"),
             },
         }
     );
@@ -73,6 +75,7 @@ export const putRecipe = async (recipe: any) => {
         {
             headers: {
                 Authorization: "Bearer " + window.localStorage.getItem("Token"),
+                FoodieId: window.localStorage.getItem("FoodieId"),
             },
         }
     );

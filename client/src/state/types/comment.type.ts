@@ -2,6 +2,6 @@ export interface Comment {
     commentId: number;
     foodieId: string;
     recipeId: number;
-    commentText: number;
-    foodieName: number;
+    commentText: string;
+    foodieName: string;
 }

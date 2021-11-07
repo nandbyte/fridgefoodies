@@ -32,7 +32,6 @@ const CreateRecipePage = (props: any) => {
             });
             setTimeout(() => history.push("/login"), 1500);
         }
-        console.log("create recipe " + foodie.foodieId);
     }, []);
 
     useEffect(() => {
@@ -42,10 +41,11 @@ const CreateRecipePage = (props: any) => {
     }, [foodie]);
 
     const createRecipeEntry = () => {
+        console.log(foodie.foodieId);
         postRecipe({
             recipeId: 0,
-            foodieId: foodie.foodieId,
-            foodieName: foodie.foodieName,
+            foodieId: foodie!.foodieId,
+            foodieName: foodie!.foodieName,
             recipeTitle,
             recipeText: "",
             recipeImage: "",
