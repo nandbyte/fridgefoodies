@@ -21,7 +21,7 @@ const CreateRecipePage = (props: any) => {
     const [foodie, setFoodie] = useRecoilState(foodieState);
 
     useEffect(() => {
-        if (foodie.foodieId === "") {
+        if (foodie === null) {
             toast({
                 position: "top",
                 title: "Error",
@@ -36,7 +36,7 @@ const CreateRecipePage = (props: any) => {
     }, []);
 
     useEffect(() => {
-        if (foodie.foodieId === "") {
+        if (foodie === null) {
             history.push("/login");
         }
     }, [foodie]);

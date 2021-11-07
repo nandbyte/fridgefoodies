@@ -31,17 +31,12 @@ const Navbar = () => {
     const history = useHistory();
 
     const logUserOut = () => {
-        setFoodie({
-            foodieId: "",
-            foodieName: "",
-            foodieEmail: "",
-            foodieIsAdmin: false,
-        });
+        setFoodie(null);
         logout();
     };
 
     const NavButton = () => {
-        if (foodie.foodieId === "") {
+        if (foodie === null) {
             return (
                 <Button
                     onClick={() => {

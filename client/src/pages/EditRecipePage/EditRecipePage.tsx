@@ -37,7 +37,6 @@ import {
 import { Ingredient } from "../../state/types/ingredient.type";
 import { ingredientState } from "../../state/ingredient/ingredient.state";
 import { getIngredients } from "../../api/ingredient.api";
-import RecipeIngredientTable from "../../components/RecipeIngredientTable";
 import { RecipeIngredient } from "../../state/types/recipe-ingredient.type";
 
 const EditRecipePage = (props: any) => {
@@ -120,7 +119,7 @@ const EditRecipePage = (props: any) => {
     };
 
     useEffect(() => {
-        if (foodie.foodieId === "") {
+        if (foodie === null) {
             toast({
                 position: "top",
                 title: "Error",
@@ -134,6 +133,12 @@ const EditRecipePage = (props: any) => {
     }, []);
 
     useEffect(() => {
+        if (foodie === null) {
+            history.push("/login");
+        }
+    }, [foodie]);
+
+    useEffect(() => {
         getIngredients()
             .then((response) =>
                 setIngredientList(response.data.data.ingredient)
@@ -144,7 +149,7 @@ const EditRecipePage = (props: any) => {
     }, []);
 
     useEffect(() => {
-        if (foodie.foodieId !== "") {
+        if (foodie !== null) {
             getRecipeById(id)
                 .then((response) => {
                     console.log(response);

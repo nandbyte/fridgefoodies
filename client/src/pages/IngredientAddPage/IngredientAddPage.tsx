@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Heading, Stack } from "@chakra-ui/layout";
-import { Input, FormControl, useToast } from "@chakra-ui/react";
+import { Input, FormControl, useToast, Textarea } from "@chakra-ui/react";
 
 import SectionDivider from "../../components/SectionDivider";
 import PageContainer from "../../components/PageContainer";
@@ -12,29 +12,30 @@ import { postRecipe } from "../../api/recipe.api";
 import { foodieState } from "../../state/foodie/foodie.state";
 import { useRecoilState } from "recoil";
 import { useHistory } from "react-router-dom";
+import { postIngredient } from "../../api/ingredient.api";
 
 const IngredientAddPage = (props: any) => {
     const toast = useToast();
     const history = useHistory();
 
     const [ingredientName, setIngredientName] = useState("");
-    const [ingredientDescription, setIngredientName] = useState("");
+    const [ingredientDescription, setIngredientDescription] = useState("");
 
     const [foodie, setFoodie] = useRecoilState(foodieState);
 
     useEffect(() => {
-        if (foodie.foodieId === "" || foodie.isAdmin === false) {
-            toast({
-                position: "top",
-                title: "Error",
-                description: "Please log in as admin.",
-                status: "error",
-                duration: 2000,
-                isClosable: true,
-            });
+        if (foodie !== null) {
+            if (foodie.isAdmin === false)
+                toast({
+                    position: "top",
+                    title: "Error",
+                    description: "Please log in as admin.",
+                    status: "error",
+                    duration: 2000,
+                    isClosable: true,
+                });
             setTimeout(() => history.push("/admin"), 1500);
         }
-        console.log("create recipe " + foodie.foodieId);
     }, []);
 
     useEffect(() => {
@@ -45,22 +46,17 @@ const IngredientAddPage = (props: any) => {
         }
     }, [foodie]);
 
-    const createRecipeEntry = () => {
-        postRecipe({
-            recipeId: 0,
-            foodieId: foodie.foodieId,
-            foodieName: foodie.foodieName,
-            recipeTitle,
-            recipeText: "",
-            recipeImage: "",
-            recipeRating: 0,
+    const createIngredient = () => {
+        postIngredient({
+           ingredientId: 0, 
+           ingredientName, ingredientDescription
         })
             .then((response) => {
-                console.log(response.data.data.recipe.recipeId);
+                console.log(response.data.data.ingredient);
                 toast({
                     position: "top",
                     title: "Success",
-                    description: "Recipe created successfully.",
+                    description: "Ingredient created successfully.",
                     status: "success",
                     duration: 2000,
                     isClosable: true,
@@ -71,7 +67,7 @@ const IngredientAddPage = (props: any) => {
                 toast({
                     position: "top",
                     title: "Error",
-                    description: "Duplicate Recipe Title",
+                    description: "Duplicate Ingredient Title",
                     status: "error",
                     duration: 2000,
                     isClosable: true,
@@ -88,16 +84,32 @@ const IngredientAddPage = (props: any) => {
                 <PageSection>
                     <Heading variant="section">Recipe Title</Heading>
                     <SectionDivider />
-
-                    <FormControl id="recipe-title">
+                    <FormControl id="ingredient-name">
                         <Input
                             variant="flushed"
                             p={2}
                             placeholder="Chicken Fry"
                             size="lg"
-                            value={recipeTitle}
+                            value={ingredientName}
                             onChange={(event) => {
-                                setRecipeTitle(event.target.value);
+                                setIngredientName(event.target.value);
+                            }}
+                            _hover={{
+                                borderColor: "orange.300",
+                            }}
+                            borderColor="orange.600"
+                            focusBorderColor="orange.400"
+                        />
+                    </FormControl>
+                    <FormControl id="ingredient-description">
+                        <Textarea
+                            variant="flushed"
+                            p={2}
+                            placeholder="Chicken Fry"
+                            size="lg"
+                            value={ingredientName}
+                            onChange={(event) => {
+                                setIngredientDescription(event.target.value);
                             }}
                             _hover={{
                                 borderColor: "orange.300",
@@ -107,8 +119,11 @@ const IngredientAddPage = (props: any) => {
                         />
                     </FormControl>
                     <Button
-                        onClick={createRecipeEntry}
-                        disabled={recipeTitle === ""}
+                        onClick={createIngredient}
+                        disabled={
+                            (ingredientName === "") |
+                            (ingredientDescription === "")
+                        }
                     >
                         Create Recipe Entry
                     </Button>

@@ -35,7 +35,7 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
     const [foodie] = useRecoilState(foodieState);
 
     useEffect(() => {
-        if (foodie.foodieId !== "") {
+        if (foodie !== null) {
             toast({
                 position: "top",
                 title: "Error",

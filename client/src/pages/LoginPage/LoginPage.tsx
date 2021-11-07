@@ -7,15 +7,7 @@ import SubsectionDivider from "../../components/SubsectionDivider";
 import LoginForm from "../../components/LoginForm";
 import PageSection from "../../components/PageSection";
 
-const AdminPage = () => {
-    const history = useHistory();
-
-    // useEffect(() => {
-    //     if (foodie != null) {
-    //         history.push("/create-recipe");
-    //     }
-    // }, [foodie]); //eslint-disable-line
-
+const LoginPage = () => {
     return (
         <PageContainer variant="jumbotron">
             <Heading variant="page">Login</Heading>
@@ -28,4 +20,4 @@ const AdminPage = () => {
     );
 };
 
-export default AdminPage;
+export default LoginPage;
