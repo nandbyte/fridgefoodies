@@ -82,33 +82,45 @@ const RecipePage = (props: any) => {
                 borderColor={"orange.500"}
                 borderRadius={8}
             >
-                <Stack direction="row" alignItems={"flex-start"}>
-                    <Stack spacing={8}>
-                        <Text fontSize="lg">{props.comment.commentText}</Text>
-                        <Text fontWeight="bold">
-                            {" "}
-                            - {props.comment.foodieName}
-                        </Text>
-                    </Stack>
-
-                    <Button
-                        isLoading={deleteCommentLoading}
-                        onClick={() => {
-                            setDeleteCommentLoading(true);
-                            deleteComment(props.comment.commentId)
-                                .then((response) => {
-                                    setComments(response.data.data.comments);
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                });
-                            setDeleteCommentLoading(false);
-                        }}
-                        display={displayEditButton}
-                    >
-                        Delete
-                    </Button>
-                </Stack>
+                <SimpleGrid columns={{ base: 1, lg: 6 }}>
+                    <GridItem colSpan={{ base: 1, lg: 5 }}>
+                        <Stack spacing={8}>
+                            <Text fontSize="lg">
+                                {props.comment.commentText}
+                            </Text>
+                            <Text fontWeight="bold">
+                                {" "}
+                                - {props.comment.foodieName}
+                            </Text>
+                        </Stack>
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                        <Button
+                            p={2}
+                            w={{ base: "full", lg: "full" }}
+                            mx={1}
+                            my={{ base: 2, lg: 0 }}
+                            height="100%"
+                            isLoading={deleteCommentLoading}
+                            onClick={() => {
+                                setDeleteCommentLoading(true);
+                                deleteComment(props.comment.commentId)
+                                    .then((response) => {
+                                        setComments(
+                                            response.data.data.comments
+                                        );
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
+                                    });
+                                setDeleteCommentLoading(false);
+                            }}
+                            display={displayEditButton}
+                        >
+                            Delete
+                        </Button>{" "}
+                    </GridItem>{" "}
+                </SimpleGrid>
             </Box>
         );
     };
