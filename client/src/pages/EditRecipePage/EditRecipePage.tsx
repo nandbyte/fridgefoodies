@@ -172,6 +172,14 @@ const EditRecipePage = (props: any) => {
             recipeText: instruction,
         })
             .then(() => {
+                toast({
+                    position: "top",
+                    title: "Success",
+                    description: "Recipe updated successfully.",
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true,
+                });
                 history.push("/recipe/" + id);
             })
             .catch((error) => console.log(error));

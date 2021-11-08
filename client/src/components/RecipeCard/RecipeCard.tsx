@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Stack, Text } from "@chakra-ui/layout";
 import {
     Button,
@@ -13,8 +13,10 @@ import {
     ModalOverlay,
     ModalFooter,
     useDisclosure,
+    useToast,
 } from "@chakra-ui/react";
 import { Link, useHistory } from "react-router-dom";
+import { deleteRecipeById } from "../../api/recipe.api";
 
 interface Props {
     image: string;
@@ -26,12 +28,42 @@ interface Props {
 const RecipeCard: React.FC<Props> = (props: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const history = useHistory();
+    const toast = useToast();
+
+    const [loading, setLoading] = useState(false);
 
     const editLink = `/edit-recipe/${props.id}`;
     const showLink: string = `/recipe/${props.id}`;
 
     const deleteRecipe = () => {
-        onClose();
+        setLoading(true);
+        deleteRecipeById(props.id)
+            .then((response) => {
+                console.log(response);
+                toast({
+                    position: "top",
+                    title: "Success",
+                    description: "Deleted the recipe successfully.",
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true,
+                });
+                onClose();
+                setLoading(false);
+                history.go(0);
+            })
+            .catch((error) => {
+                toast({
+                    position: "top",
+                    title: "Error",
+                    description: "Deletion failed.",
+                    status: "error",
+                    duration: 2000,
+                    isClosable: true,
+                });
+                console.log(error);
+                setLoading(false);
+            });
     };
 
     const DeleteModal = () => {
@@ -54,7 +86,12 @@ const RecipeCard: React.FC<Props> = (props: Props) => {
 
                     <ModalFooter>
                         <Stack direction="row" spacing={4}>
-                            <Button m={0} w={32} onClick={deleteRecipe}>
+                            <Button
+                                m={0}
+                                w={32}
+                                onClick={deleteRecipe}
+                                isLoading={loading}
+                            >
                                 Delete
                             </Button>
                             <Button onClick={onClose} m={0} w={32}>
