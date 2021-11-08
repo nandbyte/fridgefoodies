@@ -382,7 +382,6 @@ const EditRecipePage = (props: any) => {
 
                                         setIngredientVariant("");
                                         setIngredientQuantity("");
-                                        setIngredient("");
                                     })
                                     .catch((error) => console.log(error));
                             }}

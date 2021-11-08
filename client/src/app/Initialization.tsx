@@ -20,27 +20,18 @@ const Initialization = () => {
                 "\n\nFoodie: " +
                 window.localStorage.getItem("Foodie")
         );
-        if (window.localStorage.getItem("Foodie") !== null) {
-            setFoodie(window.localStorage.getItem("Foodie"));
+        if (window.localStorage.getItem("jwt") !== null) {
+            //TODO:  Request a foodie
             setJwt(window.localStorage.getItem("Token"));
         }
 
-        console.log(
-            "Initialized with state: \n\n" +
-                "Bearer Token: " +
-                jwt +
-                "\n\nFoodie: " +
-                foodie
-        );
-
-        getIngredients()
-            .then((response) => {
-                console.log(response.data.data.ingredient);
-                setIngredientList(response.data.data.ingredient);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        // console.log(
+        //     "Initialized with state: \n\n" +
+        //         "Bearer Token: " +
+        //         jwt +
+        //         "\n\nFoodie Id: " +
+        //         foodie!.foodieId
+        // );
     }, []);
 
     return <></>;

@@ -19,6 +19,7 @@ import EditRecipePage from "../pages/EditRecipePage";
 import ProfilePage from "../pages/ProfilePage";
 import AdminPage from "../pages/AdminPage";
 import Initialization from "./Initialization";
+import IngredientAddPage from "../pages/IngredientAddPage";
 
 const App = () => {
     return (
@@ -54,7 +55,7 @@ const App = () => {
                         <AdminPage />
                     </Route>
                     <Route exact path="/admin/add-ingredient">
-                        <AdminPage />
+                        <IngredientAddPage />
                     </Route>
                 </Router>
             </ChakraProvider>

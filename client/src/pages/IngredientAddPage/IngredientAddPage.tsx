@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Heading, Stack } from "@chakra-ui/layout";
+import { Heading, Stack, Text } from "@chakra-ui/layout";
 import { Input, FormControl, useToast, Textarea } from "@chakra-ui/react";
 
 import SectionDivider from "../../components/SectionDivider";
@@ -11,7 +11,8 @@ import { Button } from "@chakra-ui/react";
 import { foodieState } from "../../state/foodie/foodie.state";
 import { useRecoilState } from "recoil";
 import { useHistory } from "react-router-dom";
-import { postIngredient } from "../../api/ingredient.api";
+import { getIngredients, postIngredient } from "../../api/ingredient.api";
+import { Ingredient } from "../../state/types/ingredient.type";
 
 const IngredientAddPage = (props: any) => {
     const toast = useToast();
@@ -19,6 +20,7 @@ const IngredientAddPage = (props: any) => {
 
     const [ingredientName, setIngredientName] = useState("");
     const [ingredientDescription, setIngredientDescription] = useState("");
+    const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 
     const [foodie, setFoodie] = useRecoilState(foodieState);
 
@@ -44,6 +46,13 @@ const IngredientAddPage = (props: any) => {
     //         }
     //     }
     // }, [foodie]);
+    useEffect(() => {
+        getIngredients()
+            .then((response) => setIngredients(response.data.data.ingredient))
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []); // eslint-disable-line
 
     const createIngredient = () => {
         postIngredient({
@@ -77,16 +86,15 @@ const IngredientAddPage = (props: any) => {
 
     return (
         <PageContainer variant="navbar">
-            <Heading variant="page">Create a New Recipe</Heading>
+            <Heading variant="page">Create a New Ingredient</Heading>
             <SectionDivider />
 
             <Stack px={0} mx={0} justifyContent="space-between" spacing={12}>
                 <PageSection>
-                    <Heading variant="section">Recipe Title</Heading>
+                    <Heading variant="section">Ingredient Name</Heading>
                     <SectionDivider />
                     <FormControl id="ingredient-name">
                         <Input
-                            variant="flushed"
                             p={2}
                             placeholder="Chicken Fry"
                             size="lg"
@@ -101,9 +109,12 @@ const IngredientAddPage = (props: any) => {
                             focusBorderColor="orange.400"
                         />
                     </FormControl>
+                    <Heading pt={2} variant="section">
+                        Ingredient Description
+                    </Heading>{" "}
+                    <SectionDivider />
                     <FormControl id="ingredient-description">
                         <Textarea
-                            variant="flushed"
                             p={2}
                             placeholder="Chicken Fry"
                             size="lg"
@@ -132,6 +143,17 @@ const IngredientAddPage = (props: any) => {
                 <PageSection>
                     <Heading variant="section">Ingredients</Heading>
                     <SectionDivider />
+
+                    {ingredients.map((ingredientObject) => {
+                        return (
+                            <>
+                                <Heading> {ingredientObject.name}</Heading>{" "}
+                                <Text>
+                                    {ingredientObject.ingredientDescription}
+                                </Text>
+                            </>
+                        );
+                    })}
                 </PageSection>
             </Stack>
         </PageContainer>

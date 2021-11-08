@@ -106,7 +106,10 @@ const AdminPage = () => {
                                 isClosable: true,
                             });
 
-                            setTimeout(() => history.push("/profile"), 1500);
+                            setTimeout(
+                                () => history.push("/admin/add-ingredient"),
+                                1500
+                            );
                         })
                         .catch((error) => {
                             toast({
