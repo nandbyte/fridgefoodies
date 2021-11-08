@@ -1,3 +1,9 @@
+drop database fridgefoodies;
+create database fridgefoodies;
+
+\c fridgefoodies;
+
+
 create extension if not exists "pgcrypto";
 
 drop table rating;
@@ -104,3 +110,7 @@ create table rating(
 --         WHERE recipe.recipe_id = counterTable.recipe_id 
 --         AND lower(recipe_title) like lower('%beef%')
 --         ORDER BY totalrating asc;
+
+
+\dt
+
