@@ -14,8 +14,8 @@ const protect = async (req: express.Request, res: express.Response, next: expres
         console.log(token);
         try {
             const decoded: any = jwt.verify(token, "secret");
-            console.log("Creds: ",decoded.user,req.body.foodieId );
-            if (decoded.user != req.headers.foodie) {
+            console.log("Creds: ",decoded.user,req.headers.foodieid );
+            if (decoded.user != req.headers.foodieid) {
                 return res.json({ status: 500, msg: "Unauthorized access will not be granted." });
             }
         } catch (error) {

@@ -6,6 +6,7 @@ export const search = expressAsyncHandler(async (req, res) => {
     // best matches
 
     const ids: number[] = req.body.id;
+    const order = req.query.order;
     console.log(req.body);
     console.log(req.query);
     let bestMatch: any[] = [];
@@ -16,7 +17,9 @@ export const search = expressAsyncHandler(async (req, res) => {
             WHERE recipe_id in (
                 SELECT recipe_id FROM recipe_ingredient
                 WHERE ingredient_id=$1
-            )`, [id]);
+            )
+            `,
+                [id]);
             if (current.rowCount > 0) {
                 current.rows.forEach(
                     (obj: any) => {
@@ -37,11 +40,27 @@ export const search = expressAsyncHandler(async (req, res) => {
                 recipes: bestMatch,
             },
         });
-    }else{
-        var allRecipe:any[];
-        for(var i=0;i<req.body.id.length;i++){
-            
+    } else {
+        let base = "SELECT recipe.* from recipe,recipe_ingredient WHERE recipe.recipe_id = recipe_ingredient.recipe_id "
+
+        const len_ids = ids.length;
+        const str: string[] = [];
+        for (let i = 0; i < len_ids; i++) {
+            let substr = "";
+
+            for (let j = 0; j < i + 1; j++) {
+                substr += ` AND recipe_ingredient.ingredient_id=${ids[j]}`;
+            }
+            str.push(base+substr);
         }
+        var finalResult:any[] =[];
+        for(let i=0;i<str.length;i++){
+            const result:any = await query(str[i],[]);
+            finalResult.push(result.rows);
+        }
+        res.status(200).json({
+            data: [finalResult],
+        })
     }
 
 })

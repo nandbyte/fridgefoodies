@@ -7,6 +7,6 @@ const router = Router();
 
 router.get("/ingredients", listIngredients);
 router.get("/ingredient/:id", getIngredientById);
-router.post("/ingredient",  addIngredient);
-router.put("/ingredient", editIngredient);
+router.post("/ingredient",protect,admin, addIngredient);
+router.put("/ingredient",protect,admin, editIngredient);
 export default router;
