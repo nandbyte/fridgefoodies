@@ -12,7 +12,6 @@ import {
     useToast,
 } from "@chakra-ui/react";
 
-import { Text } from "@chakra-ui/layout";
 import { FaSignInAlt } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 import { useRecoilState } from "recoil";
@@ -36,7 +35,7 @@ const AdminPage = () => {
     const [jwt, setJwt] = useRecoilState(foodieJwtState);
 
     // useEffect(() => {
-    //     if (foodie.foodieId !== "") {
+    //     if (foodie.foodieId !==  ) {
     //         toast({
     //             position: "top",
     //             title: "Error",
@@ -80,18 +79,12 @@ const AdminPage = () => {
                                 "FoodieId",
                                 response.data.data.foodie.foodieId
                             );
-                            window.localStorage.setItem(
-                                "Foodie",
-                                JSON.stringify(response.data.data.foodie)
-                            );
 
                             console.log(
                                 "Foodie Logged In - \n" +
                                     "Bearer " +
                                     window.localStorage.getItem("Token") +
-                                    "\nFoodie" +
-                                    window.localStorage.getItem("Foodie") +
-                                    "\nFoodie" +
+                                    "\nFoodie Id: " +
                                     window.localStorage.getItem("FoodieId")
                             );
 

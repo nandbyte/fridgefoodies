@@ -20,6 +20,8 @@ const ProfilePage = (props: any) => {
 
     const [recipes, setRecipes] = useState([]);
 
+    const [triggerUpdate, setTriggerUpdate] = useState<boolean>(false);
+
     useEffect(() => {
         if (foodie === null) {
             toast({
@@ -44,6 +46,18 @@ const ProfilePage = (props: any) => {
     }, []);
 
     useEffect(() => {
+        if (foodie !== null) {
+            getRecipeByUser(foodie.foodieId)
+                .then((response) => {
+                    setRecipes(response.data.data.recipes);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    }, [triggerUpdate]);
+
+    useEffect(() => {
         if (foodie === null) {
             history.push("/login");
         }
@@ -64,6 +78,8 @@ const ProfilePage = (props: any) => {
                                 return (
                                     <RecipeCard
                                         key={recipe.recipeId}
+                                        triggerFunction={setTriggerUpdate}
+                                        trigger={triggerUpdate}
                                         variant="edit"
                                         id={recipe.recipeId}
                                         image={recipe.recipeImage}

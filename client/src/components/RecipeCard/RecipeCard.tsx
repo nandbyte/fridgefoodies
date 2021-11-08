@@ -22,6 +22,8 @@ interface Props {
     image: string;
     title: string;
     id: number;
+    triggerFunction?: React.Dispatch<React.SetStateAction<boolean>>;
+    trigger?: boolean;
     variant: "edit" | "showcase" | "ingredient";
 }
 
@@ -50,7 +52,9 @@ const RecipeCard: React.FC<Props> = (props: Props) => {
                 });
                 onClose();
                 setLoading(false);
-                history.go(0);
+                if (props.triggerFunction !== undefined) {
+                    props.triggerFunction(!props.trigger);
+                }
             })
             .catch((error) => {
                 toast({

@@ -25,28 +25,21 @@ const IngredientAddPage = (props: any) => {
     const [foodie, setFoodie] = useRecoilState(foodieState);
     const [loading, setLoading] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     if (foodie !== null) {
-    //         if (foodie.isAdmin === false)
-    //             toast({
-    //                 position: "top",
-    //                 title: "Error",
-    //                 description: "Please log in as admin.",
-    //                 status: "error",
-    //                 duration: 2000,
-    //                 isClosable: true,
-    //             });
-    //         setTimeout(() => history.push("/admin"), 1500);
-    //     }
-    // }, []);
-
-    // useEffect(() => {
-    //     if (foodie !== null) {
-    //         if (foodie.foodieId === "") {
-    //             history.push("/admin-login");
-    //         }
-    //     }
-    // }, [foodie]);
+    useEffect(() => {
+        if (foodie !== null) {
+            if (foodie.isAdmin !== true) {
+                toast({
+                    position: "top",
+                    title: "Error",
+                    description: "Please log in as admin.",
+                    status: "error",
+                    duration: 2000,
+                    isClosable: true,
+                });
+                setTimeout(() => history.push("/admin"), 1500);
+            }
+        }
+    }, [foodie]);
 
     useEffect(() => {
         getIngredients()

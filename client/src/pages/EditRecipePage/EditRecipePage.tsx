@@ -31,11 +31,9 @@ import { useRecoilState } from "recoil";
 import { getRecipeById, putRecipe } from "../../api/recipe.api";
 import {
     deleteRecipeIngredient,
-    getRecipeIngredients,
     postRecipeIngredient,
 } from "../../api/recipe-ingredient.api";
 import { Ingredient } from "../../state/types/ingredient.type";
-import { ingredientState } from "../../state/ingredient/ingredient.state";
 import { getIngredients } from "../../api/ingredient.api";
 import { RecipeIngredient } from "../../state/types/recipe-ingredient.type";
 

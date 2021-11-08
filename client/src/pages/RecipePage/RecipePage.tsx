@@ -30,7 +30,6 @@ import {
     getRatingByUser,
     postRating,
 } from "../../api/rating.api";
-import { CountUp } from "react-countup";
 
 interface CommentProps {
     comment: Comment;
@@ -147,20 +146,20 @@ const RecipePage = (props: any) => {
         );
     };
 
+    const rateRecipe = () => {
+        postRating(foodie?.foodieId, recipe.recipeId)
+            .then((response) => {
+                console.log(response.data);
+                setRatingDisabled(true);
+
+                getRatingByRecipe(id).then((response) => {
+                    setRatingCount(response.data.data.rating);
+                });
+            })
+            .catch((error) => console.log(error));
+    };
+
     const RatingComponent = () => {
-        const rateRecipe = () => {
-            postRating(foodie?.foodieId, recipe.recipeId)
-                .then((response) => {
-                    console.log(response.data);
-                    setRatingDisabled(true);
-
-                    getRatingByRecipe(id).then((response) => {
-                        setRatingCount(response.data.data.rating);
-                    });
-                })
-                .catch((error) => console.log(error));
-        };
-
         return (
             <Stack>
                 <Center>
@@ -183,17 +182,17 @@ const RecipePage = (props: any) => {
         );
     };
 
-    const CalorieComponent = () => {
-        useEffect(() => {
-            if (foodie !== null) {
-                getCaloriesById(id)
-                    .then((response) =>
-                        setCalories(response.data.data.totalCalories)
-                    )
-                    .catch((error) => console.log(error));
-            }
-        }, []);
+    useEffect(() => {
+        if (foodie !== null) {
+            getCaloriesById(id)
+                .then((response) =>
+                    setCalories(response.data.data.totalCalories)
+                )
+                .catch((error) => console.log(error));
+        }
+    }, []);
 
+    const CalorieComponent = () => {
         return (
             <Stack>
                 <Center>
@@ -209,9 +208,14 @@ const RecipePage = (props: any) => {
                         disabled={true}
                     />
                 </Center>
-                <Center>
-                    <Heading>{calories}</Heading>
-                </Center>
+                <Stack>
+                    <Center>
+                        <Heading>{calories} </Heading>
+                    </Center>
+                    <Center>
+                        <Heading>cal </Heading>
+                    </Center>
+                </Stack>
             </Stack>
         );
     };
