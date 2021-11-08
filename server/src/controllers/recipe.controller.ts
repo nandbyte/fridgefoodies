@@ -1,5 +1,5 @@
 import expressAsyncHandler from "express-async-handler";
-import  axios  from "axios";
+import axios from "axios";
 import { Recipe } from "../models";
 import { query } from "../database";
 
@@ -295,7 +295,7 @@ export const searchRecipeByKeyWord = expressAsyncHandler(async (req, res) => {
         } else {
             res.status(200).json({
                 data: {
-                    recipes: {},
+                    recipes: [],
                 },
                 totalMatch: result.rowCount,
             })
@@ -308,7 +308,7 @@ export const searchRecipeByKeyWord = expressAsyncHandler(async (req, res) => {
 
 
 export const deleteRecipe = expressAsyncHandler(async (req, res) => {
-    const { recipeId } = req.body;
+    const recipeId = req.params.id;
     try {
         const recipeIngredientDeleteQuery: any = await query("DELETE FROM recipe_ingredient WHERE recipe_id = $1 RETURNING *", [recipeId]);
         const recipeCommentDeleteQuery: any = await query("DELETE FROM comment WHERE recipe_id=$1 RETURNING *", [recipeId]);
@@ -338,28 +338,28 @@ export const deleteRecipe = expressAsyncHandler(async (req, res) => {
     }
 })
 
-export const getTotalCalorie = expressAsyncHandler(async (req,res)=>{
-    const {id} = req.params;
-    try{
-        const result:any = await query("SELECT SUM(ingredient_calories) as totalcalories FROM recipe_ingredient WHERE recipe_id=$1",[id]);
-        if(result.rowCount>0){
+export const getTotalCalorie = expressAsyncHandler(async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result: any = await query("SELECT SUM(ingredient_calories) as totalcalories FROM recipe_ingredient WHERE recipe_id=$1", [id]);
+        if (result.rowCount > 0) {
             res.status(200).json({
                 status: 200,
-                data:{
+                data: {
                     recipeId: id,
                     totalCalories: result.rows[0].totalcalories,
                 },
-                error:null,
+                error: null,
             })
-        }else{
+        } else {
             res.status(200).json({
                 status: 200,
-                data:{},
+                data: {},
                 error: "Unable to fetch Calories"
             })
         }
-        
-    }catch(err:any){
+
+    } catch (err: any) {
         res.status(404).json({
             error: "Recipe not found or Network error!",
             status: 404,
@@ -367,11 +367,11 @@ export const getTotalCalorie = expressAsyncHandler(async (req,res)=>{
     }
 })
 
-export const ungaBunga = expressAsyncHandler(async(req,res)=>{
-    const {recipeIngredient} = req.body;
+export const ungaBunga = expressAsyncHandler(async (req, res) => {
+    const { recipeIngredient } = req.body;
     const url = encodeURI(recipeIngredient);
     const api = `https://api.edamam.com/api/nutrition-data?app_id=f956f590&app_key=b63e722a5689bf8eb4ec6b4dbb8a2335&nutrition-type=cooking&ingr=${url}`;
-    axios.get(api).then((response)=>{
+    axios.get(api).then((response) => {
         console.log(response.data);
         res.status(200).json({
             data: response.data.calories,

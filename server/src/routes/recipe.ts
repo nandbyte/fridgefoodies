@@ -14,12 +14,12 @@ import { protect } from "../middleware/auth"
 
 const router = Router();
 
-router.post("/recipe",addRecipe);
-router.put("/recipe", editRecipe);
+router.post("/recipe", protect, addRecipe);
+router.put("/recipe", protect, editRecipe);
 router.get("/recipe", getAllRecipe);
 router.get("/recipe/user/:id", getAllRecipeByUsers);
 router.get("/recipe/:id", getRecipeById);
 router.get("/recipe/find/:keyword?", searchRecipeByKeyWord);
-router.delete("/recipe",deleteRecipe);
-router.get("/recipe/getcalorie/:id",getTotalCalorie);
+router.delete("/recipe/:id", protect, deleteRecipe);
+router.get("/recipe/getcalorie/:id", getTotalCalorie);
 export default router;

@@ -13,6 +13,7 @@ export const listIngredients: Handler = async (req, res) => {
                 return {
                     ingredientId: obj.ingredient_id,
                     ingredientName: obj.ingredient_name,
+                    ingredientDescription: obj.ingredient_description,
                 }
             }
         )
@@ -54,7 +55,7 @@ export const getIngredientById: Handler = async (req, res) => {
 
 export const addIngredient = expressAsyncHandler(async (req, res) => {
     const { ingredientName, ingredientDescription } = req.body;
-
+    console.log("ingredient: ",ingredientName, ingredientDescription);
     try {
         const result: any = await query("INSERT INTO ingredient(ingredient_name,ingredient_description) VALUES($1,$2) RETURNING *",
             [ingredientName, ingredientDescription]);
