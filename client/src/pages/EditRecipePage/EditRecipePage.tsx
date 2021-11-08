@@ -350,19 +350,6 @@ const EditRecipePage = (props: any) => {
                             borderColor="orange.600"
                             focusBorderColor="orange.400"
                         />{" "}
-                        <Heading variant="subsection">Guide</Heading>
-                        <Input
-                            placeholder="Guide"
-                            value={ingredientGuide}
-                            onChange={(event) => {
-                                setIngredientGuide(event.target.value);
-                            }}
-                            _hover={{
-                                borderColor: "orange.300",
-                            }}
-                            borderColor="orange.600"
-                            focusBorderColor="orange.400"
-                        />
                         <Heading variant="subsection">Quantity</Heading>
                         <Input
                             placeholder="Quantity"
@@ -388,12 +375,15 @@ const EditRecipePage = (props: any) => {
                                     ingredientQuantity,
                                     ingredientCalories: 0,
                                 })
-                                    // TODO: Add api call for fetching the whoel recipe Ingredient object
-                                    .then((response) =>
+                                    .then((response) => {
                                         setRecipeIngredients(
                                             response.data.data.recipeIngredients
-                                        )
-                                    )
+                                        );
+
+                                        setIngredientVariant("");
+                                        setIngredientQuantity("");
+                                        setIngredient("");
+                                    })
                                     .catch((error) => console.log(error));
                             }}
                         >

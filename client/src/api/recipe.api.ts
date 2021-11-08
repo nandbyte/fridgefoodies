@@ -80,3 +80,7 @@ export const putRecipe = async (recipe: any) => {
         }
     );
 };
+
+export const getCaloriesById = async (recipeId: string) => {
+    return axios.get(baseUrl + "/recipe/getcalorie/" + recipeId);
+};

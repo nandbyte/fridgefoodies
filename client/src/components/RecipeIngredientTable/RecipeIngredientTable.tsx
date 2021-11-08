@@ -8,7 +8,7 @@ interface Props {
 
 const RecipeIngredientTable: React.FC<Props> = (props: Props) => {
     return (
-        <Table variant="simple">
+        <Table variant="simple" colorScheme="black">
             <Thead>
                 <Tr>
                     <Th fontSize="lg">Ingredient</Th>

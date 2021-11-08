@@ -7,11 +7,12 @@ import {
     Button,
     ResponsiveValue,
     Textarea,
+    IconButton,
 } from "@chakra-ui/react";
 import { Heading, Stack, SimpleGrid, GridItem } from "@chakra-ui/layout";
 
 import { useParams } from "react-router-dom";
-import { getRecipeById } from "../../api/recipe.api";
+import { getCaloriesById, getRecipeById } from "../../api/recipe.api";
 import PageSection from "../../components/PageSection";
 import PageContainer from "../../components/PageContainer";
 import SectionDivider from "../../components/SectionDivider";
@@ -19,11 +20,17 @@ import Loading from "../../components/Loading";
 import { Recipe } from "../../state/types/recipe.type";
 import RecipeIngredientTable from "../../components/RecipeIngredientTable";
 import { RecipeIngredient } from "../../state/types/recipe-ingredient.type";
-import { FaThumbsUp } from "react-icons/fa";
+import { FaSuperpowers, FaThumbsUp } from "react-icons/fa";
 import { Comment } from "../../state/types/comment.type";
 import { foodieState } from "../../state/foodie/foodie.state";
 import { useRecoilValue } from "recoil";
 import { postComment, deleteComment } from "../../api/comment.api";
+import {
+    getRatingByRecipe,
+    getRatingByUser,
+    postRating,
+} from "../../api/rating.api";
+import { CountUp } from "react-countup";
 
 interface CommentProps {
     comment: Comment;
@@ -39,6 +46,9 @@ const RecipePage = (props: any) => {
     const [commentText, setCommentText] = useState<string>("");
     const [postCommentLoading, setPostCommentLoading] =
         useState<boolean>(false);
+    const [ratingDisabled, setRatingDisabled] = useState<boolean>(true);
+    const [ratingCount, setRatingCount] = useState<number>(0);
+    const [calories, setCalories] = useState<number>(0);
 
     const foodie = useRecoilValue(foodieState);
 
@@ -52,17 +62,19 @@ const RecipePage = (props: any) => {
                     recipeRating: response.data.data.totalRating,
                 });
 
+                setRatingCount(response.data.data.totalRating);
+
                 setRecipeIngredients(response.data.data.recipeIngredients);
                 setComments(response.data.data.comments);
             })
             .catch((error) => console.log(error));
-    }, []);
+    }, [id]);
 
     const CommentComponent: React.FC<CommentProps> = (props: CommentProps) => {
         const [deleteCommentLoading, setDeleteCommentLoading] =
             useState<boolean>(false);
 
-        const displayEditButton: ResponsiveValue<any> = () => {
+        const displayDeleteButton: ResponsiveValue<any> = () => {
             if (foodie !== null) {
                 if (foodie.foodieId !== props.comment.foodieId) {
                     return "none";
@@ -115,7 +127,7 @@ const RecipePage = (props: any) => {
                                     });
                                 setDeleteCommentLoading(false);
                             }}
-                            display={displayEditButton}
+                            display={displayDeleteButton}
                         >
                             Delete
                         </Button>{" "}
@@ -126,13 +138,79 @@ const RecipePage = (props: any) => {
     };
 
     const RatingComponent = () => {
+        useEffect(() => {
+            if (foodie !== null) {
+                getRatingByUser(foodie?.foodieId, id)
+                    .then((response) =>
+                        setRatingDisabled(response.data.data.rated !== false)
+                    )
+                    .catch((error) => console.log(error));
+            }
+        }, []);
+
+        const rateRecipe = () => {
+            postRating(foodie?.foodieId, recipe.recipeId)
+                .then((response) => {
+                    console.log(response.data);
+                    setRatingDisabled(true);
+
+                    getRatingByRecipe(id).then((response) => {
+                        setRatingCount(response.data.data.rating);
+                    });
+                })
+                .catch((error) => console.log(error));
+        };
+
         return (
-            <Stack _hover={{ cursor: "pointer" }}>
+            <Stack>
                 <Center>
-                    <FaThumbsUp size={36} />
+                    <IconButton
+                        m={0}
+                        mx={0}
+                        my={0}
+                        p={4}
+                        w="auto"
+                        h="auto"
+                        aria-label="rate"
+                        icon={<FaThumbsUp size="25" />}
+                        onClick={rateRecipe}
+                    />
                 </Center>
                 <Center>
-                    <Heading>{recipe.recipeRating}</Heading>
+                    <Heading>{ratingCount}</Heading>
+                </Center>
+            </Stack>
+        );
+    };
+
+    const CalorieComponent = () => {
+        useEffect(() => {
+            if (foodie !== null) {
+                getCaloriesById(id)
+                    .then((response) =>
+                        setCalories(response.data.data.totalCalories)
+                    )
+                    .catch((error) => console.log(error));
+            }
+        }, []);
+
+        return (
+            <Stack>
+                <Center>
+                    <IconButton
+                        m={0}
+                        mx={0}
+                        my={0}
+                        p={4}
+                        w="auto"
+                        h="auto"
+                        aria-label="rate"
+                        icon={<FaSuperpowers size="25" />}
+                        disabled={true}
+                    />
+                </Center>
+                <Center>
+                    <Heading>{calories}</Heading>
                 </Center>
             </Stack>
         );
@@ -165,7 +243,10 @@ const RecipePage = (props: any) => {
                                 <Text fontSize="xl">{recipe.foodieName}</Text>
                             </Stack>
                         </Stack>
-                        <RatingComponent />
+                        <Stack direction="row" spacing={6}>
+                            <CalorieComponent />
+                            <RatingComponent />
+                        </Stack>
                     </Stack>
                     <Center py={24}>
                         <Image
@@ -239,6 +320,8 @@ const RecipePage = (props: any) => {
                                                         response.data.data
                                                             .comments
                                                     );
+
+                                                    setCommentText("");
                                                 })
                                                 .catch((error) => {
                                                     console.log(error);
