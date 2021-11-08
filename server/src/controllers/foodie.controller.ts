@@ -14,21 +14,19 @@ export const registerUser = expressAsyncHandler(async (req, res) => {
     }
 
     try {
-        const newUser: any = await query("INSERT INTO foodie (foodie_name, foodie_email, foodie_password) VALUES($1,$2,$3)", [name, email, password]);
+        const newUser: any = await query("INSERT INTO foodie (foodie_name, foodie_email, foodie_password, foodie_is_admin) VALUES($1,$2,$3,false)", [name, email, password]);
         const searched: any = await query("SELECT * FROM foodie WHERE foodie_email=$1", [email]);
         const user: Foodie = {
             foodieId: searched.rows[0].foodie_id,
             foodieEmail: searched.rows[0].foodie_email,
             foodieName: searched.rows[0].foodie_name,
+            isAdmin: searched.rows[0].foodie_is_admin
         }
 
-        const token = jwtGenerator(searched.rows[0].foodie_id);
-        console.log(token);
         res.status(200).json({
             status: 200,
             data: {
-                foodie: user,
-                token: token
+                foodie: user
             },
             error: null
         })
@@ -56,6 +54,7 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
                 foodieId: userExists.rows[0].foodie_id,
                 foodieEmail: userExists.rows[0].foodie_email,
                 foodieName: userExists.rows[0].foodie_name,
+                isAdmin: userExists.rows[0].foodie_is_admin
             }
 
             res.status(200).json({
@@ -73,5 +72,28 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
                 error: "Incorrect email or password",
             });
         }
+    }
+})
+
+export const foodieDetails = expressAsyncHandler(async(req,res)=>{
+    const {foodieid,authorization} = req.headers;
+    console.log(req.headers);
+    try{
+        const result:any = await query("SELECT * FROM foodie WHERE foodie_id=$1",[foodieid]);
+        if(result.rowCount>0){
+            res.status(200).json({
+                status: 200,
+                data:{
+                    foodie:{
+                        foodieId: foodieid,
+                        foodieName: result.rows[0].foodie_name,
+                        foodieEmail: result.rows[0].foodie_email,
+                        isAdmin: result.rows[0].foodie_is_admin
+                    }
+                }
+            })
+        }
+    }catch(err:any){
+        console.log(err);
     }
 })

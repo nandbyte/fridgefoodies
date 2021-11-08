@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { addRating,getAllRatingsByRecipe,checkRating,deleteRating } from "../controllers/ratings.controller";
+import { protect } from "../middleware/auth";
+
 
 const router = Router();
 

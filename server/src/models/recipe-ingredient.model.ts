@@ -3,7 +3,6 @@ export interface RecipeIngredient {
     recipeId: number;
     ingredientId: number;
     ingredientVariant: string;
-    ingredientGuide: string;
     ingredientQuantity: string;
-
+    ingredientCalories: number;
 }
