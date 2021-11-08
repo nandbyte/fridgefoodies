@@ -1,10 +1,9 @@
 import React from "react";
-import { Heading, Box } from "@chakra-ui/layout";
+import { Heading } from "@chakra-ui/layout";
 
 import PageContainer from "../../components/PageContainer";
 import SubsectionDivider from "../../components/SubsectionDivider";
 import RegisterForm from "../../components/RegisterForm";
-import { Redirect } from "react-router-dom";
 import PageSection from "../../components/PageSection";
 
 const RegisterPage = () => {

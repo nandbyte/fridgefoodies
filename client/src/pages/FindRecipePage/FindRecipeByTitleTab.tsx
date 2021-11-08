@@ -24,6 +24,7 @@ const FindRecipeByTitleTab: React.FC<Props> = (props: Props) => {
     const [titleMatchingRecipe, setTitleMatchingRecipe] = useRecoilState(
         titleMatchingRecipeState
     );
+    
     const [sort] = useRecoilState(titleSortState);
     const [order] = useRecoilState(titleOrderState);
 

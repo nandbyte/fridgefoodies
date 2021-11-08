@@ -75,23 +75,30 @@ const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
                 </Button>
             </PageSection>
 
-            <PageSection>
-                <Heading variant="section">Matching Recipe</Heading>
-                <SectionDivider />
-                <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap={4}>
-                    {ingredientMatchingRecipe.map((recipe: RecipeCardData) => {
-                        return (
-                            <RecipeCard
-                                key={recipe.recipeId}
-                                variant="showcase"
-                                id={recipe.recipeId}
-                                image={recipe.recipeImage}
-                                title={recipe.recipeTitle}
-                            />
-                        );
-                    })}
-                </SimpleGrid>
-            </PageSection>
+            {loading === true ? <Loading /> : <></>}
+            {ingredientMatchingRecipe.length !== 0 ? (
+                <PageSection>
+                    <Heading variant="section">Matching Recipe</Heading>
+                    <SectionDivider />
+                    <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap={4}>
+                        {ingredientMatchingRecipe.map(
+                            (recipe: RecipeCardData) => {
+                                return (
+                                    <RecipeCard
+                                        key={recipe.recipeId}
+                                        variant="showcase"
+                                        id={recipe.recipeId}
+                                        image={recipe.recipeImage}
+                                        title={recipe.recipeTitle}
+                                    />
+                                );
+                            }
+                        )}
+                    </SimpleGrid>
+                </PageSection>
+            ) : (
+                <></>
+            )}
         </Stack>
     );
 };

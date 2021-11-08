@@ -75,24 +75,23 @@ const IngredientAddPage = (props: any) => {
                 });
                 setIngredientName("");
                 setIngredientDescription("");
-                getIngredients()
-                    .then((response) =>
-                        setIngredients(response.data.data.ingredient)
-                    )
-                    .catch((error) => {
-                        console.log(error);
-                    });
             })
             .catch((error) => {
                 toast({
                     position: "top",
                     title: "Error",
-                    description: "Duplicate Ingredient Title",
+                    description: "Ingredient could not be added.",
                     status: "error",
                     duration: 2000,
                     isClosable: true,
                 });
             });
+        getIngredients()
+            .then((response) => setIngredients(response.data.data.ingredient))
+            .catch((error) => {
+                console.log(error);
+            });
+
         setLoading(false);
     };
 

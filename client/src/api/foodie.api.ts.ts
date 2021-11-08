@@ -13,7 +13,12 @@ export const register = async (
     return axios.post(baseUrl + "/register", { email, name, password });
 };
 
+export const getFoodie = async (foodieId: string) => {
+    return axios.post(baseUrl + "/profile", { foodieId });
+};
+
 export const logout = () => {
     window.localStorage.removeItem("Token");
+    window.localStorage.removeItem("FoodieId");
     window.localStorage.removeItem("Foodie");
 };

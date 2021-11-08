@@ -70,6 +70,16 @@ const RecipePage = (props: any) => {
             .catch((error) => console.log(error));
     }, [id]);
 
+    useEffect(() => {
+        if (foodie !== null) {
+            getRatingByUser(foodie?.foodieId, id)
+                .then((response) =>
+                    setRatingDisabled(response.data.data.rated !== false)
+                )
+                .catch((error) => console.log(error));
+        }
+    }, []);
+
     const CommentComponent: React.FC<CommentProps> = (props: CommentProps) => {
         const [deleteCommentLoading, setDeleteCommentLoading] =
             useState<boolean>(false);
@@ -138,16 +148,6 @@ const RecipePage = (props: any) => {
     };
 
     const RatingComponent = () => {
-        useEffect(() => {
-            if (foodie !== null) {
-                getRatingByUser(foodie?.foodieId, id)
-                    .then((response) =>
-                        setRatingDisabled(response.data.data.rated !== false)
-                    )
-                    .catch((error) => console.log(error));
-            }
-        }, []);
-
         const rateRecipe = () => {
             postRating(foodie?.foodieId, recipe.recipeId)
                 .then((response) => {

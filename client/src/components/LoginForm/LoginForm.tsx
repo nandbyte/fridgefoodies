@@ -79,10 +79,6 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                                 "FoodieId",
                                 response.data.data.foodie.foodieId
                             );
-                            window.localStorage.setItem(
-                                "Foodie",
-                                JSON.stringify(response.data.data.foodie)
-                            );
 
                             console.log(
                                 "Foodie Logged In - \n" +
