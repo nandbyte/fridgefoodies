@@ -23,6 +23,7 @@ const IngredientAddPage = (props: any) => {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 
     const [foodie, setFoodie] = useRecoilState(foodieState);
+    const [loading, setLoading] = useState<boolean>(false);
 
     // useEffect(() => {
     //     if (foodie !== null) {
@@ -46,6 +47,7 @@ const IngredientAddPage = (props: any) => {
     //         }
     //     }
     // }, [foodie]);
+
     useEffect(() => {
         getIngredients()
             .then((response) => setIngredients(response.data.data.ingredient))
@@ -55,6 +57,7 @@ const IngredientAddPage = (props: any) => {
     }, []); // eslint-disable-line
 
     const createIngredient = () => {
+        setLoading(true);
         postIngredient({
             ingredientId: 0,
             ingredientName,
@@ -70,18 +73,26 @@ const IngredientAddPage = (props: any) => {
                     duration: 2000,
                     isClosable: true,
                 });
-                history.push("/admin/add-ingredient");
+                setIngredientName("");
+                setIngredientDescription("");
             })
             .catch((error) => {
                 toast({
                     position: "top",
                     title: "Error",
-                    description: "Duplicate Ingredient Title",
+                    description: "Ingredient could not be added.",
                     status: "error",
                     duration: 2000,
                     isClosable: true,
                 });
             });
+        getIngredients()
+            .then((response) => setIngredients(response.data.data.ingredient))
+            .catch((error) => {
+                console.log(error);
+            });
+
+        setLoading(false);
     };
 
     const IngredientComponent = (props: any) => {
@@ -120,7 +131,7 @@ const IngredientAddPage = (props: any) => {
                     <FormControl id="ingredient-name">
                         <Input
                             p={2}
-                            placeholder="Chicken Fry"
+                            placeholder="Vegetable"
                             size="lg"
                             value={ingredientName}
                             onChange={(event) => {
@@ -159,6 +170,7 @@ const IngredientAddPage = (props: any) => {
                             ingredientName === "" ||
                             ingredientDescription === ""
                         }
+                        loading={loading}
                     >
                         Create Ingredient
                     </Button>
@@ -169,9 +181,9 @@ const IngredientAddPage = (props: any) => {
                     <SectionDivider />
                     <Stack spacing={4}>
                         {ingredients.map((ingredientObject) => {
-                            console.log(ingredientObject);
                             return (
                                 <IngredientComponent
+                                    key={ingredientObject.ingredientId}
                                     ingredient={ingredientObject}
                                 />
                             );

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
+import { getFoodie } from "../api/foodie.api.ts";
 import { getIngredients } from "../api/ingredient.api";
 import { foodieJwtState, foodieState } from "../state/foodie/foodie.state";
 import { ingredientState } from "../state/ingredient/ingredient.state";
@@ -20,9 +21,16 @@ const Initialization = () => {
                 "\n\nFoodie: " +
                 window.localStorage.getItem("Foodie")
         );
-        if (window.localStorage.getItem("jwt") !== null) {
-            //TODO:  Request a foodie
+        if (
+            window.localStorage.getItem("Token") !== null &&
+            window.localStorage.getItem("FoodieId") !== null
+        ) {
             setJwt(window.localStorage.getItem("Token"));
+            getFoodie(window.localStorage.getItem("FoodieId"))
+                .then((response) => {
+                    setFoodie(response.data.data.foodie);
+                })
+                .catch((error) => console.log(error));
         }
 
         // console.log(

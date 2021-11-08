@@ -81,7 +81,7 @@ export const putRecipe = async (recipe: any) => {
     );
 };
 
-export const deleteRecipe = async (recipeId: string) => {
+export const deleteRecipeById = async (recipeId: number) => {
     return axios.delete(baseUrl + "/recipe/" + recipeId, {
         headers: {
             Authorization: "Bearer " + window.localStorage.getItem("Token"),
@@ -90,6 +90,6 @@ export const deleteRecipe = async (recipeId: string) => {
     });
 };
 
-export const getCaloriesById = async (recipeId: string) => {
+export const getCaloriesById = async (recipeId: number) => {
     return axios.get(baseUrl + "/recipe/getcalorie/" + recipeId);
 };

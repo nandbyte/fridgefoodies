@@ -61,7 +61,6 @@ const EditRecipePage = (props: any) => {
     const [ingredient, setIngredient] = useState<Ingredient>();
     const [ingredientVariant, setIngredientVariant] = useState<string>("");
     const [ingredientQuantity, setIngredientQuantity] = useState<string>("");
-    const [ingredientGuide, setIngredientGuide] = useState<string>("");
     const [ingredientLoading, setIngredientLoading] = useState<boolean>(true);
 
     const EditRecipeIngredient = () => {
@@ -172,6 +171,14 @@ const EditRecipePage = (props: any) => {
             recipeText: instruction,
         })
             .then(() => {
+                toast({
+                    position: "top",
+                    title: "Success",
+                    description: "Recipe updated successfully.",
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true,
+                });
                 history.push("/recipe/" + id);
             })
             .catch((error) => console.log(error));
