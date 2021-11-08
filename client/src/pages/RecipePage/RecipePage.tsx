@@ -1,147 +1,353 @@
 import React, { useEffect, useState } from "react";
-import { AspectRatio, Center, Flex, Image, Text } from "@chakra-ui/react";
-import { Heading, Stack, Box } from "@chakra-ui/layout";
+import {
+    Center,
+    Image,
+    Text,
+    Box,
+    Button,
+    ResponsiveValue,
+    Textarea,
+    IconButton,
+} from "@chakra-ui/react";
+import { Heading, Stack, SimpleGrid, GridItem } from "@chakra-ui/layout";
 
-import Credit from "../../components/Credit";
-import SectionDivider from "../../components/SectionDivider";
-import Navbar from "../../components/Navbar";
-import SubsectionDivider from "../../components/SubsectionDivider";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import { getCaloriesById, getRecipeById } from "../../api/recipe.api";
+import PageSection from "../../components/PageSection";
+import PageContainer from "../../components/PageContainer";
+import SectionDivider from "../../components/SectionDivider";
+import Loading from "../../components/Loading";
+import { Recipe } from "../../state/types/recipe.type";
+import RecipeIngredientTable from "../../components/RecipeIngredientTable";
+import { RecipeIngredient } from "../../state/types/recipe-ingredient.type";
+import { FaSuperpowers, FaThumbsUp } from "react-icons/fa";
+import { Comment } from "../../state/types/comment.type";
+import { foodieState } from "../../state/foodie/foodie.state";
+import { useRecoilValue } from "recoil";
+import { postComment, deleteComment } from "../../api/comment.api";
+import {
+    getRatingByRecipe,
+    getRatingByUser,
+    postRating,
+} from "../../api/rating.api";
+import { CountUp } from "react-countup";
+
+interface CommentProps {
+    comment: Comment;
+}
 
 const RecipePage = (props: any) => {
-    const [recipe, setRecipe]: any = useState({});
+    const [recipe, setRecipe]: any = useState<Recipe>(null);
+    const [recipeIngredients, setRecipeIngredients] = useState<
+        RecipeIngredient[]
+    >([]);
+
+    const [comments, setComments] = useState<Comment[]>([]);
+    const [commentText, setCommentText] = useState<string>("");
+    const [postCommentLoading, setPostCommentLoading] =
+        useState<boolean>(false);
+    const [ratingDisabled, setRatingDisabled] = useState<boolean>(true);
+    const [ratingCount, setRatingCount] = useState<number>(0);
+    const [calories, setCalories] = useState<number>(0);
+
+    const foodie = useRecoilValue(foodieState);
 
     let { id }: any = useParams();
 
     useEffect(() => {
-        axios
-            .get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
+        getRecipeById(id)
             .then((response) => {
-                setRecipe(response.data.meals[0]);
-                console.log(response.data.meals[0]);
-            });
+                setRecipe({
+                    ...response.data.data.recipe[0],
+                    recipeRating: response.data.data.totalRating,
+                });
+
+                setRatingCount(response.data.data.totalRating);
+
+                setRecipeIngredients(response.data.data.recipeIngredients);
+                setComments(response.data.data.comments);
+            })
+            .catch((error) => console.log(error));
+    }, [id]);
+
+    useEffect(() => {
+        if (foodie !== null) {
+            getRatingByUser(foodie?.foodieId, id)
+                .then((response) =>
+                    setRatingDisabled(response.data.data.rated !== false)
+                )
+                .catch((error) => console.log(error));
+        }
     }, []);
 
-    return (
-        <Box justifyItems="center">
-            <Navbar />
-            <Flex width="100%" justifyContent="center">
-                <Stack
-                    px={{ base: 8, xl: 16 }}
-                    justifyContent="space-between"
-                    width={{ base: "100%", xl: "1200px" }}
-                >
-                    <Box py={{ base: 4, xl: 8 }}>
-                        <Text
-                            fontSize={{ base: 14, lg: 24 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                            textTransform="uppercase"
-                        >
-                            Recipe
-                        </Text>
-                        <SubsectionDivider />
-                        <Heading
-                            fontSize={{ base: 32, lg: 64 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                        >
-                            {recipe.strMeal}
-                        </Heading>
-                    </Box>
-                    <Box py={{ base: 4, xl: 8 }}>
-                        <Center>
-                            <Image
-                                borderRadius="md"
-                                w={{ base: "100%", lg: "50%" }}
-                                src={recipe.strMealThumb}
-                            />
-                        </Center>
-                    </Box>
-                    <Box py={{ base: 4, xl: 8 }}>
-                        <Heading
-                            fontSize={{ base: 18, lg: 36 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                            textTransform="uppercase"
-                        >
-                            Ingredients
-                        </Heading>
-                        <SubsectionDivider />
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strIngredient1 !== ""
-                                ? `${recipe.strIngredient1} (${recipe.strMeasure1})`
-                                : null}
-                        </Text>{" "}
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strIngredient2 !== ""
-                                ? `${recipe.strIngredient2} (${recipe.strMeasure2})`
-                                : null}
-                        </Text>{" "}
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strIngredient3 !== ""
-                                ? `${recipe.strIngredient3} (${recipe.strMeasure3})`
-                                : null}
-                        </Text>{" "}
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strIngredient4 !== ""
-                                ? `${recipe.strIngredient4} (${recipe.strMeasure4})`
-                                : null}
-                        </Text>{" "}
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strIngredient5 !== ""
-                                ? `${recipe.strIngredient5} (${recipe.strMeasure5})`
-                                : null}
-                        </Text>{" "}
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strIngredient6 !== ""
-                                ? `${recipe.strIngredient6} (${recipe.strMeasure6})`
-                                : null}
-                        </Text>{" "}
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strIngredient7 !== ""
-                                ? `${recipe.strIngredient7} (${recipe.strMeasure7})`
-                                : null}
-                        </Text>{" "}
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strIngredient8 !== ""
-                                ? `${recipe.strIngredient8} (${recipe.strMeasure8})`
-                                : null}
-                        </Text>{" "}
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strIngredient9 !== ""
-                                ? `${recipe.strIngredient9} (${recipe.strMeasure9})`
-                                : null}
-                        </Text>{" "}
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strIngredient10 !== ""
-                                ? `${recipe.strIngredient10} (${recipe.strMeasure10})`
-                                : null}
-                        </Text>
-                    </Box>
-                    <Box py={{ base: 4, xl: 8 }}>
-                        <Heading
-                            fontSize={{ base: 18, lg: 36 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                            textTransform="uppercase"
-                        >
-                            Instructions
-                        </Heading>
-                        <SubsectionDivider />
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strInstructions}
-                        </Text>
-                    </Box>
+    const CommentComponent: React.FC<CommentProps> = (props: CommentProps) => {
+        const [deleteCommentLoading, setDeleteCommentLoading] =
+            useState<boolean>(false);
 
-                    <Box pt={{ base: 64, lg: 96 }}>
-                        <SectionDivider />
-                        <Credit />
-                    </Box>
-                </Stack>
-            </Flex>
-        </Box>
+        const displayDeleteButton: ResponsiveValue<any> = () => {
+            if (foodie !== null) {
+                if (foodie.foodieId !== props.comment.foodieId) {
+                    return "none";
+                } else {
+                    return "block";
+                }
+            } else {
+                return "block";
+            }
+        };
+
+        return (
+            <Box
+                p={2}
+                borderWidth={1}
+                borderStyle={"dotted"}
+                borderColor={"orange.500"}
+                borderRadius={8}
+            >
+                <SimpleGrid columns={{ base: 1, lg: 6 }}>
+                    <GridItem colSpan={{ base: 1, lg: 5 }}>
+                        <Stack spacing={8}>
+                            <Text fontSize="lg">
+                                {props.comment.commentText}
+                            </Text>
+                            <Text fontWeight="bold">
+                                {" "}
+                                - {props.comment.foodieName}
+                            </Text>
+                        </Stack>
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                        <Button
+                            p={2}
+                            w={{ base: "full", lg: "full" }}
+                            mx={1}
+                            my={{ base: 2, lg: 0 }}
+                            height="100%"
+                            isLoading={deleteCommentLoading}
+                            onClick={() => {
+                                setDeleteCommentLoading(true);
+                                deleteComment(props.comment.commentId)
+                                    .then((response) => {
+                                        setComments(
+                                            response.data.data.comments
+                                        );
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
+                                    });
+                                setDeleteCommentLoading(false);
+                            }}
+                            display={displayDeleteButton}
+                        >
+                            Delete
+                        </Button>{" "}
+                    </GridItem>{" "}
+                </SimpleGrid>
+            </Box>
+        );
+    };
+
+    const RatingComponent = () => {
+        const rateRecipe = () => {
+            postRating(foodie?.foodieId, recipe.recipeId)
+                .then((response) => {
+                    console.log(response.data);
+                    setRatingDisabled(true);
+
+                    getRatingByRecipe(id).then((response) => {
+                        setRatingCount(response.data.data.rating);
+                    });
+                })
+                .catch((error) => console.log(error));
+        };
+
+        return (
+            <Stack>
+                <Center>
+                    <IconButton
+                        m={0}
+                        mx={0}
+                        my={0}
+                        p={4}
+                        w="auto"
+                        h="auto"
+                        aria-label="rate"
+                        icon={<FaThumbsUp size="25" />}
+                        onClick={rateRecipe}
+                    />
+                </Center>
+                <Center>
+                    <Heading>{ratingCount}</Heading>
+                </Center>
+            </Stack>
+        );
+    };
+
+    const CalorieComponent = () => {
+        useEffect(() => {
+            if (foodie !== null) {
+                getCaloriesById(id)
+                    .then((response) =>
+                        setCalories(response.data.data.totalCalories)
+                    )
+                    .catch((error) => console.log(error));
+            }
+        }, []);
+
+        return (
+            <Stack>
+                <Center>
+                    <IconButton
+                        m={0}
+                        mx={0}
+                        my={0}
+                        p={4}
+                        w="auto"
+                        h="auto"
+                        aria-label="rate"
+                        icon={<FaSuperpowers size="25" />}
+                        disabled={true}
+                    />
+                </Center>
+                <Center>
+                    <Heading>{calories}</Heading>
+                </Center>
+            </Stack>
+        );
+    };
+
+    return (
+        <PageContainer variant="navbar">
+            {recipe === null ? (
+                <Loading />
+            ) : (
+                <>
+                    <Text
+                        fontSize={{ base: 16, lg: 24 }}
+                        textAlign={{ base: "center", lg: "left" }}
+                        fontWeight="black"
+                        textTransform="uppercase"
+                    >
+                        Recipe
+                    </Text>
+                    <SectionDivider />
+                    <Stack direction={"row"} justifyContent={"space-between"}>
+                        <Stack>
+                            <Heading variant="page">
+                                {recipe.recipeTitle}
+                            </Heading>
+                            <Stack direction="row">
+                                <Text fontSize="xl" fontWeight="bold">
+                                    Author:{" "}
+                                </Text>
+                                <Text fontSize="xl">{recipe.foodieName}</Text>
+                            </Stack>
+                        </Stack>
+                        <Stack direction="row" spacing={6}>
+                            <CalorieComponent />
+                            <RatingComponent />
+                        </Stack>
+                    </Stack>
+                    <Center py={24}>
+                        <Image
+                            borderRadius="md"
+                            w={{ base: "100%", lg: "50%" }}
+                            src={recipe.recipeImage}
+                        />
+                    </Center>
+
+                    <Stack
+                        px={0}
+                        mx={0}
+                        justifyContent="space-between"
+                        spacing={12}
+                    >
+                        <PageSection>
+                            <Heading variant="section">Ingredients</Heading>
+                            <SectionDivider />
+                            <RecipeIngredientTable
+                                recipeIngredients={recipeIngredients}
+                            />
+                        </PageSection>
+
+                        <PageSection>
+                            <Heading variant="section">Instructions</Heading>
+                            <SectionDivider />
+                            <Stack spacing={4}>
+                                {recipe.recipeText.split("\n").map((text) => {
+                                    return <Text fontSize="xl">{text}</Text>;
+                                })}
+                            </Stack>
+                        </PageSection>
+
+                        <Box py={4} pt={16}>
+                            <Heading variant="section">Comments</Heading>
+                            <SectionDivider />
+                            <SimpleGrid columns={{ base: 1, lg: 6 }}>
+                                <GridItem colSpan={{ base: 1, lg: 5 }}>
+                                    <Textarea
+                                        // display={}
+
+                                        variant="outline"
+                                        placeholder="Comment"
+                                        p={2}
+                                        value={commentText}
+                                        onChange={(event) => {
+                                            setCommentText(event.target.value);
+                                        }}
+                                        _hover={{
+                                            borderColor: "orange.300",
+                                        }}
+                                        borderColor="orange.600"
+                                        focusBorderColor="orange.400"
+                                    />
+                                </GridItem>
+                                <GridItem colSpan={1}>
+                                    <Button
+                                        p={2}
+                                        w={{ base: "full", lg: "full" }}
+                                        mx={1}
+                                        my={{ base: 2, lg: 0 }}
+                                        height="100%"
+                                        isLoading={postCommentLoading}
+                                        onClick={() => {
+                                            setPostCommentLoading(true);
+                                            postComment({
+                                                commentId: 0,
+                                                foodieId: foodie!.foodieId,
+                                                foodieName: foodie!.foodieName,
+                                                recipeId: recipe.recipeId,
+                                                commentText: commentText,
+                                            })
+                                                .then((response) => {
+                                                    setComments(
+                                                        response.data.data
+                                                            .comments
+                                                    );
+
+                                                    setCommentText("");
+                                                })
+                                                .catch((error) => {
+                                                    console.log(error);
+                                                });
+                                            setPostCommentLoading(false);
+                                        }}
+                                    >
+                                        Comment
+                                    </Button>
+                                </GridItem>
+                            </SimpleGrid>
+
+                            <Stack spacing={2} py={2} pt={6}>
+                                {comments.map((comment) => (
+                                    <CommentComponent comment={comment} />
+                                ))}
+                            </Stack>
+                        </Box>
+                    </Stack>
+                </>
+            )}
+        </PageContainer>
     );
 };
 

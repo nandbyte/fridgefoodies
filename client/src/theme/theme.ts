@@ -12,7 +12,6 @@ import colors from "./foundations/colors";
 import Button from "./components/button";
 import Link from "./components/link";
 import Select from "./components/select";
-import Input from "./components/input";
 import Heading from "./components/heading";
 
 const overrides = {
@@ -26,7 +25,6 @@ const overrides = {
         Button,
         Link,
         Select,
-        Input,
         Heading,
         // Other components go here
     },

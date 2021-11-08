@@ -1,38 +1,31 @@
 import React from "react";
 
 import { Heading, Box, Stack } from "@chakra-ui/layout";
-import { Button, Radio, RadioGroup } from "@chakra-ui/react";
-import { useTypedDispatch } from "../../hooks/useTypedDispatch";
-import { useTypedSelector } from "../../hooks/useTypedSelector";
+import { Radio, RadioGroup } from "@chakra-ui/react";
+import { useRecoilState } from "recoil";
 import {
-    setFilterType,
-    setSortType,
-    setOrderType,
-} from "../../state/recipe/find-recipe-by-ingredients.slice";
-import { Recipe } from "../../state/recipe/recipe.type";
+    ingredientFilterState,
+    ingredientOrderState,
+    ingredientSortState,
+} from "../../state/recipe/ingredient-recipe.state";
 
 interface Props {}
 
 const SearchCriteria: React.FC<Props> = (props: Props) => {
-    const dispatch = useTypedDispatch();
-
-    const { filterType, sortType, orderType, matchingRecipes } =
-        useTypedSelector((state) => state.findRecipeByIngredients);
+    const [filterType, setFilterType] = useRecoilState(ingredientFilterState);
+    const [sortType, setSortType] = useRecoilState(ingredientSortState);
+    const [orderType, setOrderType] = useRecoilState(ingredientOrderState);
 
     const changeFilterType = (value: string) => {
-        dispatch(setFilterType(parseInt(value)));
+        setFilterType(value);
     };
 
     const changeSortType = (value: string) => {
-        dispatch(setSortType(parseInt(value)));
+        setSortType(value);
     };
 
     const changeOrderType = (value: string) => {
-        dispatch(setOrderType(parseInt(value)));
-    };
-
-    const sortRecipes = () => {
-        let intermediateList = [...matchingRecipes];
+        setOrderType(value);
     };
 
     return (
@@ -49,8 +42,12 @@ const SearchCriteria: React.FC<Props> = (props: Props) => {
                 >
                     <Heading variant="subsection">1. Filter By - </Heading>
                     <Stack direction="column" space={2}>
-                        <Radio value={0}>Ingredient</Radio>
-                        <Radio value={1}>Best Match</Radio>
+                        <Radio value={"best"}>
+                            Including your ingredients and more.
+                        </Radio>
+                        <Radio value={"bounded"}>
+                            Including your incredients only.
+                        </Radio>
                     </Stack>
                 </RadioGroup>
 
@@ -61,8 +58,8 @@ const SearchCriteria: React.FC<Props> = (props: Props) => {
                 >
                     <Heading variant="subsection">2. Sort by - </Heading>
                     <Stack direction="column" space={2}>
-                        <Radio value={0}>Rating</Radio>
-                        <Radio value={1}>Alphabetical</Radio>
+                        <Radio value={"rating"}>Rating</Radio>
+                        <Radio value={"alphabet"}>Alphabetical</Radio>
                     </Stack>
                 </RadioGroup>
 
@@ -73,8 +70,8 @@ const SearchCriteria: React.FC<Props> = (props: Props) => {
                 >
                     <Heading variant="subsection">3. Order by - </Heading>
                     <Stack direction="column" space={2}>
-                        <Radio value={0}>Ascending</Radio>
-                        <Radio value={1}>Descending</Radio>
+                        <Radio value={"desc"}>Descending</Radio>
+                        <Radio value={"asc"}>Ascending</Radio>
                     </Stack>
                 </RadioGroup>
             </Stack>

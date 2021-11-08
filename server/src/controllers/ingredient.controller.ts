@@ -6,9 +6,24 @@ import expressAsyncHandler from "express-async-handler";
 
 export const listIngredients: Handler = async (req, res) => {
     try {
-        const queryResult: any = await query("select * from ingredient", []);
+        const queryResult: any = await query("select * from ingredient order by ingredient_id asc", []);
         const ingredients: Ingredient[] = queryResult.rows;
-        res.status(200).json(ingredients);
+        const modified = ingredients.map(
+            (obj: any) => {
+                return {
+                    ingredientId: obj.ingredient_id,
+                    ingredientName: obj.ingredient_name,
+                    ingredientDescription: obj.ingredient_description,
+                }
+            }
+        )
+        res.status(200).json({
+            status: 200,
+            data: {
+                ingredient: modified,
+            },
+            error: null,
+        });
     } catch (err: any) {
         log.error(err.message);
     }
@@ -17,12 +32,22 @@ export const listIngredients: Handler = async (req, res) => {
 export const getIngredientById: Handler = async (req, res) => {
     try {
         const id = req.params.id;
-        const queryResult: any = await query(
+        const result: any = await query(
             "select * from ingredient where ingredient_id=$1",
             [id]
         );
-        const ingredient: Ingredient = queryResult.rows[0];
-        res.status(200).json(ingredient);
+        const ingredient: Ingredient = {
+            ingredientId: result.rows[0].ingredient_id,
+            ingredientName: result.rows[0].ingredient_name,
+            ingredientDescription: result.rows[0].ingredient_description
+        }
+        res.status(200).json({
+            status: 200,
+            data: {
+                ingredient: ingredient,
+            },
+            error: null,
+        });
     } catch (err: any) {
         log.error(err.message);
     }
@@ -30,7 +55,7 @@ export const getIngredientById: Handler = async (req, res) => {
 
 export const addIngredient = expressAsyncHandler(async (req, res) => {
     const { ingredientName, ingredientDescription } = req.body;
-
+    console.log("ingredient: ",ingredientName, ingredientDescription);
     try {
         const result: any = await query("INSERT INTO ingredient(ingredient_name,ingredient_description) VALUES($1,$2) RETURNING *",
             [ingredientName, ingredientDescription]);
@@ -50,14 +75,21 @@ export const addIngredient = expressAsyncHandler(async (req, res) => {
                 error: null,
             })
         } else {
-            res.status(403).json({
-                status: 403,
-                data: {},
-                error: "Database error!"
+            res.status(200).json({
+                status: 200,
+                data: {
+                    ingredient:{}
+                },
+                error: "Can't add the ingredient"
             });
         }
 
     } catch (err: any) {
+        res.status(203).json({
+            status: 203,
+            data:{},
+            error:"Ingredient Already present",
+        })
         console.log(err);
     }
 })
@@ -86,10 +118,12 @@ export const editIngredient = expressAsyncHandler(async (req, res) => {
                 error: null,
             })
         } else {
-            res.status(403).json({
-                status: 403,
-                data: {},
-                error: "Database error!"
+            res.status(200).json({
+                status: 200,
+                data: {
+                    ingrediant: {},
+                },
+                error: "Unable to updated the recipe"
             });
         }
 
@@ -97,3 +131,7 @@ export const editIngredient = expressAsyncHandler(async (req, res) => {
         console.log(err);
     }
 })
+
+
+
+

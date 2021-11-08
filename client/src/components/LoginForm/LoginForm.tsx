@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import bcryptjs from "bcryptjs";
+
 import {
-    Alert,
-    AlertIcon,
-    AlertTitle,
     Button,
     FormControl,
     FormLabel,
@@ -15,24 +14,39 @@ import {
 
 import { Text } from "@chakra-ui/layout";
 import { FaSignInAlt } from "react-icons/fa";
-import { useLoginMutation } from "../../state/foodie/foodie.api.slice";
+import { useHistory } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { login } from "../../api/foodie.api.ts";
+import { foodieJwtState, foodieState } from "../../state/foodie/foodie.state";
 
 interface Props {}
 
 const LoginForm: React.FC<Props> = (props: Props) => {
+    const toast = useToast();
+
+    const history = useHistory();
+
     const [email, setEmail] = useState<string>("");
 
     const [password, setPassword] = useState<string>("");
 
-    const [loginError, setLoginError] = useState("");
+    const [foodie, setFoodie] = useRecoilState(foodieState);
 
-    const [loginUser, { data, error }] = useLoginMutation();
-
-    const toast = useToast();
+    const [jwt, setJwt] = useRecoilState(foodieJwtState);
 
     useEffect(() => {
-        console.log(data);
-    }, [data]);
+        if (foodie !== null) {
+            toast({
+                position: "top",
+                title: "Error",
+                description: "Please log out first.",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
+            setTimeout(() => history.push("/profile"), 1500);
+        }
+    }, []);
 
     const handleLogin: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
@@ -41,17 +55,65 @@ const LoginForm: React.FC<Props> = (props: Props) => {
             /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
         if (!emailRegexPattern.test(email)) {
-            setLoginError("Please provide a valid email address.");
             toast({
                 position: "top",
                 title: "Error",
-                description: loginError,
+                description: "Please provide a valid email address.",
                 status: "error",
-                duration: 1000,
+                duration: 2000,
                 isClosable: true,
             });
         } else {
-            loginUser({ email, password });
+            bcryptjs
+                .hash(password, "$2a$10$5874nLVXZq5CSbNxKsMTYu")
+                .then((hashedPassword: string) =>
+                    login(email, hashedPassword)
+                        .then((response) => {
+                            setFoodie(response.data.data.foodie);
+                            setJwt(response.data.data.token);
+                            window.localStorage.setItem(
+                                "Token",
+                                response.data.data.token
+                            );
+                            window.localStorage.setItem(
+                                "FoodieId",
+                                response.data.data.foodie.foodieId
+                            );
+
+                            console.log(
+                                "Foodie Logged In - \n" +
+                                    "Bearer " +
+                                    window.localStorage.getItem("Token") +
+                                    "\nFoodie" +
+                                    window.localStorage.getItem("Foodie") +
+                                    "\nFoodie" +
+                                    window.localStorage.getItem("FoodieId")
+                            );
+
+                            console.log(response.data.data.foodie);
+
+                            toast({
+                                position: "top",
+                                title: "Success",
+                                description: "Logged in successfully",
+                                status: "success",
+                                duration: 2000,
+                                isClosable: true,
+                            });
+
+                            setTimeout(() => history.push("/profile"), 1500);
+                        })
+                        .catch((error) => {
+                            toast({
+                                position: "top",
+                                title: "Error",
+                                description: "Login Failed",
+                                status: "error",
+                                duration: 2000,
+                                isClosable: true,
+                            });
+                        })
+                );
         }
     };
 
@@ -71,9 +133,11 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                             onChange={(event) => {
                                 setEmail(event.target.value);
                             }}
-                            borderColor="orange"
+                            _hover={{
+                                borderColor: "orange.300",
+                            }}
+                            borderColor="orange.600"
                             focusBorderColor="orange.400"
-                            colorScheme="orange"
                         />
                     </FormControl>
                     <FormControl id="login-password">
@@ -88,7 +152,10 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                             onChange={(event) => {
                                 setPassword(event.target.value);
                             }}
-                            borderColor="orange"
+                            _hover={{
+                                borderColor: "orange.300",
+                            }}
+                            borderColor="orange.600"
                             focusBorderColor="orange.400"
                         />
                     </FormControl>

@@ -1,52 +1,44 @@
 import React, { useEffect } from "react";
 import { CUIAutoComplete } from "chakra-ui-autocomplete";
 import { Box } from "@chakra-ui/layout";
-import { useDispatch } from "react-redux";
-import { setSelectedIngredients } from "../../state/recipe/find-recipe-by-ingredients.slice";
+import { useToast } from "@chakra-ui/toast";
+
+import {
+    findRecipeByIngredientTabValue,
+    ingredientState,
+    selectedIngredientsState,
+} from "../../state/ingredient/ingredient.state";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { getIngredients } from "../../api/ingredient.api";
 
 interface Props {}
 
 const AutoComplete: React.FC<Props> = (props: Props) => {
-    const dispatch = useDispatch();
+    const toast = useToast();
 
-    const [ingredients, setIngredients] = React.useState([]);
+    const [ingredients, setIngredients] = useRecoilState(ingredientState);
+    const [selectedIngredients, setSelectedIngredients] = useRecoilState(
+        selectedIngredientsState
+    );
+
+    const pageData = useRecoilValue(findRecipeByIngredientTabValue);
+
+    useEffect(() => {
+        getIngredients()
+            .then((response) => setIngredients(response.data.data.ingredient))
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []); // eslint-disable-line
+
     const [selectedItems, setSelectedItems] = React.useState([]);
 
-    // useEffect(() => {
-    //     (async function () {
-    //         try {
-    //             const response = await getAllIngredients();
-    //             console.log(response);
-    //             let ingredientList: any = [];
-
-    //             // TODO: Convert this into your API comsumption mode
-    //             response.data.meals.forEach((ingredient: any) => {
-    //                 ingredientList.push({
-    //                     value: ingredient.strIngredient,
-    //                     label: ingredient.strIngredient,
-    //                 });
-    //             });
-
-    //             setIngredients(ingredientList);
-
-    //             console.log(ingredients);
-    //         } catch (e) {
-    //             console.error(e);
-    //         }
-    //     })();
-    // }, []); // eslint-disable-line
-
     const handleSelectedItemsChange = (selectedItems: any) => {
-        if (selectedItems) {
-            setSelectedItems(selectedItems);
-            dispatch(
-                setSelectedIngredients(
-                    selectedItems.map((selectedItem: any) => {
-                        return selectedItem.label;
-                    })
-                )
-            );
-        }
+        setSelectedItems(selectedItems);
+        console.log(selectedItems);
+        setSelectedIngredients(
+            selectedItems.map((item: any) => parseInt(item.value))
+        );
     };
 
     return (
@@ -54,7 +46,7 @@ const AutoComplete: React.FC<Props> = (props: Props) => {
             <CUIAutoComplete
                 label="Choose Ingredients"
                 placeholder="Ingredient"
-                items={ingredients}
+                items={pageData.ingredientDropdownList}
                 inputStyleProps={{
                     colorScheme: "orange",
                     borderColor: "orange.500",

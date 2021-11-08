@@ -6,6 +6,8 @@ import foodie from "./routes/foodie";
 import recipe from "./routes/recipe";
 import recipeIngrediant from "./routes/recipeIngredient";
 import rating from "./routes/ratings";
+import search from "./routes/search";
+import comment from "./routes/comment"
 const app = express();
 
 // Configuration
@@ -24,5 +26,6 @@ app.use(foodie);
 app.use(recipe);
 app.use(recipeIngrediant);
 app.use(rating);
-
+app.use(search);
+app.use(comment);
 export default app;

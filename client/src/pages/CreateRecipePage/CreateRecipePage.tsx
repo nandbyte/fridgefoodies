@@ -1,97 +1,121 @@
 import React, { useEffect, useState } from "react";
-import {
-    AspectRatio,
-    Center,
-    Flex,
-    Image,
-    Input,
-    Text,
-} from "@chakra-ui/react";
-import { Heading, Stack, Box } from "@chakra-ui/layout";
 
-import Credit from "../../components/Credit";
+import { Heading, Stack } from "@chakra-ui/layout";
+import { Input, FormControl, useToast } from "@chakra-ui/react";
+
 import SectionDivider from "../../components/SectionDivider";
-import Navbar from "../../components/Navbar";
-import SubsectionDivider from "../../components/SubsectionDivider";
-import axios from "axios";
-import { useParams } from "react-router-dom";
+import PageContainer from "../../components/PageContainer";
+import PageSection from "../../components/PageSection";
+import { Button } from "@chakra-ui/react";
+
+import { postRecipe } from "../../api/recipe.api";
+import { foodieState } from "../../state/foodie/foodie.state";
+import { useRecoilState } from "recoil";
+import { useHistory } from "react-router-dom";
 
 const CreateRecipePage = (props: any) => {
-    const [recipe, setRecipe]: any = useState({});
+    const toast = useToast();
+    const history = useHistory();
 
-    useEffect(() => {}, []);
+    const [recipeTitle, setRecipeTitle] = useState("");
+    const [foodie, setFoodie] = useRecoilState(foodieState);
+
+    useEffect(() => {
+        if (foodie === null) {
+            toast({
+                position: "top",
+                title: "Error",
+                description: "Please log in first.",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
+            setTimeout(() => history.push("/login"), 1500);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (foodie === null) {
+            history.push("/login");
+        }
+    }, [foodie]);
+
+    const createRecipeEntry = () => {
+        console.log(foodie.foodieId);
+        postRecipe({
+            recipeId: 0,
+            foodieId: foodie!.foodieId,
+            foodieName: foodie!.foodieName,
+            recipeTitle,
+            recipeText: "",
+            recipeImage: "",
+            recipeRating: 0,
+        })
+            .then((response) => {
+                console.log(response.data);
+                console.log(response.data.data.recipe.recipeId);
+                toast({
+                    position: "top",
+                    title: "Success",
+                    description: "Recipe created successfully.",
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true,
+                });
+                history.push(
+                    "/edit-recipe/" + response.data.data.recipe.recipeId
+                );
+            })
+            .catch((error) => {
+                console.log(error);
+
+                toast({
+                    position: "top",
+                    title: "Error",
+                    description: "Something went wrong",
+                    status: "error",
+                    duration: 2000,
+                    isClosable: true,
+                });
+            });
+    };
 
     return (
-        <Box justifyItems="center">
-            <Navbar />
-            <Flex width="100%" justifyContent="center">
-                <Stack
-                    px={{ base: 8, xl: 16 }}
-                    justifyContent="space-between"
-                    width={{ base: "100%", xl: "1200px" }}
-                >
-                    <Box py={{ base: 4, xl: 8 }}>
-                        <Text
-                            fontSize={{ base: 14, lg: 24 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                            textTransform="uppercase"
-                        >
-                            Recipe
-                        </Text>
-                        <SubsectionDivider />
-                        <Input></Input>
+        <PageContainer variant="navbar">
+            <Heading variant="page">Create a New Recipe</Heading>
+            <SectionDivider />
 
-                        <Heading
-                            fontSize={{ base: 32, lg: 64 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                        >
-                            {recipe.strMeal}
-                        </Heading>
-                    </Box>
-                    <Box py={{ base: 4, xl: 8 }}>
-                        <Center>
-                            <Image
-                                borderRadius="md"
-                                w={{ base: "100%", lg: "50%" }}
-                                src={recipe.strMealThumb}
-                            />
-                        </Center>
-                    </Box>
-                    <Box py={{ base: 4, xl: 8 }}>
-                        <Heading
-                            fontSize={{ base: 18, lg: 36 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                            textTransform="uppercase"
-                        >
-                            Ingredients
-                        </Heading>
-                        <SubsectionDivider />
-                    </Box>
-                    <Box py={{ base: 4, xl: 8 }}>
-                        <Heading
-                            fontSize={{ base: 18, lg: 36 }}
-                            textAlign={{ base: "center", lg: "left" }}
-                            fontWeight="black"
-                            textTransform="uppercase"
-                        >
-                            Instructions
-                        </Heading>
-                        <SubsectionDivider />
-                        <Text fontSize={{ base: 12, lg: 18 }}>
-                            {recipe.strInstructions}
-                        </Text>
-                    </Box>
+            <Stack px={0} mx={0} justifyContent="space-between" spacing={12}>
+                <PageSection>
+                    <Heading variant="section">Recipe Title</Heading>
+                    <SectionDivider />
 
-                    <Box pt={{ base: 64, lg: 96 }}>
-                        <SectionDivider />
-                        <Credit />
-                    </Box>
-                </Stack>
-            </Flex>
-        </Box>
+                    <FormControl id="recipe-title">
+                        <Input
+                            variant="flushed"
+                            p={2}
+                            placeholder="Chicken Fry"
+                            size="lg"
+                            value={recipeTitle}
+                            onChange={(event) => {
+                                setRecipeTitle(event.target.value);
+                            }}
+                            _hover={{
+                                borderColor: "orange.300",
+                            }}
+                            borderColor="orange.600"
+                            focusBorderColor="orange.400"
+                        />
+                    </FormControl>
+                    <Button
+                        onClick={createRecipeEntry}
+                        disabled={recipeTitle === ""}
+                    >
+                        Create Recipe Entry
+                    </Button>
+                </PageSection>
+            </Stack>
+        </PageContainer>
     );
 };
 
