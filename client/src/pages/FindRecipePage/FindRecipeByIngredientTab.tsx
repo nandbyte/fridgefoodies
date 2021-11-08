@@ -1,46 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Tag, Text } from "@chakra-ui/react";
-import { Heading, Stack, Box } from "@chakra-ui/layout";
+import { Heading, Stack, Box, SimpleGrid } from "@chakra-ui/layout";
 
 import SectionDivider from "../../components/SectionDivider";
 import PageSection from "../../components/PageSection";
 import AutoComplete from "../../components/AutoComplete";
 import Loading from "../../components/Loading";
-import { useTypedDispatch } from "../../hooks/useTypedDispatch";
-import { useTypedSelector } from "../../hooks/useTypedSelector";
 import SearchCriteria from "../../components/SearchCriteria";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { findRecipeByIngredientTabValue } from "../../state/ingredient/ingredient.state";
+import YourIngredients from "../../components/YourIngredients";
+import RecipeCard from "../../components/RecipeCard";
+import {
+    ingredientFilterState,
+    ingredientMatchingRecipeState,
+    ingredientOrderState,
+    ingredientSortState,
+} from "../../state/recipe/ingredient-recipe.state";
+import { getRecipeByIngredients } from "../../api/recipe.api";
+import { RecipeCardData } from "../../state/types/recipe.type";
 
 interface Props {}
 
-interface TagProps {
-    ingredientName: string;
-}
-const IngredientTag: React.FC<TagProps> = (props: TagProps) => {
-    return (
-        <Tag
-            key={props.ingredientName}
-            fontSize="lg"
-            colorScheme="orange"
-            variant="outline"
-            px={3}
-            py={2}
-            m={1}
-        >
-            {props.ingredientName}
-        </Tag>
-    );
-};
-
 const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
-    const dispatch = useTypedDispatch();
+    const pageData = useRecoilValue(findRecipeByIngredientTabValue);
 
-    const ingredientList = useTypedSelector(
-        (state) => state.ingredient.ingredientList
-    );
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const selectedIngredients = useTypedSelector(
-        (state) => state.findRecipeByIngredients.selectedIngredients
-    );
+    const [ingredientMatchingRecipe, setIngredientMatchingRecipe] =
+        useRecoilState(ingredientMatchingRecipeState);
+
+    const [filter] = useRecoilState(ingredientFilterState);
+    const [sort] = useRecoilState(ingredientSortState);
+    const [order] = useRecoilState(ingredientOrderState);
+
+    const findRecipe: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+        setLoading(true);
+        console.log(pageData.selectedIngredients);
+        getRecipeByIngredients(
+            filter,
+            sort,
+            order,
+            pageData.selectedIngredients
+        )
+            .then((response) => {
+                console.log(response.data.data.recipes);
+                setIngredientMatchingRecipe(response.data.data.recipes);
+            })
+            .catch((error) => console.log(error));
+        setLoading(false);
+    };
 
     return (
         <Stack px={0} mx={0} justifyContent="space-between" spacing={12}>
@@ -51,24 +60,17 @@ const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
 
                 <Heading variant={"section"}>Your Ingredients</Heading>
                 <SectionDivider />
-                <Box>
-                    {selectedIngredients.length === 0 ? (
-                        <Text>No ingredient is selected.</Text>
-                    ) : (
-                        selectedIngredients.map((ingredient: any) => {
-                            return (
-                                <IngredientTag ingredientName={ingredient} />
-                            );
-                        })
-                    )}
-                </Box>
+                <YourIngredients />
             </PageSection>
 
             <PageSection>
                 <Heading variant="section">Find Recipe By Ingredients</Heading>
                 <SectionDivider />
                 <SearchCriteria />
-                <Button disabled={selectedIngredients.length === 0}>
+                <Button
+                    disabled={pageData.selectedIngredientsCount === 0}
+                    onClick={findRecipe}
+                >
                     Find Recipe
                 </Button>
             </PageSection>
@@ -76,7 +78,19 @@ const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
             <PageSection>
                 <Heading variant="section">Matching Recipe</Heading>
                 <SectionDivider />
-                <Loading />
+                <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap={4}>
+                    {ingredientMatchingRecipe.map((recipe: RecipeCardData) => {
+                        return (
+                            <RecipeCard
+                                key={recipe.recipeId}
+                                variant="showcase"
+                                id={recipe.recipeId}
+                                image={recipe.recipeImage}
+                                title={recipe.recipeTitle}
+                            />
+                        );
+                    })}
+                </SimpleGrid>
             </PageSection>
         </Stack>
     );

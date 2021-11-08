@@ -6,13 +6,22 @@ import { Link } from "react-router-dom";
 interface Props {
     image: string;
     title: string;
-    id: string;
+    id: number;
+    variant: "edit" | "showcase" | "ingredient";
 }
 
-const MatchingRecipe: React.FC<Props> = (props: Props) => {
+const RecipeCard: React.FC<Props> = (props: Props) => {
+    const link: string = () => {
+        if (props.variant === "edit") {
+            return `/edit-recipe/${props.id}`;
+        } else {
+            return `/recipe/${props.id}`;
+        }
+    };
+
     return (
-        <Link to={`/recipe/${props.id}`}>
-            <Box p={2} borderRadius="md" border="2px solid black">
+        <Link to={link}>
+            <Box p={2} borderRadius="md" border="2px solid orange">
                 <Center>
                     <Image w="100%" src={props.image} />
                 </Center>
@@ -24,4 +33,4 @@ const MatchingRecipe: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default MatchingRecipe;
+export default RecipeCard;

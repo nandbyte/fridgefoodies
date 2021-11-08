@@ -1,5 +1,6 @@
 export interface Foodie {
-    foodieId?: string;
+    foodieId: string;
     foodieName: string;
     foodieEmail: string;
+    isAdmin: boolean;
 }
