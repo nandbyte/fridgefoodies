@@ -50,7 +50,7 @@ const EditRecipePage = (props: any) => {
     const [cloudinaryLink, setCloudinaryLink] = useState<string>("");
     const [imageLoading, setImageLoading] = useState<boolean>(false);
 
-    const [ingredientList, setIngredientList] = useRecoilState(ingredientState);
+    const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [foodie] = useRecoilState(foodieState);
 
     //const [images,setImages] = useState([]);
@@ -62,6 +62,7 @@ const EditRecipePage = (props: any) => {
     const [ingredientVariant, setIngredientVariant] = useState<string>("");
     const [ingredientQuantity, setIngredientQuantity] = useState<string>("");
     const [ingredientGuide, setIngredientGuide] = useState<string>("");
+    const [ingredientLoading, setIngredientLoading] = useState<boolean>(true);
 
     const EditRecipeIngredient = () => {
         return (
@@ -151,9 +152,16 @@ const EditRecipePage = (props: any) => {
                 })
                 .catch((error) => console.log(error));
         }
-
-        console.log("Edit Recipe Ingredient List - ", ingredientList);
     }, [id]);
+
+    useEffect(() => {
+        getIngredients()
+            .then((response) => setIngredients(response.data.data.ingredient))
+            .catch((error) => {
+                console.log(error);
+            });
+        setIngredientLoading(false);
+    }, []); // eslint-disable-line
 
     const editRecipe = () => {
         putRecipe({
@@ -178,16 +186,7 @@ const EditRecipePage = (props: any) => {
         axios
             .post(
                 "https://api.cloudinary.com/v1_1/charlatane2499/image/upload",
-                formData,
-                {
-                    transformRequest: [
-                        (data, headers) => {
-                            delete headers.common.Authorization;
-                            delete headers.common.FoodieId;
-                            return data;
-                        },
-                    ],
-                }
+                formData
             )
             .then((response) => {
                 console.log(response.data);
@@ -305,33 +304,39 @@ const EditRecipePage = (props: any) => {
                         </Heading>
                         <SectionDivider />
                         <Heading variant="subsection">Ingredient Name</Heading>
-                        <Select
-                            placeholder={"Select Ingredient"}
-                            value={ingredient?.ingredientId}
-                            onChange={(event) =>
-                                setIngredient(
-                                    ingredientList[
-                                        parseInt(event.target.value) - 1
-                                    ]
-                                )
-                            }
-                        >
-                            {ingredientList.map((ingredientObject) => {
-                                return (
-                                    <option
-                                        key={ingredientObject.ingredientId}
-                                        value={ingredientObject.ingredientId}
-                                    >
-                                        {
-                                            ingredientList[
-                                                ingredientObject.ingredientId -
-                                                    1
-                                            ].ingredientName
-                                        }
-                                    </option>
-                                );
-                            })}
-                        </Select>
+                        {ingredientLoading === false ? (
+                            <Select
+                                placeholder={"Select Ingredient"}
+                                value={ingredient?.ingredientId}
+                                onChange={(event) =>
+                                    setIngredient(
+                                        ingredients[
+                                            parseInt(event.target.value) - 1
+                                        ]
+                                    )
+                                }
+                            >
+                                {ingredients.map((ingredientObject) => {
+                                    return (
+                                        <option
+                                            key={ingredientObject.ingredientId}
+                                            value={
+                                                ingredientObject.ingredientId
+                                            }
+                                        >
+                                            {
+                                                ingredients[
+                                                    ingredientObject.ingredientId -
+                                                        1
+                                                ].ingredientName
+                                            }
+                                        </option>
+                                    );
+                                })}
+                            </Select>
+                        ) : (
+                            <Loading />
+                        )}
                         <Heading variant="subsection">Variant</Heading>
                         <Input
                             placeholder="Variant"
