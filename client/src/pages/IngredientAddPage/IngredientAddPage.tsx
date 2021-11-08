@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Heading, Stack, Text } from "@chakra-ui/layout";
+import { Heading, Stack, Text, Box } from "@chakra-ui/layout";
 import { Input, FormControl, useToast, Textarea } from "@chakra-ui/react";
 
 import SectionDivider from "../../components/SectionDivider";
@@ -84,6 +84,30 @@ const IngredientAddPage = (props: any) => {
             });
     };
 
+    const IngredientComponent = (props: any) => {
+        return (
+            <Box
+                p={4}
+                borderWidth={1}
+                borderStyle={"dotted"}
+                borderColor={"orange.500"}
+                borderRadius={8}
+            >
+                <Stack direction="row" alignContent="center">
+                    <Heading variant="section">
+                        {props.ingredient.ingredientId}.
+                    </Heading>
+                    <Box>
+                        <Heading variant={"section"}>
+                            {props.ingredient.ingredientName}
+                        </Heading>
+                        <Text>{props.ingredient.ingredientDescription}</Text>
+                    </Box>
+                </Stack>
+            </Box>
+        );
+    };
+
     return (
         <PageContainer variant="navbar">
             <Heading variant="page">Create a New Ingredient</Heading>
@@ -116,9 +140,9 @@ const IngredientAddPage = (props: any) => {
                     <FormControl id="ingredient-description">
                         <Textarea
                             p={2}
-                            placeholder="Chicken Fry"
+                            placeholder="..."
                             size="lg"
-                            value={ingredientName}
+                            value={ingredientDescription}
                             onChange={(event) => {
                                 setIngredientDescription(event.target.value);
                             }}
@@ -143,17 +167,16 @@ const IngredientAddPage = (props: any) => {
                 <PageSection>
                     <Heading variant="section">Ingredients</Heading>
                     <SectionDivider />
-
-                    {ingredients.map((ingredientObject) => {
-                        return (
-                            <>
-                                <Heading> {ingredientObject.name}</Heading>{" "}
-                                <Text>
-                                    {ingredientObject.ingredientDescription}
-                                </Text>
-                            </>
-                        );
-                    })}
+                    <Stack spacing={4}>
+                        {ingredients.map((ingredientObject) => {
+                            console.log(ingredientObject);
+                            return (
+                                <IngredientComponent
+                                    ingredient={ingredientObject}
+                                />
+                            );
+                        })}
+                    </Stack>
                 </PageSection>
             </Stack>
         </PageContainer>

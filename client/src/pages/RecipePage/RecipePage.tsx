@@ -273,7 +273,11 @@ const RecipePage = (props: any) => {
                         <PageSection>
                             <Heading variant="section">Instructions</Heading>
                             <SectionDivider />
-                            <Text fontSize="xl">{recipe.recipeText}</Text>
+                            <Stack spacing={4}>
+                                {recipe.recipeText.split("\n").map((text) => {
+                                    return <Text fontSize="xl">{text}</Text>;
+                                })}
+                            </Stack>
                         </PageSection>
 
                         <Box py={4} pt={16}>
