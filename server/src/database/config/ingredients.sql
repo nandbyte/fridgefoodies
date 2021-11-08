@@ -132,6 +132,7 @@ insert into ingredient (ingredient_name, ingredient_description) values ('Water'
 insert into ingredient (ingredient_name, ingredient_description) values ('Caramel', 'Caramel is a medium to dark-orange confectionery product made by heating a variety of sugars. It can be used as a flavoring in puddings and desserts, as a filling in bonbons, or as a topping for ice cream and custard.');
 
 insert into ingredient (ingredient_name, ingredient_description) values ('Tomato', 'The tomato is the edible berry of the plant Solanum lycopersicum, commonly known as a tomato plant. Tomatoes are loaded with a substance called lycopene. It gives them their bright red color and helps protect them from the ultraviolet rays of the sun. In much the same way, it can help protect your cells from damage. Tomatoes also have potassium, vitamins B and E, and other nutrients.');
+
 insert into ingredient (ingredient_name, ingredient_description) values ('Duck', 'Duck is the common name for numerous species of waterfowl in the family Anatidae. Ducks are generally smaller and shorter-necked than swans and geese, which are also members of the same family. Duck is eaten in many cuisines around the world. It is a high-fat, high-protein meat rich in iron. Duckling nominally comes from a juvenile animal, but may be simply a menu name.');
 
 
@@ -141,6 +142,7 @@ insert into ingredient (ingredient_name, ingredient_description) values ('Rosema
 insert into ingredient (ingredient_name, ingredient_description) values ('Banana', 'A banana is an elongated, edible fruit – botanically a berry – produced by several kinds of large herbaceous flowering plants in the genus Musa. In some countries, bananas used for cooking may be called "plantains", distinguishing them from dessert bananas. Bananas are also rich in potassium, fiber and natural sugars. The vitamin C, potassium and other vitamins and minerals bananas contain help to maintain overall good health. Because the fruits sugar content is balanced with fiber, it helps maintain a healthy blood glucose level.');
 
 insert into ingredient (ingredient_name, ingredient_description) values ('Maple Syrup', 'Maple syrup is a syrup usually made from the xylem sap of sugar maple, red maple, or black maple trees, although it can also be made from other maple species.');
+
 insert into ingredient (ingredient_name, ingredient_description) values ('Chocolate', 'Chocolate is a food product made from roasted and ground cacao pods, that is available as a liquid, solid or paste, on its own or as a flavoring agent in other foods. Normal eating chocolate can widely be used as a substitute for baking chocolate in almost any recipe. However, due to the fact that eating chocolate already has quite a bit of sugar added to it, you may want to reduce the sugar in your recipe accordingly.');
 
 
