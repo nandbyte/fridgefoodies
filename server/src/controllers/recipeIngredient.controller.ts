@@ -1,23 +1,36 @@
 import expressAsyncHandler from "express-async-handler";
 import { RecipeIngredient } from "../models";
 import { query } from "../database";
+import  axios  from "axios";
 
 export const addRecipeIngredient = expressAsyncHandler(async (req, res) => {
     console.log(req.body);
-    const { recipeId, ingredientId, ingredientVariant, ingredientGuide, ingredientQuantity } = req.body;
+    const { recipeId, ingredientId, ingredientVariant, ingredientQuantity } = req.body;
+    
+    const fetchName:any = await query("SELECT * FROM ingredient WHERE ingredient_id=$1",[ingredientId]);
+
+    const sentence = fetchName.rows[0].ingredient_name+" "+ingredientQuantity;
+    const url = encodeURI(sentence);
+    const api = `https://api.edamam.com/api/nutrition-data?app_id=f956f590&app_key=b63e722a5689bf8eb4ec6b4dbb8a2335&nutrition-type=cooking&ingr=${url}`;
+    console.log(api);
+    let calories:any;
+    await axios.get(api).then((response)=>{
+        calories = response.data.calories;
+    })
+    console.log(calories);
     var result: any;
     try {
-        result = await query("INSERT INTO recipe_ingredient(recipe_id,ingredient_id,ingredient_variant,ingredient_guide,ingredient_quantity) VALUES($1,$2,$3,$4,$5) RETURNING *", [recipeId, ingredientId, ingredientVariant, ingredientGuide, ingredientQuantity]);
+        result = await query("INSERT INTO recipe_ingredient(recipe_id,ingredient_id,ingredient_variant,ingredient_quantity,ingredient_calories) VALUES($1,$2,$3,$4,$5) RETURNING *", [recipeId, ingredientId, ingredientVariant, ingredientQuantity,calories]);
         console.log(result.rows);
         const ingredientName: any = await query("SELECT ingredient_name from ingredient WHERE ingredient_id=$1", [ingredientId]);
         const newRecipeIngredient: RecipeIngredient = {
             recipeIngredientId: result.rows[0].recipe_ingredient_id,
             recipeId: result.rows[0].recipe_id,
             ingredientId: result.rows[0].ingredient_id,
-            ingredientGuide: result.rows[0].ingredient_guide,
+    
             ingredientQuantity: result.rows[0].ingredient_quantity,
-            ingredientVariant: result.rows[0].ingredient_variant
-
+            ingredientVariant: result.rows[0].ingredient_variant,
+            ingredientCalories: result.rows[0].ingredient_calories
         }
 
         if (result.rowCount > 0) {
@@ -30,9 +43,10 @@ export const addRecipeIngredient = expressAsyncHandler(async (req, res) => {
                         recipeIngredientId: result.rows[0].recipe_ingredient_id,
                         recipeId: result.rows[0].recipe_id,
                         ingredientId: result.rows[0].ingredient_id,
-                        ingredientGuide: result.rows[0].ingredient_guide,
+
                         ingredientQuantity: result.rows[0].ingredient_quantity,
-                        ingredientVariant: result.rows[0].ingredient_variant
+                        ingredientVariant: result.rows[0].ingredient_variant,
+                        ingredientCalories: result.rows[0].ingredient_calories
                     }
 
                     const finalResult = result.rows.map(
@@ -41,10 +55,11 @@ export const addRecipeIngredient = expressAsyncHandler(async (req, res) => {
                                 recipeIngredientId: obj.recipe_ingredient_id,
                                 recipeId: obj.recipe_id,
                                 ingredientId: obj.ingredient_id,
-                                ingredientGuide: obj.ingredient_guide,
+                        
                                 ingredientQuantity: obj.ingredient_quantity,
                                 ingredientVariant: obj.ingredient_variant,
-                                ingredientName: obj.ingredientname
+                                ingredientName: obj.ingredientname,
+                                ingredientCalories: obj.ingredient_calories,
                             }
                         }
                     )
@@ -82,7 +97,7 @@ export const addRecipeIngredient = expressAsyncHandler(async (req, res) => {
 
 
 export const editRecipeIngredient = expressAsyncHandler(async (req, res) => {
-    const { recipeIngredientId, recipeId, ingredientId, ingredientVariant, ingredientGuide, ingredientQuantity } = req.body;
+    const { recipeIngredientId, recipeId, ingredientId, ingredientVariant, ingredientQuantity,ingredientCalories } = req.body;
 
     try {
         const result: any = await query("SELECT * FROM recipe_ingredient WHERE recipe_ingredient_id = $1", [recipeIngredientId]);
@@ -92,9 +107,10 @@ export const editRecipeIngredient = expressAsyncHandler(async (req, res) => {
                 recipeIngredientId: result.rows[0].recipe_ingredient_id,
                 recipeId: recipeId,
                 ingredientId: ingredientId,
-                ingredientGuide: ingredientGuide,
+                
                 ingredientQuantity: ingredientQuantity,
-                ingredientVariant: ingredientVariant
+                ingredientVariant: ingredientVariant,
+                ingredientCalories: ingredientCalories,
             }
 
             res.status(202).json({
@@ -124,9 +140,10 @@ export const getRecipeIngredientById = expressAsyncHandler(async (req, res) => {
                 recipeIngredientId: result.rows[0].recipe_ingredient_id,
                 recipeId: result.rows[0].recipe_id,
                 ingredientId: result.rows[0].ingredient_id,
-                ingredientGuide: result.rows[0].ingredient_guide,
+                
                 ingredientQuantity: result.rows[0].ingredient_quantity,
-                ingredientVariant: result.rows[0].ingredient_variant
+                ingredientVariant: result.rows[0].ingredient_variant,
+                ingredientCalories: result.rows[0].ingredient_calories
             }
 
             const finalResult = result.rows.map(
@@ -135,7 +152,7 @@ export const getRecipeIngredientById = expressAsyncHandler(async (req, res) => {
                         recipeIngredientId: obj.recipe_ingredient_id,
                         recipeId: obj.recipe_id,
                         ingredientId: obj.ingredient_id,
-                        ingredientGuide: obj.ingredient_guide,
+                        ingredientCalories: obj.ingredient_calories,
                         ingredientQuantity: obj.ingredient_quantity,
                         ingredientVariant: obj.ingredient_variant,
                         ingredientName: obj.ingredientname
@@ -191,7 +208,7 @@ export const deleteRecipeIngredient = expressAsyncHandler(async (req, res) => {
                         recipeId: obj.recipe_id,
                         ingredientId: obj.ingredient_id,
                         ingredientVariant: obj.ingredient_variant,
-                        ingredientGuide: obj.ingredient_guide,
+                        ingredientCalories: obj.ingredient_calories,
                         ingredientQuantity: obj.ingredient_quantity,
                         ingredientName: obj.ingredientname
                     }

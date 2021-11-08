@@ -74,3 +74,26 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
         }
     }
 })
+
+export const foodieDetails = expressAsyncHandler(async(req,res)=>{
+    const {foodieid,authorization} = req.headers;
+    console.log(req.headers);
+    try{
+        const result:any = await query("SELECT * FROM foodie WHERE foodie_id=$1",[foodieid]);
+        if(result.rowCount>0){
+            res.status(200).json({
+                status: 200,
+                data:{
+                    foodie:{
+                        foodieId: foodieid,
+                        foodieName: result.rows[0].foodie_name,
+                        foodieEmail: result.rows[0].foodie_email,
+                        isAdmin: result.rows[0].foodie_is_admin
+                    }
+                }
+            })
+        }
+    }catch(err:any){
+        console.log(err);
+    }
+})

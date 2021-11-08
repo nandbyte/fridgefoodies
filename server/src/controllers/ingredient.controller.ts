@@ -77,13 +77,18 @@ export const addIngredient = expressAsyncHandler(async (req, res) => {
             res.status(200).json({
                 status: 200,
                 data: {
-                    ingrediant:{}
+                    ingredient:{}
                 },
                 error: "Can't add the ingredient"
             });
         }
 
     } catch (err: any) {
+        res.status(203).json({
+            status: 203,
+            data:{},
+            error:"Ingredient Already present",
+        })
         console.log(err);
     }
 })

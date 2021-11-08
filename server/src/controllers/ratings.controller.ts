@@ -6,31 +6,40 @@ export const addRating = expressAsyncHandler(async (req, res) => {
     const { recipeId, foodieId } = req.body;
 
     try {
-        const result: any = await query("INSERT INTO rating(foodie_id,recipe_id) VALUES($1,$2) RETURNING *", [foodieId, recipeId]);
-        const rating: Rating = {
-            foodieId: result.rows[0].foodie_id,
-            recipeId: result.rows[0].recipe_id,
-        }
-        if (result.rowCount > 0) {
-            res.status(200).json({
-                status: 200,
-                data: {
-                    rating: rating,
-                },
-                error: null,
-            });
+        const alreadyExists: any = await query("SELECT *  FROM rating WHERE foodie_id = $1 AND recipe_id=$2", [foodieId, recipeId]);
+        console.log(alreadyExists);
+        if (alreadyExists.rowCount === 0) {
+            const result: any = await query("INSERT INTO rating(foodie_id,recipe_id) VALUES($1,$2) RETURNING *", [foodieId, recipeId]);
+            const rating: Rating = {
+                foodieId: result.rows[0].foodie_id,
+                recipeId: result.rows[0].recipe_id,
+            }
+            if (result.rowCount > 0) {
+                res.status(200).json({
+                    status: 200,
+                    data: {
+                        rating: rating,
+                    },
+                    error: null,
+                });
+            }
         } else {
-            res.status(200).json({
-                status: 200,
-                data: {
-                    rating: 0,
-                },
-                error: null,
-            });
+            const result: any = await query(`DELETE FROM RATING WHERE foodie_id=$1 and recipe_id=$2 returning *`, [foodieId, recipeId]);
+            // console.log(result);
+            if (result.rowCount > 0) {
+                res.status(202).json({
+                    status: 202,
+                    data: {
+                        deleted: true,
+                    },
+                    error: null
+                })
+            }
         }
     } catch (err: any) {
-        throw new Error(err);
+        console.log(err)
     }
+
 });
 
 export const checkRating = expressAsyncHandler(async (req, res) => {
@@ -96,10 +105,11 @@ export const getAllRatingsByRecipe = expressAsyncHandler(async (req, res) => {
 
 export const deleteRating = expressAsyncHandler(async (req, res) => {
     const { recipeId, foodieId } = req.body;
+    // console.log(recipeId,foodieId);
     try {
-        const result: any = await query("DELETE FROM rating WHERE foodie_id=$1 and recipe_id=$2 RETURNING *", [foodieId, recipeId]);
-        console.log(result);
-        if (result.rowCount === 1) {
+        const result: any = await query(`DELETE FROM RATING WHERE foodie_id=$1 and recipe_id=$2 returning *`, [foodieId, recipeId]);
+        // console.log(result);
+        if (result.rowCount > 0) {
             res.status(202).json({
                 status: 202,
                 data: {
@@ -117,6 +127,11 @@ export const deleteRating = expressAsyncHandler(async (req, res) => {
             })
         }
     } catch (err: any) {
-        throw new Error(err);
+        res.status(404).json({
+            status: 404,
+            data: {},
+            error: "Database error!"
+        })
+        // throw new Error(err);
     }
 })

@@ -26,7 +26,7 @@ create table recipe(
 
 create table ingredient(
     ingredient_id serial primary key,
-    ingredient_name varchar(256) not null,
+    ingredient_name varchar(256) not null unique,
     ingredient_description varchar(4096)
 );
 
@@ -35,8 +35,8 @@ create table recipe_ingredient(
     recipe_id int references recipe(recipe_id),
     ingredient_id int references ingredient(ingredient_id),
     ingredient_variant varchar(256),    
-    ingredient_guide varchar(1024),
-    ingredient_quantity varchar(128) not null
+    ingredient_quantity varchar(128) not null,
+    ingredient_calories decimal(17,2)
 );
 
 create table comment(
@@ -52,55 +52,55 @@ create table rating(
     primary key(foodie_id,recipe_id)
 );
 
-SELECT *
-FROM recipe 
-WHERE recipe_id in (
-    SELECT recipe_id FROM recipe_ingredient
-    WHERE ingredient_id=1
-)
+-- SELECT *
+-- FROM recipe 
+-- WHERE recipe_id in (
+--     SELECT recipe_id FROM recipe_ingredient
+--     WHERE ingredient_id=1
+-- )
 
-SELECT recipe.*,totalRating
-FROM recipe,(
-    SELECT COUNT(recipe_id) as totalRating, recipe_id
-    FROM rating
-    GROUP BY recipe_id
-) AS counterTable
-WHERE recipe.recipe_id = counterTable.recipe_id 
-    AND lower(recipe_title) like lower($1)
-;
-
-
-SELECT recipe.*,totalRating
-        FROM recipe,(
-        SELECT COUNT(recipe_id) as totalRating, recipe_id
-        FROM rating
-        GROUP BY recipe_id
-    ) AS counterTable
-    WHERE recipe.recipe_id = counterTable.recipe_id AND recipe.recipe_id = 4
-    ORDER BY recipe_id asc
-    ;
+-- SELECT recipe.*,totalRating
+-- FROM recipe,(
+--     SELECT COUNT(recipe_id) as totalRating, recipe_id
+--     FROM rating
+--     GROUP BY recipe_id
+-- ) AS counterTable
+-- WHERE recipe.recipe_id = counterTable.recipe_id 
+--     AND lower(recipe_title) like lower($1)
+-- ;
 
 
-SELECT recipe.*,totalRating
-        FROM recipe,(
-        SELECT COUNT(recipe_id) as totalRating, recipe_id
-        FROM rating
-        GROUP BY recipe_id
-    ) AS counterTable
-    WHERE recipe.recipe_id = counterTable.recipe_id 
-        AND recipe.recipe_id = 4 
-        AND recipe.foodie_id = $1
-    ;
-
-SELECT * FROM recipe WHERE lower(recipe_title) like lower($1)
+-- SELECT recipe.*,totalRating
+--         FROM recipe,(
+--         SELECT COUNT(recipe_id) as totalRating, recipe_id
+--         FROM rating
+--         GROUP BY recipe_id
+--     ) AS counterTable
+--     WHERE recipe.recipe_id = counterTable.recipe_id AND recipe.recipe_id = 4
+--     ORDER BY recipe_id asc
+--     ;
 
 
-SELECT recipe.*,totalRating
-        FROM recipe,(
-        SELECT COUNT(recipe_id) as totalRating, recipe_id
-        FROM rating
-        GROUP BY recipe_id
-        ) AS counterTable
-        WHERE recipe.recipe_id = counterTable.recipe_id 
-        AND lower(recipe_title) like lower('%beef%')
-        ORDER BY totalrating asc;
+-- SELECT recipe.*,totalRating
+--         FROM recipe,(
+--         SELECT COUNT(recipe_id) as totalRating, recipe_id
+--         FROM rating
+--         GROUP BY recipe_id
+--     ) AS counterTable
+--     WHERE recipe.recipe_id = counterTable.recipe_id 
+--         AND recipe.recipe_id = 4 
+--         AND recipe.foodie_id = $1
+--     ;
+
+-- SELECT * FROM recipe WHERE lower(recipe_title) like lower($1)
+
+
+-- SELECT recipe.*,totalRating
+--         FROM recipe,(
+--         SELECT COUNT(recipe_id) as totalRating, recipe_id
+--         FROM rating
+--         GROUP BY recipe_id
+--         ) AS counterTable
+--         WHERE recipe.recipe_id = counterTable.recipe_id 
+--         AND lower(recipe_title) like lower('%beef%')
+--         ORDER BY totalrating asc;
