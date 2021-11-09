@@ -68,7 +68,7 @@ export const search = expressAsyncHandler(async (req, res) => {
         for (let i = 0; i < str.length; i++) {
             const result: any = await query(str[i], []);
             result.rows.forEach((recipe: any) => {
-                if (recipe.total_ingredient <= ids.length) {
+                if (recipe.total_ingredient == ids.length) {
                     bestMatch.push({
                         foodieId: recipe.foodie_id,
                         recipeId: recipe.recipe_id,

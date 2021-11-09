@@ -16,11 +16,13 @@ const SearchCriteria: React.FC<Props> = (props: Props) => {
     const [filterType, setFilterType] = useRecoilState(ingredientFilterState);
     const [sortType, setSortType] = useRecoilState(ingredientSortState);
     const [orderType, setOrderType] = useRecoilState(ingredientOrderState);
+
     const [ingredientMatchingRecipe, setIngredientMatchingRecipe] =
         useRecoilState(ingredientMatchingRecipeState);
 
     const changeFilterType = (value: string) => {
         setIngredientMatchingRecipe([]);
+
         setFilterType(value);
     };
 
@@ -51,9 +53,7 @@ const SearchCriteria: React.FC<Props> = (props: Props) => {
                         <Radio value={"best"}>
                             Including your ingredients and more.
                         </Radio>
-                        <Radio value={"bounded"}>
-                            Including your incredients only.
-                        </Radio>
+                        <Radio value={"bounded"}>Exact ingredients only.</Radio>
                     </Stack>
                 </RadioGroup>
 
