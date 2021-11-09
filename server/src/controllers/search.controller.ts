@@ -47,7 +47,12 @@ export const search = expressAsyncHandler(async (req, res) => {
         });
     } else if (req.query.filter === "bounded") {
         let baseQuery =
-            "SELECT recipe.* from recipe,recipe_ingredient WHERE recipe.recipe_id = recipe_ingredient.recipe_id ";
+            `SELECT recipe.*,counter_table.total_ingredient as total_ingredient
+            from recipe,recipe_ingredient,
+                (SELECT COUNT(*) as total_ingredient 
+                from recipe_ingredient group by recipe_id) 
+            as counter_table
+                WHERE recipe.recipe_id = recipe_ingredient.recipe_id `;
 
         const ingredientCount = ids.length;
         const str: string[] = [];
@@ -64,13 +69,15 @@ export const search = expressAsyncHandler(async (req, res) => {
             const result: any = await query(str[i], []);
             console.log(i, " ", result.rows);
             result.rows.forEach((recipe: any) => {
-                bestMatch.push({
-                    foodieId: recipe.foodie_id,
-                    recipeId: recipe.recipe_id,
-                    recipeTitle: recipe.recipe_title,
-                    recipeImage: recipe.recipe_image,
-                    recipeText: recipe.recipe_text,
-                });
+                if (recipe.total_ingredient <= ids.length) {
+                    bestMatch.push({
+                        foodieId: recipe.foodie_id,
+                        recipeId: recipe.recipe_id,
+                        recipeTitle: recipe.recipe_title,
+                        recipeImage: recipe.recipe_image,
+                        recipeText: recipe.recipe_text,
+                    });
+                }
             });
         }
         console.log(bestMatch);
