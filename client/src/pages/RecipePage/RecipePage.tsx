@@ -62,7 +62,6 @@ const RecipePage = (props: any) => {
                 });
 
                 setRatingCount(response.data.data.totalRating);
-
                 setRecipeIngredients(response.data.data.recipeIngredients);
                 setComments(response.data.data.comments);
             })
@@ -79,22 +78,19 @@ const RecipePage = (props: any) => {
         }
     }, []);
 
+    
+
     const CommentComponent: React.FC<CommentProps> = (props: CommentProps) => {
         const [deleteCommentLoading, setDeleteCommentLoading] =
             useState<boolean>(false);
 
-        const displayDeleteButton: ResponsiveValue<any> = () => {
-            if (foodie !== null) {
-                if (foodie.foodieId !== props.comment.foodieId) {
-                    return "none";
-                } else {
-                    return "block";
-                }
-            } else {
-                return "block";
-            }
+            const displayDeleteButton: ResponsiveValue<any> = () => {
+                if (foodie !== null)
+                    if (foodie.foodieId === props.comment.foodieId) return "block";
+        
+                return "none";
         };
-
+        
         return (
             <Box
                 p={2}
@@ -173,6 +169,7 @@ const RecipePage = (props: any) => {
                         aria-label="rate"
                         icon={<FaThumbsUp size="25" />}
                         onClick={rateRecipe}
+                        disabled={foodie === null}
                     />
                 </Center>
                 <Center>
@@ -283,60 +280,67 @@ const RecipePage = (props: any) => {
                         <Box py={4} pt={16}>
                             <Heading variant="section">Comments</Heading>
                             <SectionDivider />
-                            <SimpleGrid columns={{ base: 1, lg: 6 }}>
-                                <GridItem colSpan={{ base: 1, lg: 5 }}>
-                                    <Textarea
-                                        // display={}
+                            {foodie !== null ? (
+                                <SimpleGrid columns={{ base: 1, lg: 6 }}>
+                                    <GridItem colSpan={{ base: 1, lg: 5 }}>
+                                        <Textarea
+                                            // display={}
 
-                                        variant="outline"
-                                        placeholder="Comment"
-                                        p={2}
-                                        value={commentText}
-                                        onChange={(event) => {
-                                            setCommentText(event.target.value);
-                                        }}
-                                        _hover={{
-                                            borderColor: "orange.300",
-                                        }}
-                                        borderColor="orange.600"
-                                        focusBorderColor="orange.400"
-                                    />
-                                </GridItem>
-                                <GridItem colSpan={1}>
-                                    <Button
-                                        p={2}
-                                        w={{ base: "full", lg: "full" }}
-                                        mx={1}
-                                        my={{ base: 2, lg: 0 }}
-                                        height="100%"
-                                        isLoading={postCommentLoading}
-                                        onClick={() => {
-                                            setPostCommentLoading(true);
-                                            postComment({
-                                                commentId: 0,
-                                                foodieId: foodie!.foodieId,
-                                                foodieName: foodie!.foodieName,
-                                                recipeId: recipe.recipeId,
-                                                commentText: commentText,
-                                            })
-                                                .then((response) => {
-                                                    setComments(
-                                                        response.data.data
-                                                            .comments
-                                                    );
-
-                                                    setCommentText("");
+                                            variant="outline"
+                                            placeholder="Comment"
+                                            p={2}
+                                            value={commentText}
+                                            onChange={(event) => {
+                                                setCommentText(
+                                                    event.target.value
+                                                );
+                                            }}
+                                            _hover={{
+                                                borderColor: "orange.300",
+                                            }}
+                                            borderColor="orange.600"
+                                            focusBorderColor="orange.400"
+                                        />
+                                    </GridItem>
+                                    <GridItem colSpan={1}>
+                                        <Button
+                                            p={2}
+                                            w={{ base: "full", lg: "full" }}
+                                            mx={1}
+                                            my={{ base: 2, lg: 0 }}
+                                            height="100%"
+                                            isLoading={postCommentLoading}
+                                            onClick={() => {
+                                                setPostCommentLoading(true);
+                                                postComment({
+                                                    commentId: 0,
+                                                    foodieId: foodie!.foodieId,
+                                                    foodieName:
+                                                        foodie!.foodieName,
+                                                    recipeId: recipe.recipeId,
+                                                    commentText: commentText,
                                                 })
-                                                .catch((error) => {
-                                                    console.log(error);
-                                                });
-                                            setPostCommentLoading(false);
-                                        }}
-                                    >
-                                        Comment
-                                    </Button>
-                                </GridItem>
-                            </SimpleGrid>
+                                                    .then((response) => {
+                                                        setComments(
+                                                            response.data.data
+                                                                .comments
+                                                        );
+
+                                                        setCommentText("");
+                                                    })
+                                                    .catch((error) => {
+                                                        console.log(error);
+                                                    });
+                                                setPostCommentLoading(false);
+                                            }}
+                                        >
+                                            Comment
+                                        </Button>
+                                    </GridItem>
+                                </SimpleGrid>
+                            ) : (
+                                <></>
+                            )}
 
                             <Stack spacing={2} py={2} pt={6}>
                                 {comments.map((comment) => (
