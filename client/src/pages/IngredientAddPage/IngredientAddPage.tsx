@@ -57,7 +57,6 @@ const IngredientAddPage = (props: any) => {
             ingredientDescription,
         })
             .then((response) => {
-                console.log(response.data.data.ingredient);
                 toast({
                     position: "top",
                     title: "Success",
@@ -68,6 +67,14 @@ const IngredientAddPage = (props: any) => {
                 });
                 setIngredientName("");
                 setIngredientDescription("");
+
+                getIngredients()
+                    .then((response) =>
+                        setIngredients(response.data.data.ingredient)
+                    )
+                    .catch((error) => {
+                        console.log(error);
+                    });
             })
             .catch((error) => {
                 toast({
@@ -78,11 +85,6 @@ const IngredientAddPage = (props: any) => {
                     duration: 2000,
                     isClosable: true,
                 });
-            });
-        getIngredients()
-            .then((response) => setIngredients(response.data.data.ingredient))
-            .catch((error) => {
-                console.log(error);
             });
 
         setLoading(false);
