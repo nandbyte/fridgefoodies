@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Tag, Text } from "@chakra-ui/react";
+import { Button, Tag, Text, useToast } from "@chakra-ui/react";
 import { Heading, Stack, Box, SimpleGrid } from "@chakra-ui/layout";
 
 import SectionDivider from "../../components/SectionDivider";
@@ -23,6 +23,7 @@ import { RecipeCardData } from "../../state/types/recipe.type";
 interface Props {}
 
 const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
+    const toast = useToast();
     const pageData = useRecoilValue(findRecipeByIngredientTabValue);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -44,7 +45,16 @@ const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
             pageData.selectedIngredients
         )
             .then((response) => {
-                console.log(response.data.data.recipes);
+                if (response.data.data.recipes.length === 0) {
+                    toast({
+                        position: "top",
+                        title: "Info",
+                        description: "No recipe could be found.",
+                        status: "info",
+                        duration: 2000,
+                        isClosable: true,
+                    });
+                }
                 setIngredientMatchingRecipe(response.data.data.recipes);
             })
             .catch((error) => console.log(error));

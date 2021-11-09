@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Stack, Heading, SimpleGrid } from "@chakra-ui/layout";
-import { Button, Input } from "@chakra-ui/react";
+import { Button, Input, useToast } from "@chakra-ui/react";
 import PageSection from "../../components/PageSection";
 import SectionDivider from "../../components/SectionDivider";
 import Loading from "../../components/Loading";
@@ -18,13 +18,14 @@ import { RecipeCardData } from "../../state/types/recipe.type";
 interface Props {}
 
 const FindRecipeByTitleTab: React.FC<Props> = (props: Props) => {
+    const toast = useToast();
     const [loading, setLoading] = useState<boolean>(false);
     const [keyword, setKeyword] = useState<string>("");
 
     const [titleMatchingRecipe, setTitleMatchingRecipe] = useRecoilState(
         titleMatchingRecipeState
     );
-    
+
     const [sort] = useRecoilState(titleSortState);
     const [order] = useRecoilState(titleOrderState);
 
@@ -33,7 +34,16 @@ const FindRecipeByTitleTab: React.FC<Props> = (props: Props) => {
         console.log("Clicked");
         getRecipeByTitle(keyword, sort, order)
             .then((response) => {
-                console.log(response.data.data.recipes);
+                if (response.data.data.recipes.length === 0) {
+                    toast({
+                        position: "top",
+                        title: "Info",
+                        description: "No recipe could be found.",
+                        status: "info",
+                        duration: 2000,
+                        isClosable: true,
+                    });
+                }
                 setTitleMatchingRecipe(response.data.data.recipes);
             })
             .catch((error) => console.log(error));
