@@ -41,7 +41,7 @@ const TabView = (props: any) => {
             isLazy
         >
             <TabList>
-                <SimpleGrid w="100%" gap={6} columns={2}>
+                <SimpleGrid w="100%" gap={6} columns={3}>
                     {tabList.map((tabs) => (
                         <Tab
                             key={tabs.tabName}
