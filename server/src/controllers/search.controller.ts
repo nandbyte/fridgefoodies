@@ -10,58 +10,80 @@ export const search = expressAsyncHandler(async (req, res) => {
     console.log(req.body);
     console.log(req.query);
     let bestMatch: any[] = [];
-    if (req.query.filter === 'best') {
+    let bestMatchMapped: any[] = [];
+    if (req.query.filter === "best") {
         for (const id of ids) {
-            const current: any = await query(`SELECT *
+            const current: any = await query(
+                `SELECT *
             FROM recipe 
             WHERE recipe_id in (
                 SELECT recipe_id FROM recipe_ingredient
                 WHERE ingredient_id=$1
             )
             `,
-                [id]);
+                [id]
+            );
             if (current.rowCount > 0) {
-                current.rows.forEach(
-                    (obj: any) => {
-                        bestMatch.push({
-                            foodieId: obj.foodie_id,
-                            recipeId: obj.recipe_id,
-                            recipeTitle: obj.recipe_title,
-                            recipeImage: obj.recipe_image,
-                            recipeText: obj.recipe_text
-                        });
-                    }
-                )
+                current.rows.forEach((obj: any) => {
+                    bestMatch.push({
+                        foodieId: obj.foodie_id,
+                        recipeId: obj.recipe_id,
+                        recipeTitle: obj.recipe_title,
+                        recipeImage: obj.recipe_image,
+                        recipeText: obj.recipe_text,
+                    });
+                });
+                const _ids = bestMatch.map((obj) => obj.recipeId);
+                bestMatchMapped = bestMatch.filter(
+                    ({ recipeId }, index) => !_ids.includes(recipeId, index + 1)
+                );
             }
         }
         console.log(bestMatch);
         res.status(200).json({
             data: {
-                recipes: bestMatch,
+                recipes: bestMatchMapped,
             },
         });
-    } else {
-        let base = "SELECT recipe.* from recipe,recipe_ingredient WHERE recipe.recipe_id = recipe_ingredient.recipe_id "
+    } else if (req.query.filter === "bounded") {
+        let baseQuery =
+            "SELECT recipe.* from recipe,recipe_ingredient WHERE recipe.recipe_id = recipe_ingredient.recipe_id ";
 
-        const len_ids = ids.length;
+        const ingredientCount = ids.length;
         const str: string[] = [];
-        for (let i = 0; i < len_ids; i++) {
-            let substr = "";
+        for (let i = 0; i < ingredientCount; i++) {
+            let subQuery = "";
 
             for (let j = 0; j < i + 1; j++) {
-                substr += ` AND recipe_ingredient.ingredient_id=${ids[j]}`;
+                subQuery += ` AND recipe_ingredient.ingredient_id=${ids[j]}`;
             }
-            str.push(base+substr);
+            str.push(baseQuery + subQuery);
         }
-        var finalResult:any[] =[];
-        for(let i=0;i<str.length;i++){
-            const result:any = await query(str[i],[]);
-            finalResult.push(result.rows);
+
+        for (let i = 0; i < str.length; i++) {
+            const result: any = await query(str[i], []);
+            console.log(i, " ", result.rows);
+            result.rows.forEach((recipe: any) => {
+                bestMatch.push({
+                    foodieId: recipe.foodie_id,
+                    recipeId: recipe.recipe_id,
+                    recipeTitle: recipe.recipe_title,
+                    recipeImage: recipe.recipe_image,
+                    recipeText: recipe.recipe_text,
+                });
+            });
         }
+        console.log(bestMatch);
+
+        const _ids = bestMatch.map((obj) => obj.recipeId);
+        bestMatchMapped = bestMatch.filter(
+            ({ recipeId }, index) => !_ids.includes(recipeId, index + 1)
+        );
+
         res.status(200).json({
-            data: [finalResult],
-        })
+            data: {
+                recipes: bestMatchMapped,
+            },
+        });
     }
-
-})
-
+});
