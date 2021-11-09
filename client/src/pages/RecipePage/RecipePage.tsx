@@ -183,13 +183,9 @@ const RecipePage = (props: any) => {
     };
 
     useEffect(() => {
-        if (foodie !== null) {
-            getCaloriesById(id)
-                .then((response) =>
-                    setCalories(response.data.data.totalCalories)
-                )
-                .catch((error) => console.log(error));
-        }
+        getCaloriesById(id)
+            .then((response) => setCalories(response.data.data.totalCalories))
+            .catch((error) => console.log(error));
     }, []);
 
     const CalorieComponent = () => {
