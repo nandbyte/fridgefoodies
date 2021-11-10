@@ -65,8 +65,6 @@ const RegisterForm: React.FC<Props> = (props: Props) => {
                 duration: 2000,
                 isClosable: true,
             });
-
-            setTimeout(() => history.push("/profile"), 1500);
         } else if (!emailRegexPattern.test(email)) {
             toast({
                 position: "top",

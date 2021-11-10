@@ -9,10 +9,11 @@ import PageContainer from "../../components/PageContainer";
 
 import FindRecipeByTitleTab from "./FindRecipeByTitleTab";
 import FindRecipeByIngredientTab from "./FindRecipeByIngredientTab";
+import FindRecipeByCaloriesTab from "./FindRecipeByCalories";
 
 const tabs: Array<TabObject> = [
     {
-        tabName: "Search By Recipe",
+        tabName: "Search By Title",
         tabPanel: <FindRecipeByTitleTab />,
         tabLink: "/find-recipe/title",
     },
@@ -20,6 +21,11 @@ const tabs: Array<TabObject> = [
         tabName: "Search By Ingredients",
         tabPanel: <FindRecipeByIngredientTab />,
         tabLink: "/find-recipe/ingredient",
+    },
+    {
+        tabName: "Search By Calories",
+        tabPanel: <FindRecipeByCaloriesTab />,
+        tabLink: "/find-recipe/calories",
     },
 ];
 

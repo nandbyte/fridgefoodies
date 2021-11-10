@@ -55,6 +55,25 @@ export const getRecipeByIngredients = async (
     );
 };
 
+export const getRecipeByCalories = async (
+    min: number,
+    max: number,
+    sort: string,
+    order: string
+) => {
+    return axios.get(
+        baseUrl +
+            "/search/calories?min=" +
+            min +
+            "&max=" +
+            max +
+            "&sort=" +
+            sort +
+            "&order=" +
+            order
+    );
+};
+
 export const postRecipe = async (recipe: Recipe) => {
     return axios.post(
         baseUrl + "/recipe",

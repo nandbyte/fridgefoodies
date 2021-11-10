@@ -78,19 +78,17 @@ const RecipePage = (props: any) => {
         }
     }, []);
 
-    
-
     const CommentComponent: React.FC<CommentProps> = (props: CommentProps) => {
         const [deleteCommentLoading, setDeleteCommentLoading] =
             useState<boolean>(false);
 
-            const displayDeleteButton: ResponsiveValue<any> = () => {
-                if (foodie !== null)
-                    if (foodie.foodieId === props.comment.foodieId) return "block";
-        
-                return "none";
+        const displayDeleteButton: ResponsiveValue<any> = () => {
+            if (foodie !== null)
+                if (foodie.foodieId === props.comment.foodieId) return "block";
+
+            return "none";
         };
-        
+
         return (
             <Box
                 p={2}
@@ -118,7 +116,7 @@ const RecipePage = (props: any) => {
                             mx={1}
                             my={{ base: 2, lg: 0 }}
                             height="100%"
-                            isLoading={deleteCommentLoading}
+                            loading={deleteCommentLoading}
                             onClick={() => {
                                 setDeleteCommentLoading(true);
                                 deleteComment(props.comment.commentId)
@@ -271,9 +269,13 @@ const RecipePage = (props: any) => {
                             <Heading variant="section">Instructions</Heading>
                             <SectionDivider />
                             <Stack spacing={4}>
-                                {recipe.recipeText.split("\n").map((text) => {
-                                    return <Text fontSize="xl">{text}</Text>;
-                                })}
+                                {recipe.recipeText
+                                    .split("\n")
+                                    .map((text: string) => {
+                                        return (
+                                            <Text fontSize="xl">{text}</Text>
+                                        );
+                                    })}
                             </Stack>
                         </PageSection>
 

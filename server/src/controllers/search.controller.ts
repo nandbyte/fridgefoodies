@@ -93,3 +93,63 @@ export const search = expressAsyncHandler(async (req, res) => {
         });
     }
 });
+
+export const searchByCalorie = expressAsyncHandler(async (req, res) => {
+    const min = req.query.min;
+    const max = req.query.max;
+
+    console.log(req.query.min, req.query.max, req.query.order, req.query.sort);
+
+    let sort = "";
+    if (req.query.sort === "rating") sort = "total_rating";
+    else if (req.query.sort === "calories") sort = "total_calorie";
+    const order = req.query.order;
+
+    const queryString = `SELECT 
+            recipe.recipe_id as recipe_id,
+            recipe.recipe_title as recipe_title,
+            recipe.recipe_image as recipe_image,
+            calorie_counter.calorie as total_calorie,
+            totalRating.total_rating as total_rating
+            from recipe, (
+                SELECT sum(ingredient_calories) as calorie,recipe_id
+                FROM recipe_ingredient
+                GROUP BY recipe_id
+            ) as calorie_counter,
+            (   SELECT COUNT(*) as total_rating, recipe_id
+                FROM rating
+                GROUP BY recipe_id
+                ) as totalRating
+            WHERE calorie_counter.recipe_id = recipe.recipe_id 
+                    AND recipe.recipe_id = totalRating.recipe_id
+                    AND calorie_counter.calorie > ${min}
+                    AND calorie_counter.calorie < ${max}
+            ORDER BY ${sort} ${order}`;
+    try {
+        const result: any = await query(queryString, []);
+        if (result.rowCount > 0) {
+            const mappedData = result.rows.map((obj: any) => {
+                return {
+                    recipeId: obj.recipe_id,
+                    recipeTitle: obj.recipe_title,
+                    recipeImage: obj.recipe_image,
+                    totalCalorie: obj.total_calorie,
+                    totalRating: obj.total_rating,
+                };
+            });
+            res.status(200).json({
+                status: 200,
+                data: mappedData,
+                error: null,
+            });
+        } else {
+            res.status(200).json({
+                status: 200,
+                data: [],
+                error: "No recipe found for the given calorie range",
+            });
+        }
+    } catch (err: any) {
+        console.log(err);
+    }
+});
