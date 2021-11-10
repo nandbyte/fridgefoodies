@@ -10,7 +10,6 @@ export const search = expressAsyncHandler(async (req, res) => {
     console.log(req.body);
     console.log(req.query);
     let bestMatch: any[] = [];
-    let bounded: any[] = [];
     let bestMatchMapped: any[] = [];
     if (req.query.filter === "best") {
         for (const id of ids) {
@@ -47,15 +46,12 @@ export const search = expressAsyncHandler(async (req, res) => {
             },
         });
     } else if (req.query.filter === "bounded") {
-
-        let baseQuery =
-            `SELECT recipe.*,counter_table.total_ingredient as total_ingredient
-            from recipe,recipe_ingredient,
-                (SELECT COUNT(*) as total_ingredient, recipe_id
-                from recipe_ingredient group by recipe_id) 
-            as counter_table
-                WHERE recipe.recipe_id = recipe_ingredient.recipe_id AND recipe.recipe_id = counter_table.recipe_id `;
-
+        let baseQuery = `SELECT recipe.*,counter_table.total_ingredient as total_ingredient
+        from recipe,recipe_ingredient,
+            (SELECT COUNT(*) as total_ingredient, recipe_id
+            from recipe_ingredient group by recipe_id) 
+        as counter_table
+            WHERE recipe.recipe_id = recipe_ingredient.recipe_id AND recipe.recipe_id = counter_table.recipe_id `;
 
         const ingredientCount = ids.length;
         const str: string[] = [];
@@ -71,7 +67,6 @@ export const search = expressAsyncHandler(async (req, res) => {
 
         for (let i = 0; i < str.length; i++) {
             const result: any = await query(str[i], []);
-
             result.rows.forEach((recipe: any) => {
                 if (recipe.total_ingredient == ids.length) {
                     bestMatch.push({
@@ -84,10 +79,10 @@ export const search = expressAsyncHandler(async (req, res) => {
                 }
             });
         }
+        console.log(bestMatch);
 
-
-        const _ids = bounded.map((obj) => obj.recipeId);
-        bestMatchMapped = bounded.filter(
+        const _ids = bestMatch.map((obj) => obj.recipeId);
+        bestMatchMapped = bestMatch.filter(
             ({ recipeId }, index) => !_ids.includes(recipeId, index + 1)
         );
 
