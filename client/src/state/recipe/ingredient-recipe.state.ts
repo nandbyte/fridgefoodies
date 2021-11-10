@@ -1,9 +1,9 @@
-import { atom, selector } from "recoil";
+import { atom } from "recoil";
 import { RecipeCardData } from "../types/recipe.type";
 
 export const ingredientFilterState = atom({
     key: "ingredient-filter-type",
-    default: "best" as string, 
+    default: "best" as string,
 });
 
 export const ingredientSortState = atom({

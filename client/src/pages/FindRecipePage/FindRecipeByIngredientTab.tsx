@@ -55,6 +55,7 @@ const FindRecipeByIngredientTab: React.FC<Props> = (props: Props) => {
                         isClosable: true,
                     });
                 }
+                console.log(response.data.data.recipes);
                 setIngredientMatchingRecipe(response.data.data.recipes);
             })
             .catch((error) => console.log(error));

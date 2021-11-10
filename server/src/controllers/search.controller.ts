@@ -98,10 +98,12 @@ export const searchByCalorie = expressAsyncHandler(async (req, res) => {
     const min = req.query.min;
     const max = req.query.max;
 
-    const order = req.query.sort == "rating"? "total_rating":"total_calorie";
-    const sort = req.query.order;
+    console.log(req.query.min, req.query.max, req.query.order, req.query.sort);
 
-    console.log(min,max,order,sort);
+    let sort = "";
+    if (req.query.sort === "rating") sort = "total_rating";
+    else if (req.query.sort === "calories") sort = "total_calorie";
+    const order = req.query.order;
 
     const queryString = `SELECT 
             recipe.recipe_id as recipe_id,
@@ -121,38 +123,33 @@ export const searchByCalorie = expressAsyncHandler(async (req, res) => {
             WHERE calorie_counter.recipe_id = recipe.recipe_id 
                     AND recipe.recipe_id = totalRating.recipe_id
                     AND calorie_counter.calorie > ${min}
-                    AND calorie_counter.calorie <${max}
-            ORDER BY ${order} ${sort}        
-            `
-    try{
-        const result:any = await query(queryString,[]);
-        if(result.rowCount>0){
-            const mappedData = result.rows.map(
-                (obj:any)=>{
-                    return{
-                        recipeId: obj.recipe_id,
-                        recipeTitle: obj.recipe_title,
-                        recipeImage: obj.recipe_image,
-                        totalCalorie: obj.total_calorie,
-                        totalRating: obj.total_rating
-                    }
-                }
-            )
-            res.status(200).json(
-                { 
-                    status: 200,
-                    data: mappedData,
-                    error: null,
-                },
-            )
-        }else{
+                    AND calorie_counter.calorie < ${max}
+            ORDER BY ${sort} ${order}`;
+    try {
+        const result: any = await query(queryString, []);
+        if (result.rowCount > 0) {
+            const mappedData = result.rows.map((obj: any) => {
+                return {
+                    recipeId: obj.recipe_id,
+                    recipeTitle: obj.recipe_title,
+                    recipeImage: obj.recipe_image,
+                    totalCalorie: obj.total_calorie,
+                    totalRating: obj.total_rating,
+                };
+            });
             res.status(200).json({
                 status: 200,
-                data:[],
-                error:"No recipe found for the given calorie range"
-            })
+                data: mappedData,
+                error: null,
+            });
+        } else {
+            res.status(200).json({
+                status: 200,
+                data: [],
+                error: "No recipe found for the given calorie range",
+            });
         }
-    }catch(err:any){
+    } catch (err: any) {
         console.log(err);
     }
-})
+});
