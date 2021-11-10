@@ -61,7 +61,7 @@ export const getRecipeByCalories = async (
     sort: string,
     order: string
 ) => {
-    return axios.post(
+    return axios.get(
         baseUrl +
             "/search/calories?min=" +
             min +

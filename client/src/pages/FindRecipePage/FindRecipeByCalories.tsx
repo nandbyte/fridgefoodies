@@ -18,12 +18,12 @@ import TitleSearchCriteria from "../../components/TitleSearchCriteria";
 import RecipeCard from "../../components/RecipeCard";
 import { useRecoilState } from "recoil";
 import {
-    titleMatchingRecipeState,
-    titleOrderState,
-    titleSortState,
-} from "../../state/recipe/title-recipe.state";
-import { getRecipeByTitle } from "../../api/recipe.api";
-import { RecipeCardData } from "../../state/types/recipe.type";
+    calorieOrderState,
+    calorieSortState,
+} from "../../state/recipe/calorie-recipe.state";
+import { getRecipeByCalories } from "../../api/recipe.api";
+import { Recipe, RecipeCardData } from "../../state/types/recipe.type";
+import CalorieSearchCriteria from "../../components/CalorieSearchCriteria";
 
 interface Props {}
 
@@ -33,33 +33,33 @@ const FindRecipeByCaloriesTab: React.FC<Props> = (props: Props) => {
     const [minimumCalories, setMinimumCalories] = useState<number>(1000);
     const [maximumCalories, setMaximumCalories] = useState<number>(5000);
 
-    const [titleMatchingRecipe, setTitleMatchingRecipe] = useRecoilState(
-        titleMatchingRecipeState
-    );
+    const [calorieMatchingRecipe, setCalorieMatchingRecipe] = useState<
+        Recipe[]
+    >([]);
 
-    const [sort] = useRecoilState(titleSortState);
-    const [order] = useRecoilState(titleOrderState);
+    const [sort] = useRecoilState(calorieSortState);
+    const [order] = useRecoilState(calorieOrderState);
 
-    // const findRecipe: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-    //     setLoading(true);
-    //     console.log("Clicked");
-    //     getRecipeByTitle(keyword, sort, order)
-    //         .then((response) => {
-    //             if (response.data.data.recipes.length === 0) {
-    //                 toast({
-    //                     position: "top",
-    //                     title: "Info",
-    //                     description: "No recipe could be found.",
-    //                     status: "info",
-    //                     duration: 2000,
-    //                     isClosable: true,
-    //                 });
-    //             }
-    //             setTitleMatchingRecipe(response.data.data.recipes);
-    //         })
-    //         .catch((error) => console.log(error));
-    //     setLoading(false);
-    // };
+    const findRecipe: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+        setLoading(true);
+        setCalorieMatchingRecipe([]);
+        getRecipeByCalories(minimumCalories, maximumCalories, sort, order)
+            .then((response) => {
+                if (response.data.data.length === 0) {
+                    toast({
+                        position: "top",
+                        title: "Info",
+                        description: "No recipe could be found.",
+                        status: "info",
+                        duration: 2000,
+                        isClosable: true,
+                    });
+                }
+                setCalorieMatchingRecipe(response.data.data);
+            })
+            .catch((error) => console.log(error));
+        setLoading(false);
+    };
 
     return (
         <Stack px={0} mx={0} justifyContent="space-between" spacing={12}>
@@ -69,7 +69,7 @@ const FindRecipeByCaloriesTab: React.FC<Props> = (props: Props) => {
                 <RangeSlider
                     defaultValue={[1000, 5000]}
                     min={0}
-                    max={30000}
+                    max={12000}
                     step={500}
                     onChange={(values) => {
                         setMinimumCalories(values[0]);
@@ -99,7 +99,6 @@ const FindRecipeByCaloriesTab: React.FC<Props> = (props: Props) => {
                 <Box fontSize={"lg"} fontWeight="bold" py={4}>
                     <Text>Maximum Calories</Text>
                     <Heading variant="section" fontSize="6xl">
-                        {" "}
                         {maximumCalories}
                     </Heading>
                 </Box>
@@ -108,18 +107,20 @@ const FindRecipeByCaloriesTab: React.FC<Props> = (props: Props) => {
             <PageSection>
                 <Heading variant="section">Find Recipe By Calories</Heading>
                 <SectionDivider />
-                <TitleSearchCriteria />
-                <Button>Find Recipe</Button>
+                <CalorieSearchCriteria />
+                <Button loading={loading} onClick={findRecipe}>
+                    Find Recipe
+                </Button>
             </PageSection>
 
             {loading === true ? <Loading /> : <></>}
-            {titleMatchingRecipe.length !== 0 ? (
+            {calorieMatchingRecipe.length !== 0 ? (
                 <PageSection>
                     <Heading variant="section">Matching Recipe</Heading>
                     <SectionDivider />
 
                     <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap={4}>
-                        {titleMatchingRecipe.map((recipe: RecipeCardData) => {
+                        {calorieMatchingRecipe.map((recipe: any) => {
                             return (
                                 <RecipeCard
                                     key={recipe.recipeId}
