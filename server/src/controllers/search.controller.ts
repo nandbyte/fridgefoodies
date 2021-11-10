@@ -47,7 +47,7 @@ export const search = expressAsyncHandler(async (req, res) => {
             },
         });
     } else if (req.query.filter === "bounded") {
-<<<<<<< HEAD
+
         let baseQuery =
             `SELECT recipe.*,counter_table.total_ingredient as total_ingredient
             from recipe,recipe_ingredient,
@@ -55,14 +55,7 @@ export const search = expressAsyncHandler(async (req, res) => {
                 from recipe_ingredient group by recipe_id) 
             as counter_table
                 WHERE recipe.recipe_id = recipe_ingredient.recipe_id AND recipe.recipe_id = counter_table.recipe_id `;
-=======
-        let baseQuery = `SELECT recipe.*,counter_table.total_ingredient as total_ingredient
-        from recipe,recipe_ingredient,
-            (SELECT COUNT(*) as total_ingredient, recipe_id
-            from recipe_ingredient group by recipe_id) 
-        as counter_table
-            WHERE recipe.recipe_id = recipe_ingredient.recipe_id AND recipe.recipe_id = counter_table.recipe_id `;
->>>>>>> 5e7aafa17fbe2273acdedd758aa5dc04d31f0217
+
 
         const ingredientCount = ids.length;
         const str: string[] = [];
@@ -72,27 +65,16 @@ export const search = expressAsyncHandler(async (req, res) => {
             for (let j = 0; j < i + 1; j++) {
                 subQuery += ` AND recipe_ingredient.ingredient_id=${ids[j]}`;
             }
-<<<<<<< HEAD
-            // console.log(baseQuery + subQuery);
-=======
 
->>>>>>> 5e7aafa17fbe2273acdedd758aa5dc04d31f0217
             str.push(baseQuery + subQuery);
         }
 
         for (let i = 0; i < str.length; i++) {
             const result: any = await query(str[i], []);
-<<<<<<< HEAD
-            result.rows.map((obj: any) => console.log(obj.total_ingredient, obj.recipe_id));
-            result.rows.forEach((recipe: any) => {
-                if (recipe.total_ingredient <= ids.length) {
-                    // console.log(recipe.total_ingredient)
-                    bounded.push({
-=======
+
             result.rows.forEach((recipe: any) => {
                 if (recipe.total_ingredient == ids.length) {
                     bestMatch.push({
->>>>>>> 5e7aafa17fbe2273acdedd758aa5dc04d31f0217
                         foodieId: recipe.foodie_id,
                         recipeId: recipe.recipe_id,
                         recipeTitle: recipe.recipe_title,
