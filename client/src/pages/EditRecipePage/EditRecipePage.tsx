@@ -239,6 +239,7 @@ const EditRecipePage = (props: any) => {
                 <PageSection>
                     <Heading variant="section">Image</Heading>
                     <SectionDivider />
+
                     <FormLabel
                         for="image-upload"
                         my={4}
@@ -282,6 +283,9 @@ const EditRecipePage = (props: any) => {
                             });
                         }}
                     />
+                    <Text pt={2}>
+                        We recommend uploading a 700px x 700px image.
+                    </Text>
                     {cloudinaryLink !== "" ? (
                         <Image
                             w={{ base: "100%", lg: "50%" }}
